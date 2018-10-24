@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>提现明细</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="stylesheet" href="../../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../plugins/jqgrid/ui.jqgrid-bootstrap.css">
+    <link rel="stylesheet" href="../../plugins/ztree/css/metroStyle/metroStyle.css">
+    <link rel="stylesheet" href="../../css/animate.min.css">
+    <link rel="stylesheet" href="../../css/main.css">
+    <script src="../../libs/jquery.min.js"></script>
+    <script src="../../plugins/layer/layer.js"></script>
+    <script src="../../libs/bootstrap.min.js"></script>
+    <script src="../../libs/vue.min.js"></script>
+    <script src="../../libs/formvalidator.js"></script>
+    <script src="../../plugins/jqgrid/grid.locale-cn.js"></script>
+    <script src="../../plugins/jqgrid/jquery.jqGrid.min.js"></script>
+    <script src="../../plugins/ztree/jquery.ztree.all.min.js"></script>
+    <script src="../../js/common.js"></script>
+</head>
+
+<body>
+<div id="rrapp" class="zxxAnimateFadeIn" style="display:none;" v-cloak>
+    <div v-show="showList">
+        <div class="grid-btn">
+            <div class="form-group">
+                <input type="text" class="form-control col-sm-2" style="width:180px;margin-right:10px;margin-top:10px;"
+                       v-model="q.s_user_name" @keyup.enter="query"
+                       placeholder="申请用户">
+                <input type="text" class="form-control col-sm-2" style="width:180px;margin-right:10px;margin-top:10px;"
+                       v-model="q.s_serial_num" @keyup.enter="query"
+                       placeholder="流水号">
+                <input type="text" class="form-control col-sm-2" style="width:180px;margin-right:10px;margin-top:10px;"
+                       v-model="q.s_money" @keyup.enter="query"
+                       placeholder="提现金额">
+                <input type="text" class="form-control col-sm-2" style="width:180px;margin-right:10px;margin-top:10px;"
+                       v-model="q.s_name" @keyup.enter="query"
+                       placeholder="姓名">
+                <input type="text" class="form-control col-sm-2" style="width:180px;margin-right:10px;margin-top:10px;"
+                       v-model="q.s_mobile" @keyup.enter="query"
+                       placeholder="手机号">
+                <input type="text" class="form-control col-sm-2" style="width:180px;margin-right:10px;margin-top:10px;"
+                       v-model="q.s_bankcard_num" @keyup.enter="query"
+                       placeholder="银行卡号">
+                <input type="text" class="form-control col-sm-2" style="width:180px;margin-right:10px;margin-top:10px;"
+                       v-model="q.s_bankinfo" @keyup.enter="query"
+                       placeholder="银行卡信息">
+                <input type="text" class="form-control col-sm-2" style="width:180px;margin-right:10px;margin-top:10px;"
+                       v-model="q.s_bank" @keyup.enter="query"
+                       placeholder="开户行">
+            </div>
+            <a class="btn btn-default" @click="query" style="margin-top:10px;">
+                <i class="fa fa-search"></i>&nbsp;查询</a>
+            <a v-if="hasPermission('app:withdraw:deal')" class="btn btn-default" @click="batchdeal"
+               style="margin-top:10px;">
+                <i class="fa fa-plus"></i>&nbsp;批量打款</a>
+            <a v-if="hasPermission('app:withdraw:paramset')" class="btn btn-primary" @click="paramSet"
+               style="float:right;margin-top:10px;margin-right:10px;"><i class="fa fa-gears"></i>&nbsp;&nbsp;参数配置</a>
+        </div>
+        <table id="jqGrid"></table>
+        <div id="jqGridPager"></div>
+    </div>
+    <div id="paramSetLayer" style="display:none;">
+        <form class="form-horizontal">
+            <div class="form-group">
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">最低可提现金额</div>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" v-model="form.value1" placeholder="最低可提现金额"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">预留复销(%)</div>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" v-model="form.value2" placeholder="预留复销(%)"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">提现手续费(%)</div>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" v-model="form.value3" placeholder="提现手续费(%)"/>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script src="../../js/modules/app/withdraw.js"></script>
+</body>
+
+</html>

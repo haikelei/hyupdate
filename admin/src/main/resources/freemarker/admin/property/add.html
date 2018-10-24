@@ -1,0 +1,102 @@
+<div class="wrapper wrapper-content  animated">
+    <form class="form-horizontal" id="addFormId">
+        <div class="tabs-container">
+            <ul class="nav nav-tabs">
+                <li class="active"><a data-toggle="tab" href="#tab-11">基础信息</a></li>
+            </ul>
+            <div class="tab-content">
+                <div id="tab-11" class="tab-pane active">
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label class="col-xs-1 control-label">类别</label>
+                            <div class="col-xs-5">
+                                <input type="text" placeholder="类别" name="clazz" class="form-control" required>
+                            </div>
+                            <label class="col-xs-1 control-label">名称</label>
+                            <div class="col-xs-5">
+                                <input type="text" placeholder="名称" class="form-control" name="name">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-1 control-label">值</label>
+                            <div class="col-xs-10">
+                                <textarea placeholder="值" class="form-control" name="content" id="contentId"></textarea>
+                            </div>
+                            <div class="col-xs-1" id="container">
+                                <button type="button" class="btn btn-success"><i class="fa fa-upload"></i></button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-1 control-label">序号</label>
+                            <div class="col-xs-11">
+                                <input type="number" placeholder="序号" class="form-control" name="indexing" value="1">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-1 control-label">备注</label>
+                            <div class="col-xs-11">
+                                <textarea placeholder="备注" class="form-control" name="memo"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-1 control-label">扩展1</label>
+                            <div class="col-xs-4">
+                                <input type="text" placeholder="值" class="form-control" name="ext1" id="ext1Id">
+                            </div>
+                            <div class="col-xs-1" id="containerExt1Id">
+                                <button type="button" class="btn btn-success"><i class="fa fa-upload"></i></button>
+                            </div>
+                            <label class="col-xs-1 control-label">扩展2</label>
+                            <div class="col-xs-4">
+                                <input type="text" placeholder="值" class="form-control" name="ext2" id="ext2Id">
+                            </div>
+                            <div class="col-xs-1" id="containerExt2Id">
+                                <button type="button" class="btn btn-success"><i class="fa fa-upload"></i></button>
+                            </div>
+                        </div>
+                        <!--<div class="form-group" style="height: 180px;">
+                            <label class="col-xs-1 control-label">序号</label>
+                            <div class="col-xs-11">
+                                <textarea name="ctx" id="summernote" class="summernote"></textarea>
+                            </div>
+                        </div>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    $(document).ready(function () {
+        $("#addFormId").validate({
+            rules: {
+                pvalue: {
+                    required: true
+                },
+                clazz: {
+                    required: true
+                },
+                name: {
+                    required: true
+                },
+                pkey: {
+                    required: true
+                }
+            }
+        });
+        addFileClick("", "container", "contentId");
+        addFileClick("", "containerExt1Id", "ext1Id");
+        addFileClick("", "containerExt2Id", "ext2Id");
+//             initUploader("selectBtnId", function (link) {
+//                 $("#contentId").val(link);
+//             });
+//             initUploader("selectExt1BtnId", function (link) {
+//                 $("#ext1Id").val(link);
+//             },"containerExt1Id");
+//             initUploader("selectExt2BtnId", function (link) {
+//                 $("#ext2Id").val(link);
+//             },"containerExt2Id");
+
+    });
+
+</script>

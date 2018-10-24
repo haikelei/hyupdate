@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.empathy.dao.RoleDao">
+
+    <sql id="fields">
+        id,
+        created,
+        modified,
+        delflag,
+        name,
+        memo,
+        code
+    </sql>
+    <sql id="permissionSql">
+        role_id,
+        permission_id
+    </sql>
+    <sql id="wb">
+        WHERE delflag = 0
+    </sql>
+
+    <select id="findById" parameterType="long" resultType="com.empathy.domain.role.Role">
+        SELECT
+        <include refid="fields"/>
+        FROM role WHERE id = #{id}
+    </select>
+
+    <select id="findAll" resultType="com.empathy.domain.role.Role">
+        SELECT
+        <include refid="fields"/>
+        FROM role WHERE delflag = 0
+    </select>
+
+    <insert id="save" parameterType="com.empathy.domain.role.Role">
+        INSERT INTO role (id,name,memo,code) VALUES (#{id},#{name},#{memo},#{code})
+    </insert>
+
+    <update id="update" parameterType="com.empathy.domain.role.Role">
+        UPDATE role SET name = #{name},memo=#{memo},code=#{code} WHERE id = #{id}
+    </update>
+
+    <update id="delById" parameterType="long">
+        UPDATE role SET delflag = 1 WHERE id = #{id}
+    </update>
+
+    <select id="list" parameterType="com.empathy.domain.role.bo.RoleBo" resultType="com.empathy.domain.role.Role">
+        SELECT
+        <include refid="fields"/>
+        FROM role
+        <include refid="wb"/>
+        LIMIT #{start},#{limit}
+    </select>
+
+    <select id="count" parameterType="com.empathy.domain.role.bo.RoleBo" resultType="long">
+        SELECT COUNT(*) FROM role
+        <include refid="wb"/>
+    </select>
+
+    <delete id="delPermisionsById" parameterType="long">
+        DELETE FROM role_permission WHERE role_id = #{id}
+    </delete>
+
+    <insert id="addPermissions" parameterType="list">
+        INSERT INTO role_permission (role_id,permission_id ) VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.roleId},#{item.permissionId})
+        </foreach>
+    </insert>
+
+    <select id="findRolesByMemberId" parameterType="long" resultType="string">
+        SELECT r.code FROM member_role mr
+        INNER JOIN role r ON mr.role_id = r.id
+        WHERE mr.member_id = #{memberId}
+    </select>
+
+    <select id="findHadAssignPermissionById" parameterType="long" resultType="long">
+        SELECT permission_id FROM role_permission WHERE role_id = #{roleId}
+    </select>
+</mapper>

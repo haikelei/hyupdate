@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.empathy.dao.HostProveDao">
+
+    <sql id="fields">
+        id,user_id userId,card_classify cardClassify,card_number cardNumber,flow_status flowStatus,name,
+        create_time createTime,
+        last_revamp_time lastRevampTime
+    </sql>
+    <sql id="wb">
+        WHERE del_flag = 0
+    </sql>
+
+    <select id="findById" parameterType="long" resultType="com.empathy.domain.user.HostProve">
+        SELECT
+        <include refid="fields"/>
+        FROM tp_host_prove WHERE id = #{id}
+    </select>
+
+    <insert id="save" parameterType="com.empathy.domain.user.HostProve" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO tp_host_prove
+        (user_id,card_classify,card_number,flow_status,name,create_time,last_revamp_time,del_flag)
+        VALUES
+        (#{userId},#{cardClassify},#{cardNumber},#{flowStatus},#{name},#{createTime},#{lastRevampTime},#{delFlag})
+    </insert>
+
+    <update id="update" parameterType="com.empathy.domain.user.HostProve">
+        UPDATE tp_host_prove SET flow_status = #{flowStatus},last_revamp_time=#{lastRevampTime} WHERE id = #{id}
+    </update>
+
+    <update id="delById" parameterType="long">
+        UPDATE tp_host_prove SET del_flag = 1 WHERE id = #{id}
+    </update>
+
+    <select id="count" parameterType="com.empathy.domain.account.bo.ProveListAddBo" resultType="int">
+        SELECT count(id) from tp_host_prove
+        <where>
+
+            <if test="status != null">
+                flow_status = #{status}
+            </if>
+
+            and del_flag=0
+        </where>
+    </select>
+
+    <select id="list" parameterType="com.empathy.domain.account.bo.ProveListAddBo"
+            resultType="com.empathy.domain.account.vo.ProveAddVo">
+        select a.id ,a.user_id memberId,a.card_classify cardClassify,a.card_number cardNumber,a.flow_status flowStatus,
+        a.name name,a.create_time createTime,a.del_flag delFlag,
+        b.username,b.phone userPhone from tp_host_prove a
+        left join base_member b on a.user_id = b.id
+
+        <where>
+
+            <if test="status != null">
+                a.flow_status = #{status}
+            </if>
+            and a.del_flag=0
+
+        </where>
+
+
+        order by a.create_time desc
+
+    </select>
+
+
+    <select id="findCountByUpd" parameterType="long" resultType="int">
+        select count(id) from tp_host_prove where user_id = #{id} and (flow_status=0 or flow_status=1)
+    </select>
+
+
+
+
+</mapper>

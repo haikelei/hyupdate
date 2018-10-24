@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.empathy.dao.ConfigurationDao">
+
+    <sql id="fields">
+        id,
+        conversion,
+        type,
+        create_time createTime,
+        last_revamp_time lastRevampTime
+    </sql>
+    <sql id="wb">
+        WHERE del_flag = 0
+    </sql>
+
+    <select id="findById" parameterType="long" resultType="com.empathy.domain.configuration.Configuration">
+        SELECT
+        <include refid="fields"/>
+        FROM base_configuration WHERE id = #{id}
+    </select>
+
+    <insert id="save" parameterType="com.empathy.domain.configuration.Configuration" useGeneratedKeys="true"
+            keyProperty="id">
+        INSERT INTO base_configuration (conversion,type,create_time,last_revamp_time,del_flag)
+        VALUES (#{conversion},#{type},#{createTime},#{lastRevampTime},#{delFlag})
+    </insert>
+
+    <update id="update" parameterType="com.empathy.domain.configuration.Configuration">
+        UPDATE base_configuration SET conversion = #{conversion},type = #{type},last_revamp_time=#{lastRevampTime} WHERE
+        id = #{id}
+    </update>
+
+    <update id="delById" parameterType="long">
+        UPDATE base_configuration SET del_flag = 1 WHERE id = #{id}
+    </update>
+
+    <select id="findByType" parameterType="string" resultType="com.empathy.domain.configuration.Configuration">
+        SELECT <include refid="fields"></include> FROM base_configuration where type=#{withdraw} and del_flag = 0
+
+    </select>
+
+
+</mapper>

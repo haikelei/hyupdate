@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.empathy.dao.BaseMainNavigationDao">
+
+    <sql id="fields">
+        id,
+        controls_type controlsType,
+        main_id mainId,left_deviation leftDeviation,size,
+        font,
+        create_time createTime,
+        last_revamp_time lastRevampTime
+    </sql>
+    <sql id="wb">
+        WHERE del_flag = 0
+    </sql>
+
+    <select id="findById" parameterType="long" resultType="com.empathy.domain.baseMain.BaseMain">
+        SELECT
+        <include refid="fields"/>
+        FROM base_main WHERE id = #{id}
+    </select>
+
+    <insert id="save" parameterType="com.empathy.domain.baseMain.BaseMain" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO base_main
+        (controls_type,font,check_font_color,default_font_color,check_pic,default_pic,respond_event,create_time,last_revamp_time,del_flag)
+        VALUES
+        (#{controlsType},#{font},#{checkFontColor},#{defaultFontColor},#{checkPic},#{defaultPic},#{respondEvent},#{createTime},#{lastRevampTime},#{delFlag})
+    </insert>
+
+    <update id="update" parameterType="com.empathy.domain.baseMain.BaseMain">
+        UPDATE base_main SET controls_type = #{controlsType},font = #{font},
+        check_font_color = #{checkFontColor},default_font_color = #{defaultFontColor},check_pic = #{checkPic},
+        default_pic = #{defaultPic},respond_event = #{respondEvent},
+        last_revamp_time=#{lastRevampTime} WHERE id = #{id}
+    </update>
+
+    <update id="delById" parameterType="long">
+        UPDATE base_main SET del_flag = 1 WHERE id = #{id}
+    </update>
+
+
+</mapper>

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>项目管理 | 系统</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.7 -->
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="bower_components/Ionicons/css/ionicons.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="dist/css/AdminLTE.min.css">
+    <!-- AdminLTE Skins. Choose a skin from the css/skins
+         folder instead of downloading all of them to reduce the load. -->
+    <link rel="stylesheet" href="dist/css/skins/_all-skins.min.css">
+    <link rel="stylesheet" href="js/layer/mobile/need/layer.css">
+    <!-- Morris chart -->
+    <link rel="stylesheet" href="bower_components/morris.js/morris.css">
+    <!-- jvectormap -->
+    <link rel="stylesheet" href="bower_components/jvectormap/jquery-jvectormap.css">
+    <!-- Date Picker -->
+    <link rel="stylesheet" href="bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
+    <link rel="stylesheet" href="//g.alicdn.com/sui/sui3/0.0.18/css/sui.min.css">
+    <link rel="stylesheet" href="css/iconfont.css">
+    <link rel="stylesheet" href="css/paging.css">
+    <link rel="stylesheet" href="css/H-ui.min.css">
+    <link rel="stylesheet" href="css/main.css">
+    <!-- Daterange picker -->
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Google Font -->
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+
+
+<!-- Content Wrapper. Contains page content -->
+<div>
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <section class="content-header">
+            <ol id="nav_title" class="breadcrumb" style="position: static; float: none;">
+                <li onclick="goIndex()" class="active"><i class="fa fa-home"
+                                                          style="font-size: 20px; position: relative; top: 2px; left: -3px;"></i>
+                    &nbsp; 华语
+                </li>
+                <li class="active"> 礼物管理</li>
+            </ol>
+        </section>
+
+    </section>
+
+
+    <div style="height: 34px;width: 143.2px;;margin-left:30px;margin-top: 10px">
+        <button type="button" class="btn btn-block btn-primary" onclick="giftAddSubmit()">添加礼物</button>
+    </div>
+    <div class="panel-body text-center">
+        <table class="table table-hover table-bordered">
+            <thead>
+            <tr>
+                <th class="text-center">礼物名</th>
+                <th class="text-center">图片</th>
+                <th class="text-center">礼物默认金额</th>
+                <th class="text-center">礼物默认华语币</th>
+                <th class="text-center">礼物实际金额</th>
+                <th class="text-center">礼物实际华语币</th>
+                <th class="text-center">礼物经验值</th>
+                <th class="text-center">排序值</th>
+                <th class="text-center">创建时间</th>
+                <th class="text-center">操作</th>
+            </tr>
+            </thead>
+            <tbody id="table"></tbody>
+        </table>
+        <div class="box" id="box"></div>
+    </div>
+
+    <!-- /.content -->
+
+
+    <div class="modal-eddit-body" style="display: none">
+        <div>
+            <input type="hidden" id="editGiftId">
+            <label for="edidGiftName" class="control-label">礼物名：</label>
+            <input id="edidGiftName" type="text" class="form-control">
+        </div>
+        <br/>
+        <div>
+
+            <label for="edidGiftUrl" class="control-label">图片：</label>
+            <button id="upload-btn" class="btn btn-default">
+                <i class="fa fa-cloud-upload">上传图片</i>
+            </button>
+            <input id="edidGiftUrl" type="hidden" class="form-control">
+
+        </div>
+        <div id="showImg" class="form-group" style="display:none;">
+            <div class="col-sm-2 control-label">&nbsp;</div>
+            <div class="col-sm-10">
+                <image id="imageAddId" width="100px" height="100px"></image>
+            </div>
+        </div>
+        <br/>
+        <div>
+            <!--<label for="file" class="control-label">礼物排序值：
+
+                <div class="panel updatepanel">
+                    <div class="addbox"><span class="icon-add-50"></span></div>
+                    <input type="file" id="file" style="display: none" />
+                </div>
+
+            </label>-->
+            <label for="editGiftCode" class="control-label">礼物排序值：</label>
+            <input id="editGiftCode" type="text" class="form-control">
+
+        </div>
+        <br/>
+        <div>
+            <label for="editGiftDefaultPrice" class="control-label">礼物初始价格（金额）：</label>
+            <input id="editGiftDefaultPrice" type="text" class="form-control">
+        </div>
+        <br/>
+        <div>
+            <label for="editGiftDefaultMoney" class="control-label">礼物初始价格（华语币）：</label>
+            <input id="editGiftDefaultMoney" type="text" class="form-control">
+        </div>
+        <br/>
+        <div>
+            <label for="editGiftPrice" class="control-label">礼物实际价格（金额）：</label>
+            <input id="editGiftPrice" type="text" class="form-control">
+        </div>
+        <br/>
+        <div>
+            <label for="editGiftMoney" class="control-label">礼物实际价格（华语币）</label>
+            <input id="editGiftMoney" type="text" class="form-control">
+        </div>
+        <br/>
+        <div>
+            <label for="editGiftExp" class="control-label">礼物经验值</label>
+            <input id="editGiftExp" type="text" class="form-control">
+        </div>
+
+        <div>
+            <button type='button' class='btn btn-primary' onclick='edidGiftSubmit()'>保存</button>
+            </td>
+            &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+            <button type='button' class='btn btn-primary' onclick='cancel()'>取消</button>
+            </td>
+        </div>
+    </div>
+
+
+    <div class="modal-add-body" style="display: none">
+        <div>
+            <input type="hidden" id="addGiftId">
+            <label for="addGiftName" class="control-label">礼物名：</label>
+            <input id="addGiftName" type="text" class="form-control">
+        </div>
+        <br/>
+        <div>
+
+            <label for="addGiftUrl" class="control-label">图片：</label>
+            <button id="upload-picture" class="btn btn-default">
+                <i class="fa fa-cloud-upload">上传图片</i>
+            </button>
+            <input id="addGiftUrl" type="hidden" class="form-control">
+
+        </div>
+        <div id="showImge" class="form-group" style="display:none;">
+            <div class="col-sm-2 control-label">&nbsp;</div>
+            <div class="col-sm-10">
+                <image id="imageAdd" width="100px" height="100px"></image>
+            </div>
+        </div>
+        <br/>
+        <div>
+            <label for="addGiftCode" class="control-label">礼物排序值：</label>
+            <input id="addGiftCode" type="text" class="form-control">
+        </div>
+        <br/>
+        <div>
+            <label for="addGiftDefaultPrice" class="control-label">礼物初始价格（金额）：</label>
+            <input id="addGiftDefaultPrice" type="text" class="form-control">
+        </div>
+        <br/>
+        <div>
+            <label for="addGiftDefaultMoney" class="control-label">礼物初始价格（华语币）：</label>
+            <input id="addGiftDefaultMoney" type="text" class="form-control">
+        </div>
+        <br/>
+        <div>
+            <label for="addGiftPrice" class="control-label">礼物实际价格（金额）：</label>
+            <input id="addGiftPrice" type="text" class="form-control">
+        </div>
+        <br/>
+        <div>
+            <label for="addGiftMoney" class="control-label">礼物实际价格（华语币）</label>
+            <input id="addGiftMoney" type="text" class="form-control">
+        </div>
+        <br/>
+        <div>
+            <label for="addGiftExp" class="control-label">礼物经验值</label>
+            <input id="addGiftExp" type="text" class="form-control">
+        </div>
+
+        <div>
+            <button type='button' class='btn btn-primary' onclick='addGiftSubmit()'>修改</button>
+            </td>
+            &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+            <button type='button' class='btn btn-primary' onclick='cancel()'>取消</button>
+            </td>
+        </div>
+    </div>
+
+
+</div>
+<!-- /.content-wrapper -->
+<!-- /.control-sidebar -->
+<!-- Add the sidebar's background. This div must be placed
+     immediately after the control sidebar -->
+<div class="control-sidebar-bg"></div>
+
+<!-- ./wrapper -->
+
+<!-- jQuery 3 -->
+<!-- Bootstrap 3.3.7 -->
+<!-- DataTables -->
+<!--<script src="bower_components/datatables.net/js/jquery.dataTables.min.js"></script>-->
+
+<!-- SlimScroll -->
+<!--<script src="bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>-->
+<!-- FastClick -->
+<script src="bower_components/fastclick/lib/fastclick.js"></script>
+<!-- AdminLTE App -->
+<!--<script src="dist/js/adminlte.min.js"></script>-->
+<!-- AdminLTE for demo purposes -->
+<!--<script src="dist/js/demo.js"></script>-->
+<!-- page script -->
+<script type="text/javascript" src="//g.alicdn.com/sj/lib/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript" src="//g.alicdn.com/sui/sui3/0.0.18/js/sui.min.js"></script>
+<script type="text/javascript" src="js/common.js"></script>
+<script type="text/javascript" src="js/md5.js"></script>
+<script type="text/javascript" src="js/ajaxupload.js"></script>
+<script type="text/javascript" src="js/gift.js"></script>
+<script type="text/javascript" src="js/layer/layer.js"></script>
+<script type="text/javascript" src="js/paging.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $('#header').load('head.html');
+    })
+    $(function () {
+        /**
+         * 检查登录态
+         */
+        checkLoginStatus();
+    })
+
+    function goIndex() {
+        window.location(index.html)
+    }
+</script>
+
+
+</body>
+</html>

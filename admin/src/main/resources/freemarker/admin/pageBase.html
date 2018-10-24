@@ -1,0 +1,286 @@
+<#macro page brNames>
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <link href="/assets/img/favicon.ico" rel="icon" type="image/x-icon"/>
+        <title>友佳票据-首页</title>
+        <link href="/assets/font-awesome/css/font-awesome.css" rel="stylesheet">
+        <link href="/assets/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+        <link href="/assets/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+        <link href="/assets/css/plugins/ladda/ladda-themeless.min.css" rel="stylesheet">
+        <link href="/assets/css/plugins/blueimp/css/blueimp-gallery.min.css" rel="stylesheet">
+        <link href="/assets/js/plugins/gritter/jquery.gritter.css" rel="stylesheet">
+        <link href="/assets/css/loading/style.css" rel="stylesheet">
+        <link href="/assets/css/bootstrap.min.css" rel="stylesheet">
+        <link href="/assets/css/bootstrap-table.min.css" rel="stylesheet">
+        <link href="/assets/css/animate.css" rel="stylesheet">
+        <link href="/assets/css/plugins/summernote/summernote.css" rel="stylesheet">
+        <link href="/assets/css/style.css" rel="stylesheet">
+        <link href="/assets/css/plugins/chosen/bootstrap-chosen.css" rel="stylesheet">
+        <link href="/assets/css/plugins/select2/select2.min.css" rel="stylesheet">
+        <link href="/assets/css/plugins/datapicker/datepicker3.css" rel="stylesheet">
+        <link href="/assets/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet">
+        <link href="/assets/css/plugins/webuploader/webuploader.css" rel="stylesheet">
+        <link href="/assets/css/plugins/dualListbox/bootstrap-duallistbox.min.css" rel="stylesheet">
+        <script type="text/javascript">
+            var ctx = "./.";
+        </script>
+    </head>
+    <body>
+    <div class="l-wrapper" id="loadingDivId">
+        <svg viewBox="0 0 120 120" version="1.1" xmlns="http://www.w3.org/2000/svg">
+            <g id="circle" class="g-circles g-circles--v2">
+                <circle id="12" transform="translate(35, 16.698730) rotate(-30) translate(-35, -16.698730) " cx="35"
+                        cy="16.6987298" r="10"></circle>
+                <circle id="11" transform="translate(16.698730, 35) rotate(-60) translate(-16.698730, -35) "
+                        cx="16.6987298" cy="35" r="10"></circle>
+                <circle id="10" transform="translate(10, 60) rotate(-90) translate(-10, -60) " cx="10" cy="60"
+                        r="10"></circle>
+                <circle id="9" transform="translate(16.698730, 85) rotate(-120) translate(-16.698730, -85) "
+                        cx="16.6987298" cy="85" r="10"></circle>
+                <circle id="8" transform="translate(35, 103.301270) rotate(-150) translate(-35, -103.301270) " cx="35"
+                        cy="103.30127" r="10"></circle>
+                <circle id="7" cx="60" cy="110" r="10"></circle>
+                <circle id="6" transform="translate(85, 103.301270) rotate(-30) translate(-85, -103.301270) " cx="85"
+                        cy="103.30127" r="10"></circle>
+                <circle id="5" transform="translate(103.301270, 85) rotate(-60) translate(-103.301270, -85) "
+                        cx="103.30127" cy="85" r="10"></circle>
+                <circle id="4" transform="translate(110, 60) rotate(-90) translate(-110, -60) " cx="110" cy="60"
+                        r="10"></circle>
+                <circle id="3" transform="translate(103.301270, 35) rotate(-120) translate(-103.301270, -35) "
+                        cx="103.30127" cy="35" r="10"></circle>
+                <circle id="2" transform="translate(85, 16.698730) rotate(-150) translate(-85, -16.698730) " cx="85"
+                        cy="16.6987298" r="10"></circle>
+                <circle id="1" cx="60" cy="10" r="10"></circle>
+            </g>
+        </svg>
+    </div>
+    <div class="l-wrapper progress progress-striped active"
+         style="z-index: 2147483849;position: absolute;margin: 0 auto;height: 10px;background-color: lightgrey;"
+         id="loadProgressId">
+        <div id="loadSubProId" style="width:0%" aria-valuemax="100" aria-valuemin="0"
+             aria-valuenow="0" role="progressbar"
+             class="progress-bar progress-bar-default">
+        </div>
+    </div>
+    <div class="lightBoxGallery" id="galleryId">
+        <a href="#" title="Image from Unsplash" data-gallery="">
+        </a>
+        <div id="blueimp-gallery" class="blueimp-gallery">
+            <div class="slides"></div>
+            <h3 class="title"></h3>
+            <a class="prev">‹</a>
+            <a class="next">›</a>
+            <a class="close">×</a>
+            <a class="play-pause"></a>
+            <ol class="indicator"></ol>
+        </div>
+    </div>
+    <div id="wrapper">
+        <!-- 菜单 -->
+        <nav class="navbar-default navbar-static-side" role="navigation">
+            <div class="sidebar-collapse">
+                <ul class="nav metismenu" id="side-menu">
+                    <li class="nav-header">
+                        <div class="dropdown profile-element">
+							<span>
+                                <img alt="image" class="img-circle" src="/assets/img/logo.jpg"/>
+                            </span>
+                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+								<span class="clear">
+									<span class="block m-t-xs">
+										<strong class="font-bold"></strong>
+									</span>
+									<span class="text-muted text-xs block">
+										<b class="caret" style="margin-left: 18px;"></b>
+									</span>
+								</span>
+                            </a>
+                            <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                                <!--<li><a href="profile.html">个人资料</a></li>-->
+                                <!--<li class="divider"></li>-->
+                                <li><a href="${ctx}/admin/logout">退出</a></li>
+                            </ul>
+                        </div>
+                        <div class="logo-element"><i class="fa fa-fire"></i></div>
+                    </li>
+                    <!-- 平台 -->
+                    <li class="active">
+                        <a href="index.html">
+                            <i class="fa fa-cog"></i>
+                            <span class="nav-label">系统管理</span>
+                            <span class="fa arrow"></span>
+                        </a>
+                        <ul class="nav nav-second-level">
+                            <li><a href="javascript:void(0);" onclick="openNewWin('/member/',this);"><i
+                                    class="fa fa-user"></i>用户管理</a></li>
+                            <li><a href="javascript:void(0);" onclick="openNewWin('/property/',this);"><i
+                                    class="fa fa-cog"></i>配置管理</a></li>
+                            <li><a href="javascript:void(0);" onclick="openNewWin('/role/',this);"><i
+                                    class="fa fa-user-o"></i>角色管理</a></li>
+                            <li><a href="javascript:void(0);" onclick="openNewWin('/permission/',this);"><i
+                                    class="fa fa-leaf"></i>权限管理</a></li>
+                            <li><a href="javascript:void(0);" onclick="openNewWin('/log/',this);"><i
+                                    class="fa fa-comment"></i>日志记录</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="index.html">
+                            <i class="fa fa-info"></i>
+                            <span class="nav-label">新闻信息</span>
+                            <span class="fa arrow"></span>
+                        </a>
+                        <ul class="nav nav-second-level">
+                            <li><a href="javascript:void(0);" onclick="openNewWin('/news/',this);"><i
+                                    class="fa fa-ban"></i>新闻管理</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="index.html">
+                            <i class="fa fa-info"></i>
+                            <span class="nav-label">Banner</span>
+                            <span class="fa arrow"></span>
+                        </a>
+                        <ul class="nav nav-second-level">
+                            <li><a href="javascript:void(0);" onclick="openNewWin('/banner/',this);"><i
+                                    class="fa fa-magic"></i>Banner管理</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="index.html">
+                            <i class="fa fa-info"></i>
+                            <span class="nav-label">消息管理</span>
+                            <span class="fa arrow"></span>
+                        </a>
+                        <ul class="nav nav-second-level">
+                            <li><a href="javascript:void(0);" onclick="openNewWin('/notification/',this);"><i
+                                    class="fa fa-first-order"></i>通知管理</a></li>
+                            <li><a href="javascript:void(0);" onclick="openNewWin('/message/',this);"><i
+                                    class="fa fa-deaf"></i>消息管理</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="index.html">
+                            <i class="fa fa-order"></i>
+                            <span class="nav-label">订单管理</span>
+                            <span class="fa arrow"></span>
+                        </a>
+                        <ul class="nav nav-second-level">
+                            <li><a href="javascript:void(0);" onclick="openNewWin('/order',this);"><i
+                                    class="fa fa-ticket"></i>订单管理</a></li>
+                            <li><a href="javascript:void(0);" onclick="openNewWin('/order/offer',this);"><i
+                                    class="fa fa-key"></i>竞价管理</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="index.html">
+                            <i class="fa fa-user"></i>
+                            <span class="nav-label">用户管理</span>
+                            <span class="fa arrow"></span>
+                        </a>
+                        <ul class="nav nav-second-level">
+                            <li><a href="javascript:void(0);" onclick="openNewWin('/user',this);"><i
+                                    class="fa fa-users"></i>用户管理</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="gray-bg dashbard-1">
+            <div class="row border-bottom">
+                <nav class="navbar navbar-static-top" role="navigation"
+                     style="margin-bottom: 0">
+                    <div class="navbar-header">
+                        <a class="navbar-minimalize minimalize-styl-2 btn btn-primary "
+                           href="#"><i class="fa fa-bars"></i> </a>
+                    </div>
+                    <ul class="nav navbar-top-links navbar-right">
+                        <li><span class="m-r-sm text-muted welcome-message">欢迎您， ${empathy_login_key_.username}</span>
+                        </li>
+                        <li><a href="././admin/logout"> <i class="fa fa-sign-out"></i> 退出
+                        </a></li>
+                    </ul>
+                </nav>
+            </div>
+            <!-- 内容 -->
+            <div id="ctxAreaId">
+                <#nested>
+            </div>
+            <div class="footer">
+                <div class="pull-right">
+                </div>
+                <div>
+                    <strong>Copyright</strong> tybest &copy; 2016-2018 All Rights Reserved
+                </div>
+            </div>
+        </div>
+        <script src="/assets/js/jquery-3.1.1.min.js"></script>
+        <script src="/assets/js/bootstrap.min.js"></script>
+        <script src="/assets/js/bootstrap-table.min.js"></script>
+        <script src="/assets/js/bootstrap-table-zh-CN.min.js"></script>
+        <script src="/assets/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+        <script src="/assets/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+        <script src="/assets/js/layer/layer.js"></script>
+        <script src="/assets/js/plugins/validate/jquery.validate.min.js"></script>
+        <script src="/assets/js/bootstrap-table-export.js"></script>
+        <script src="/assets/js/tableExport.js"></script>
+        <script src="/assets/js/inspinia.js"></script>
+        <script src="/assets/js/plugins/pace/pace.min.js"></script>
+        <script src="/assets/js/plugins/nestable/jquery.nestable.js"></script>
+        <script src="/assets/js/plugins/summernote/summernote.min.js"></script>
+        <script src="/assets/js/plugins/datapicker/bootstrap-datepicker.js"></script>
+        <script src="/assets/js/plugins/gritter/jquery.gritter.min.js"></script>
+        <script src="/assets/js/plugins/chosen/chosen.jquery.js"></script>
+        <script src="/assets/js/plugins/select2/select2.full.min.js"></script>
+        <script src="/assets/js/plugins/toastr/toastr.min.js"></script>
+        <script src="/assets/js/plugins/ladda/spin.min.js"></script>
+        <script src="/assets/js/plugins/ladda/ladda.min.js"></script>
+        <script src="/assets/js/plugins/ladda/ladda.jquery.min.js"></script>
+        <script src="/assets/js/plugins/sweetalert/sweetalert.min.js"></script>
+        <script src="/assets/js/plugins/chartJs/Chart.min.js"></script>
+        <script src="/assets/js/plugins/jsKnob/jquery.knob.js"></script>
+        <script src="/assets/js/plugins/blueimp/jquery.blueimp-gallery.min.js"></script>
+        <script src="/assets/js/plugins/webuploader/webuploader.min.js"></script>
+        <script src="/assets/js/area/js/jquery.cityselect.js"></script>
+        <script src="/assets/js/plugins/dualListbox/jquery.bootstrap-duallistbox.js"></script>
+        <script src="/assets/js/math.js"></script>
+        <script>
+            $(document).ready(function () {
+                setTimeout(function () {
+                    toastr.options = {
+                        closeButton: true,
+                        progressBar: true,
+                        showMethod: 'slideDown',
+                        timeOut: 4000
+                    };
+                    toastr.success('欢迎登录友佳票据管理平台', '(*｀∀´*)');
+                }, 1300);
+
+                var lineData = {
+                    labels: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
+                    datasets: [
+
+                        {
+                            label: "示例数据",
+                            backgroundColor: 'rgba(26,179,148,0.5)',
+                            borderColor: "rgba(26,179,148,0.7)",
+                            pointBackgroundColor: "rgba(26,179,148,1)",
+                            pointBorderColor: "#fff",
+                            data: [28, 48, 40, 19, 86, 27, 90, 55, 9, 66, 33, 89]
+                        }
+                    ]
+                };
+                var lineOptions = {
+                    responsive: true
+                };
+                var ctx = document.getElementById("lineChart").getContext("2d");
+                new Chart(ctx, {type: 'line', data: lineData, options: lineOptions});
+            });
+        </script>
+    </body>
+    </html>
+</#macro>

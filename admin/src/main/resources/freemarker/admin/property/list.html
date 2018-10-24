@@ -1,0 +1,118 @@
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h5></h5>
+        <ol class="breadcrumb">
+            <li><a href="${ctx}/admin/" class="fa fa-home">主页</a></li>
+            <li><a href="javascript:void(0);">系统管理</a></li>
+            <li class="active"><strong>用户管理</strong></li>
+        </ol>
+    </div>
+    <div class="col-lg-2"></div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content" id="ctxDivId">
+                    <form>
+                        <div class="row">
+                            <div class="col-sm-3 m-b-xs">
+                                <div class="input-group">
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-sm btn-default">类别</button>
+                                </span>
+                                    <select class="form-control" name="clazz" id="selectClazzId"
+                                            onchange="refreshData();">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-3 m-b-xs">
+                                <div class="input-group">
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-sm btn-default">名称</button>
+                                </span>
+                                    <input type="text" name="name" placeholder="名称" class="input-sm form-control">
+                                </div>
+
+                            </div>
+                            <div class="col-sm-2">
+                                <div class="input-group">
+                                <span class="input-group-btn">
+                                        <button type="button" id="ctxSearchId" class="btn btn-sm btn-primary"><i
+                                                class="fa fa-search"></i>查询</button>
+                                </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="ctxTableId"></table>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <script>
+        $(function () {
+            initBTable('/admin/property/page',
+                [//{field: 'state',checkbox: true},
+                    {field: 'id', title: 'ID', align: 'left', sortable: true},
+                    {field: 'clazz', title: '类别', align: 'left', sortable: true},
+                    {field: 'name', title: '名称', align: 'left', sortable: true, cellStyle: norwap()},
+                    {field: 'content', title: '内容', align: 'left', sortable: true, cellStyle: norwap()},
+                    {field: 'indexing', title: '序号', align: 'left', sortable: true},
+                    {field: 'memo', title: '备注', align: 'left', sortable: true, cellStyle: norwap()},
+                    {field: 'ext1', title: '扩展1', align: 'left', sortable: true, cellStyle: norwap()},
+                    {field: 'ext2', title: '扩展2', align: 'left', sortable: true, cellStyle: norwap()},
+                    {
+                        field: 'id',
+                        title: '操作',
+                        align: 'left', cellStyle: norwap(),
+                        formatter: function (value) {
+                            var html = "";
+                            html = html + '<a class="fa fa-edit" onclick="edit(\'' + value + '\')">修改</a>&nbsp; | ';
+                            html = html + '<a class="fa fa-remove" onclick="del(\'' + value + '\')">删除</a>&nbsp;';
+                            return html;
+                        }
+                    }], 'createTime', 'desc', function () {
+                    var tools = '<div class="pull-left search">';
+                    tools += '&nbsp;<a class="fa fa-plus" onclick="add()" href="javascript:void(0);">新增</a>&nbsp;&nbsp;';
+                    tools += '</div>';
+                    $(".fixed-table-toolbar").append(tools);
+                });
+            initSelect2("selectClazzId", "/admin/select2/property");
+        });
+        function edit(id) {
+            popWindow("修改", "/admin/property/edit/" + id, {}, function () {//提交修改
+                var s = $("#editFormId").validate().form();
+                if (s) {
+                    submitForm("editFormId", "/admin/property/update", function () {
+                        refreshData();
+                    });
+                }
+            });
+        }
+
+        function del(id) {
+            sweetConfirm("提示", "您确定要删除吗？", "是", "否", function () {
+                delById("/admin/property/remove/" + id, function () {
+                    refreshData();
+                    swal("已完成", "", "success");
+                });
+            }, function () {
+                swal("失败", "", "warning")
+            });
+        }
+        function add() {
+            popWindow("新增", "/admin/property/add", {}, function () {//提交修改
+                var s = $("#addFormId").validate().form();
+                if (s) {
+                    submitForm("addFormId", "/admin/property/save", function () {
+                        refreshData();
+                    });
+                }
+            });
+        }
+
+    </script>

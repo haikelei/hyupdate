@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.empathy.dao.MemberDao">
+    <sql id="fields">
+        id,
+        username,
+        password,
+        statuz,
+        realname
+    </sql>
+
+    <sql id="roleSql">
+        user_id,
+        role_id
+    </sql>
+
+    <select id="findById" parameterType="long" resultType="com.empathy.domain.member.Member">
+        SELECT<include refid="fields"/>,job_no jobNo FROM member WHERE id = #{id}
+    </select>
+
+    <select id="findByUsername" parameterType="string" resultType="com.empathy.domain.member.Member">
+        SELECT<include refid="fields"/>,job_no jobNo FROM member WHERE username = #{username} AND delflag =0
+    </select>
+
+    <insert id="save" parameterType="com.empathy.domain.member.Member">
+        INSERT INTO member (<include refid="fields"/>,job_no)
+        VALUES (#{id},#{username},#{password},#{statuz},#{realname},#{jobNo})
+    </insert>
+
+    <update id="update" parameterType="com.empathy.domain.member.Member">
+        UPDATE member
+        <set>
+            <if test="password != null and password != '' ">
+                password = #{password},
+            </if>
+            <if test="realname != null and realname != '' ">
+                realname = #{realname},
+            </if>
+            <if test="jobNo != null and jobNo != '' ">
+                job_no = #{jobNo},
+            </if>
+            <if test="statuz != null">
+                statuz = #{statuz},
+            </if>
+            modified = CURRENT_TIMESTAMP
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <sql id="where">
+        WHERE delflag=0
+        <if test="username != null">
+            AND username like concat('%',#{username},'%')
+        </if>
+    </sql>
+
+    <select id="count" parameterType="com.empathy.domain.member.bo.MemberBo" resultType="long">
+        SELECT COUNT(*) FROM member
+        <include refid="where"/>
+    </select>
+
+    <select id="list" parameterType="com.empathy.domain.member.bo.MemberBo"
+            resultType="com.empathy.domain.member.Member">
+        SELECT<include refid="fields"/>,job_no jobNo FROM member
+        <include refid="where"/>
+        <if test="start != null">
+            LIMIT #{start},#{limit}
+        </if>
+    </select>
+
+    <select id="findRoleById" parameterType="long" resultType="string">
+        SELECT r.name FROM member_role mr
+        INNER JOIN role r ON mr.role_id = r.id
+        WHERE mr.member_id = #{id}
+    </select>
+
+    <update id="delById" parameterType="long">
+        UPDATE member SET delflag =1 WHERE id = #{id}
+    </update>
+
+    <select id="findHadAssignRolesByUserId" parameterType="long" resultType="long">
+        SELECT role_id FROM member_role WHERE member_id = #{memberId}
+    </select>
+
+    <delete id="delRolesById" parameterType="long">
+        DELETE FROM member_role WHERE member_id = #{memberId}
+    </delete>
+    <insert id="saveRoles" parameterType="list">
+        INSERT INTO member_role (member_id,role_id) VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.memberId},#{item.roleId})
+        </foreach>
+    </insert>
+</mapper>

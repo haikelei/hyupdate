@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>项目管理 | 系统</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.7 -->
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="bower_components/Ionicons/css/ionicons.min.css">
+    <!-- Theme style -->
+    <!--<link rel="stylesheet" href="dist/css/AdminLTE.min.css">-->
+    <!-- AdminLTE Skins. Choose a skin from the css/skins
+         folder instead of downloading all of them to reduce the load. -->
+
+    <link rel="stylesheet" href="js/layer/mobile/need/layer.css">
+    <link rel="stylesheet" href="bower_components/jvectormap/jquery-jvectormap.css">
+
+    <link rel="stylesheet" href="bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
+
+    <link rel="stylesheet" href="css/fileinput.css">
+    <link rel="stylesheet" href="css/select.style.css">
+
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+
+    <style>
+        .loading {
+            width: 160px;
+            height: 56px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            line-height: 56px;
+            color: #fff;
+            padding-left: 60px;
+            font-size: 15px;
+            background: #000 url(/img/loading-sm.gif) no-repeat 10px 50%;
+            opacity: 0.7;
+            z-index: 9999;
+            -moz-border-radius: 20px;
+            -webkit-border-radius: 20px;
+            border-radius: 20px;
+            filter: progid:DXImageTransform.Microsoft.Alpha(opacity=70);
+        }
+    </style>
+
+
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <section class="content-header">
+            <ol id="nav_title" class="breadcrumb" style="position: static; float: none;line-height:10px;">
+                <li onclick="goIndex()" class="active">
+                    <i class="fa fa-home" style="font-size: 20px; position: relative; top: 2px; left: -3px;"></i> &nbsp; 华语
+                </li>
+                <li class="active"> 上传音频</li>
+            </ol>
+        </section>
+    </section>
+
+    <div class="panel panel-default" style="">
+        <form class="form-horizontal" style="width:60%;padding-top:20px;">
+            <div class="form-group">
+                <div class="col-sm-2 control-label">标题</div>
+                <div class="col-sm-10">
+                    <input type="text" id="title" placeholder="输入不超过50个字" class="form-control" maxlength="50" style="width:380px;">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">专辑</div>
+                <div class="col-sm-10">
+                    <a href="javascript:void(0)" class="sel_mask"><span id="span_mian">选择专辑</span><img src="img/1.png"/>
+                        <select id="albumId" class="sel">
+                            <option></option>
+                        </select>
+                    </a>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">封面</div>
+                <div class="col-sm-10">
+                    <div class="input-group">
+                        <div class="input-group-btn">
+                            <button id="upload-btn" class="btn btn-default">
+                                <i class="fa fa-cloud-upload">上传音频封面</i>
+                            </button>
+                        </div>
+                        <input id="ImgUrl" type="text" placeholder="图标地址(仅一张)" class="form-control" style="width:339px;">
+                    </div>
+                </div>
+            </div>
+            <div id="showImg" class="form-group" style="display:none;">
+                <div class="col-sm-2 control-label">&nbsp;</div>
+                <div class="col-sm-10">
+                    <image id="imageAddId" src="" width="100px" height="100px"></image>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label">音频</div>
+                <div class="col-sm-10">
+                    <div class="input-group">
+                        <div class="input-group-btn">
+                            <button id="upload-recroding" class="btn btn-default">
+                                <i class="fa fa-cloud-upload">上传音频</i>
+                            </button>
+                        </div>
+                        <input id="sign" type="text" placeholder="音频唯一标识" class="form-control" style="width:339px;">
+
+                    </div>
+                </div>
+                <div class="col-sm-2 control-label"></div>
+                <div class="col-sm-10" style = "color:red;">
+                    *文本框未显示数值时请勿保存
+                </div>
+
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2 control-label"></div>
+                <input type="button" class="btn btn-default" onclick="HtmlLoad()" value="保存" style="margin-left:15px;" />
+                <input type="button" class="btn btn-default" onclick="history.go(-1)" value="返回" />
+            </div>
+        </form>
+    </div>
+
+    <div id="myModal" class="modal fade" data-keyboard="false"
+         data-backdrop="static" data-role="dialog"
+         aria-labelledby="myModalLabel" aria-hidden="true">
+        <div id="loading" class="loading">加载中。。。</div>
+    </div>
+
+
+
+</body>
+
+<script type="text/javascript" src="//g.alicdn.com/sj/lib/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript" src="//g.alicdn.com/sui/sui3/0.0.18/js/sui.min.js"></script>
+<script type="text/javascript" src="js/common.js"></script>
+<script type="text/javascript" src="js/ajaxupload.js"></script>
+<script type="text/javascript" src="js/md5.js"></script>
+<script type="text/javascript" src="js/layer/layer.js"></script>
+<script type="text/javascript" src="js/paging.min.js"></script>
+
+
+<script >
+
+    var classifyId = null;
+
+    $(function () {
+        /**
+         * 检查登录态
+         */
+        checkLoginStatus();
+
+        //获取专辑类型
+        ajaxByPOST("/hy/album/findAlbumForAccount", {start: 0  , limit: 1000000000}, listSelectCallBack);
+
+        addVale();
+
+    });
+
+
+    //添加分类下拉列表
+    if ($('#albumId option:selected').val() != "" && $('#albumId option:selected').val() != undefined) {
+        classifyId = $('#albumId option:selected').val();
+    }
+
+    function listSelectCallBack(result) {
+        var html = "";
+        var role_html = ''
+        var baseCompany = "分类列表"
+        for (var i = 0; i < result.data.length; i++) {
+            if (i == 0) {
+                role_html += '<option value="" selected="selected">' + baseCompany + '</option>'
+            }
+            role_html += '<option value="' + result.data[i].id + '" onclick="">' + result.data[i].albumName + '</option>'
+            $("#albumId").html(role_html)
+        }
+    }
+    function addVale () {
+        $('.sel').change(function () {    // 选择后替换内容并恢复箭头方向
+            $("#span_mian").html($('.sel').find('option:selected').html());
+
+        });
+    }
+
+    function  HtmlLoad(){
+        $('#myModal').modal('show');
+        updata();
+    }
+
+    //保存数据
+    function updata(){
+        var title = $("#title").val();
+        var albumId = $("#albumId").val();
+        var url = $("#ImgUrl").val();
+        var sign = $("#sign").val();
+        $.ajax({
+            type: "post",
+            url: "/hy/record/addBybackstage",
+            async: false,
+            data: {title:title,albumId:albumId,userId:0,url:url,sign:sign},
+            dataType: "json",
+            success: function (result) {
+                if(result.code == 200){
+                    alert("操作成功！");
+                    location.href="album.html";
+                }else {
+                    alert("操作失败，请重新操作！");
+                    $('#myModal').modal('hide');
+                }
+            },error: function (result) {
+                alert("操作失败，请重试！");
+                $('#myModal').modal('hide');
+            }
+        });
+
+    };
+
+    function init(result) {
+        if(result.code==200){
+            $('#myModal').modal('hide');
+            alert("操作成功！")
+            location.href="album.html";
+        }else{
+            $('#myModal').modal('hide');
+            console.log(result.msg)
+            alert(result.msg)
+        }
+    }
+
+
+    //音频封面上传
+    new AjaxUpload('#upload-btn', {
+        action : '/hy/file/saveRecordingFile',
+        name : 'file',
+        responseType : 'json',
+        onSubmit : function(file, ext) {
+            if (ext && /^(jpg|png|bmp|gif)$/.test(ext.toLowerCase())) {
+                this.setData({
+                    'file' : file
+                });
+            } else {
+                alert("请上传格式为 jpg|png|bmp|gif 的图片！");
+                return false;
+            }
+        },
+        onComplete : function(file, response) {
+            if (response.error) {
+                alert(response.error);
+                return;
+            }
+            $("#imageAddId").attr(
+                "src",
+                imageProdUrl + response.data);
+            $("#ImgUrl").val(response.data);
+            $("#showImg").slideDown(500);
+        }
+    });
+
+    //音频上传
+    new AjaxUpload('#upload-recroding', {
+        action : '/hy/record/addRecording',
+        name : 'file',
+        responseType : 'json',
+        onSubmit : function(file, ext) {
+            if (ext && /^(mp3|mp4)$/.test(ext.toLowerCase())) {
+                this.setData({
+                    'file' : file
+                });
+            } else {
+                alert("请上传格式为 mp3|mp4 的音频！");
+                return false;
+            }
+        },
+        onComplete : function(file, response) {
+            if (response.error) {
+                alert(response.error);
+                return;
+            }
+            $("#sign").attr("value",response.data);
+            alert("音频上传成功");
+
+        }
+    });
+
+
+
+
+
+
+
+</script>
+
+</html>

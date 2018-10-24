@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.empathy.dao.BaseLiveGiftDao">
+
+    <sql id="fields">
+        id,
+        user_id userId,gift_id giftId,live_id liveId,live_user_id liveUserId,count,
+        price,money,
+        create_time createTime,
+        last_revamp_time lastRevampTime
+    </sql>
+    <sql id="wb">
+        WHERE del_flag = 0
+    </sql>
+
+    <select id="findById" parameterType="long" resultType="com.empathy.domain.live.BaseLiveGift">
+        SELECT
+        <include refid="fields"/>
+        FROM base_live_gift WHERE id = #{id}
+    </select>
+
+    <insert id="save" parameterType="com.empathy.domain.live.BaseLiveGift" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO base_live_gift
+        (user_id,gift_id,live_id,live_user_id,count,price,money,create_time,last_revamp_time,del_flag)
+        VALUES
+        (#{userId},#{giftId},#{liveId},#{liveUserId},#{count},#{price},#{money},#{createTime},#{lastRevampTime},#{delFlag})
+    </insert>
+
+    <update id="update" parameterType="com.empathy.domain.live.BaseLiveGift">
+        UPDATE base_live_gift SET user_id = #{userId},gift_id = #{giftId},live_id = #{liveId},
+        live_user_id = #{liveUserId},count = #{count},price = #{price},money =
+        #{money},last_revamp_time=#{lastRevampTime} WHERE id = #{id}
+    </update>
+
+    <update id="delById" parameterType="long">
+        UPDATE base_live_gift SET del_flag = 1 WHERE id = #{id}
+    </update>
+
+    <select id="listForDay" parameterType="com.empathy.common.PageBo" resultType="com.empathy.domain.live.vo.GiveGiftVo">
+        select (select sum(money) from base_live_gift where live_user_id=b.id and TO_DAYS(from_unixtime(create_time/1000))=TO_DAYS(NOW())) moneySum ,b.username name,c.url url,b.sex sex,d.live_status liveStatus,b.id userId
+        from  base_member b
+        left join base_file c on b.id = c.purpose_id and c.purpose='user' and c.type='image'
+        LEFT join base_live d on b.id = d.user_id
+        where b.prove_status = 1
+        order by moneySum desc   LIMIT #{start},#{limit}
+
+    </select>
+
+    <select id="countForDay" parameterType="com.empathy.common.PageBo" resultType="int">
+        SELECT  count(id) from base_member where prove_status = 1 and del_flag=0
+
+    </select>
+    <select id="listForWeek" parameterType="com.empathy.common.PageBo" resultType="com.empathy.domain.live.vo.GiveGiftVo">
+        select (select sum(money) from base_live_gift where live_user_id=b.id and DATE_SUB(CURDATE(), INTERVAL 7 DAY) &lt;= date(from_unixtime(create_time/1000))) moneySum ,b.username name,c.url url,b.sex sex,d.live_status liveStatus,b.id userId
+        from  base_member b
+        left join base_file c on b.id = c.purpose_id and c.purpose='user' and c.type='image'
+        LEFT join base_live d on b.id = d.user_id
+        where b.prove_status = 1
+        order by moneySum desc   LIMIT #{start},#{limit}
+
+    </select>
+
+    <select id="listForMonth" parameterType="com.empathy.common.PageBo" resultType="com.empathy.domain.live.vo.GiveGiftVo">
+        select (select sum(money) from base_live_gift where live_user_id=b.id and DATE_SUB(CURDATE(), INTERVAL 30 DAY) &lt;= date(from_unixtime(create_time/1000))) moneySum ,b.username name,c.url url,b.sex sex,d.live_status liveStatus,b.id userId
+        from  base_member b
+        left join base_file c on b.id = c.purpose_id and c.purpose='user' and c.type='image'
+        LEFT join base_live d on b.id = d.user_id
+        where b.prove_status = 1
+        ORDER BY moneySum desc  LIMIT #{start},#{limit}
+
+    </select>
+
+    <select id="findMoneyByLiveId" resultType="decimal">
+        select sum(money) from base_live_gift
+        where live_id = #{id} and create_time &gt;= #{startTime}
+
+    </select>
+    <select id="findMoneyByLiveIdAndTime" resultType="decimal">
+        select sum(money) from base_live_gift
+        where live_id = #{id} and create_time between #{startTime} and #{endTime}
+
+    </select>
+
+    <select id="giftRankByTime" parameterType="map" resultType="com.empathy.domain.live.vo.GiveGiftVo">
+        select (select sum(money) from base_live_gift where live_user_id=b.id and create_time >= #{time}) moneySum ,b.username name,c.url url,b.sex sex,d.live_status liveStatus,b.id userId
+        from  base_member b
+        left join base_file c on b.id = c.purpose_id and c.purpose='user' and c.type='image'
+        LEFT join base_live d on b.id = d.user_id
+        where b.prove_status = 1
+        ORDER BY moneySum desc  LIMIT #{bo.start},#{bo.limit}
+
+    </select>
+
+
+
+</mapper>

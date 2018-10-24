@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.empathy.dao.BaseReportDao">
+
+    <sql id="fields">
+        id,
+        user_id userId,live_id liveId,type,content,report_user_id reportUserId,
+        create_time createTime,report_type reportType,
+        last_revamp_time lastRevampTime
+    </sql>
+    <sql id="wb">
+        WHERE del_flag = 0
+    </sql>
+
+    <select id="findById" parameterType="long" resultType="com.empathy.domain.baseReport.BaseReport">
+        SELECT
+        <include refid="fields"/>
+        FROM base_report WHERE id = #{id}
+    </select>
+
+    <insert id="save" parameterType="com.empathy.domain.baseReport.BaseReport" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO base_report (user_id,report_type,live_id,type,content,report_user_id,create_time,last_revamp_time,del_flag)
+        VALUES (#{userId},#{reportType},#{liveId},#{type},#{content},#{reportUserId},#{createTime},#{lastRevampTime},#{delFlag})
+    </insert>
+
+    <update id="update" parameterType="com.empathy.domain.baseReport.BaseReport">
+        UPDATE base_report SET user_id = #{userId}, live_id = #{liveId}, type = #{type}, content = #{content},
+        report_user_id = #{reportUserId},last_revamp_time=#{lastRevampTime} WHERE id = #{id}
+    </update>
+
+    <update id="delById" parameterType="long">
+        UPDATE base_report SET del_flag = 1 WHERE id = #{id}
+    </update>
+
+    <select id="list" parameterType="com.empathy.domain.baseReport.bo.ReportFindBo"
+            resultType="com.empathy.domain.baseReport.vo.ReportVo">
+        select a.id,a.live_id liveId,a.type,a.create_time createTime,a.report_type reportType,a.user_id userId ,a.report_user_id reportUserId,
+        b.username username, c.username reportUsername from base_report a left join base_member b on a.user_id = b.id
+        LEFT join base_member c on a.report_user_id = c.id
+        <where>
+            <if test="userId != null">
+                a.report_user_id = #{userId} and
+            </if>
+
+            <if test="type != null">
+                a.type = #{type} and
+            </if>
+            a.del_flag = 0
+        </where>
+        order by a.create_time desc LIMIT #{start},#{limit}
+
+    </select>
+
+    <select id="count" parameterType="com.empathy.domain.baseReport.bo.ReportFindBo" resultType="int">
+        select count(id) from base_report
+        <where>
+            <if test="userId != null">
+                report_user_id = #{userId} and
+            </if>
+
+            <if test="type != null">
+                type = #{type} and
+            </if>
+            del_flag = 0
+        </where>
+
+
+    </select>
+
+
+</mapper>

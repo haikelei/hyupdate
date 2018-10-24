@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.empathy.dao.UserMoneyDao">
+
+    <sql id="fields">
+        id,
+        money,
+        user_id userId,
+        password,
+        create_time createTime,
+        last_revamp_time lastRevampTime
+    </sql>
+    <sql id="wb">
+        WHERE del_flag = 0
+    </sql>
+
+    <select id="findById" parameterType="long" resultType="com.empathy.domain.user.UserMoney">
+        SELECT
+        <include refid="fields"/>
+        FROM base_user_money WHERE id = #{id}
+    </select>
+
+    <insert id="save" parameterType="com.empathy.domain.user.UserMoney" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO base_user_money (money,user_id,password,create_time,last_revamp_time,del_flag)
+        VALUES (#{money},#{userId},#{password},#{createTime},#{lastRevampTime},#{delFlag})
+    </insert>
+
+    <update id="update" parameterType="com.empathy.domain.user.UserMoney">
+        UPDATE base_user_money SET money = #{money},user_id = #{userId},password =
+        #{password},last_revamp_time=#{lastRevampTime} WHERE id = #{id}
+    </update>
+
+    <update id="delById" parameterType="long">
+        UPDATE base_user_money SET del_flag = 1 WHERE id = #{id}
+    </update>
+
+
+    <select id="findByUserId" parameterType="long" resultType="com.empathy.domain.user.UserMoney">
+        SELECT  <include refid="fields"></include> from base_user_money where del_flag=0 and user_id = #{id}
+
+    </select>
+
+
+</mapper>

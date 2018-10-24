@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>项目管理 | 系统</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.7 -->
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="bower_components/Ionicons/css/ionicons.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="dist/css/AdminLTE.min.css">
+    <!-- AdminLTE Skins. Choose a skin from the css/skins
+         folder instead of downloading all of them to reduce the load. -->
+    <link rel="stylesheet" href="dist/css/skins/_all-skins.min.css">
+    <link rel="stylesheet" href="js/layer/mobile/need/layer.css">
+    <!-- Morris chart -->
+    <link rel="stylesheet" href="bower_components/morris.js/morris.css">
+    <!-- jvectormap -->
+    <link rel="stylesheet" href="bower_components/jvectormap/jquery-jvectormap.css">
+    <!-- Date Picker -->
+    <link rel="stylesheet" href="bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
+    <link rel="stylesheet" href="//g.alicdn.com/sui/sui3/0.0.18/css/sui.min.css">
+    <link rel="stylesheet" href="css/iconfont.css">
+    <link rel="stylesheet" href="css/paging.css">
+    <link rel="stylesheet" href="css/H-ui.min.css">
+    <link rel="stylesheet" href="css/select.style.css">
+    <link rel="stylesheet" href="css/main.css">
+    <!-- Daterange picker -->
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Google Font -->
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+
+
+<!-- Content Wrapper. Contains page content -->
+<div>
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <section class="content-header">
+            <ol id="nav_title" class="breadcrumb" style="position: static; float: none;">
+                <li onclick="goIndex()" class="active"><i class="fa fa-home"
+                                                          style="font-size: 20px; position: relative; top: 2px; left: -3px;"></i>
+                    &nbsp; 华语
+                </li>
+                <li class="active"> 专辑管理</li>
+            </ol>
+        </section>
+
+    </section>
+
+    <div style="padding-left: 20px;margin-top: 10px;display:table-cell">
+        <button type='button' class='btn btn-primary' onclick='addArticle()'>上传音频</button>
+    </div>
+
+    <div style="padding-left: 20px;margin-top: 10px;display:table-cell">
+        <a style="display:table-cell" href="javascript:void(0)" class="sel_mask"><span id="span_mian1">收费类型</span><img src="img/1.png"/>
+            <select id="selectForClass" class="sel">
+                <option>收费类型</option>
+                <option value="100">全部免费</option>
+                <option value="200">分集收费</option>
+                <option value="300">全部收费</option>
+            </select>
+        </a>
+
+        <div style="padding-left: 20px;margin-top: 10px;display:table-cell"></div>
+
+        <a style="display:table-cell" href="javascript:void(0)" class="sel_mask1"><span id="span_mian2">是否会员制</span><img src="img/1.png"/>
+            <select id="selectForMember" class="sel1">
+                <option>是否会员制</option>
+                <option value="0">是</option>
+                <option value="1">否</option>
+            </select>
+        </a>
+
+        <div style="padding-left: 20px;margin-top: 10px;display:table-cell"></div>
+
+        <a style="display:table-cell" href="javascript:void(0)" class="sel_mask1"><span id="span_mian3">分类类型</span><img src="img/1.png"/>
+            <select id="selectForClassify" class="sel2">
+                <option></option>
+            </select>
+        </a>
+
+
+        <div style="padding-left:20px;display:table-cell">
+            <input class="fa-gear" id="albumFind" placeholder="主播名或专辑名">
+        </div>
+    </div>
+
+
+    <div style="padding-left: 20px;margin-top: 10px;display:table-cell">
+        <button type='button' class='btn btn-primary' onclick='findAlbum()'>查看</button>
+
+    </div>
+
+
+    <div class="panel-body text-center">
+        <table class="table table-hover table-bordered">
+            <thead>
+            <tr>
+                <th class="text-center">主播名</th>
+                <th class="text-center">主播手机号</th>
+                <th class="text-center">专辑名</th>
+                <th class="text-center">专辑分类名</th>
+                <th class="text-center">专辑详情</th>
+                <th class="text-center">专辑收费方式</th>
+                <th class="text-center">专辑是否会员制</th>
+                <th class="text-center">创建时间</th>
+                <th class="text-center">打开录音列表</th>
+                <th class="text-center">操作</th>
+            </tr>
+            </thead>
+            <tbody id="table"></tbody>
+        </table>
+        <div class="box" id="box"></div>
+    </div>
+
+
+    <div class="modal-body" style="display: none">
+        <div>
+            <input type="hidden" id="id">
+            <input type="hidden" id="albumId">
+            <label for="albumName" class="control-label">专辑名：</label>
+            <input id="albumName" type="text" class="form-control">
+        </div>
+        <br/>
+        <div>
+            <label class="control-label">收费类型：</label>
+            <div id="wrap1">
+                <input id="rdi1" name="type" type="radio" value="100">全部免费
+
+                <input id="rdi2" name="type" type="radio" value="200">分集免费
+
+                <input id="rdi3" name="type" type="radio" value="300">全部收费
+            </div>
+        </div>
+        <br/>
+        <div>
+            <label class="control-label">是否会员制：</label>
+            <div id="wrap">
+                <input id="rdo1" name="chargeStatus" type="radio" value="0">是
+
+                <input id="rdo2" name="chargeStatus" type="radio" value="1">否
+            </div>
+        </div>
+        <br/>
+        <div>
+            <label for="bumSet" class="control-label">前多少集免费：</label>
+            <input id="bumSet" type="text" class="form-control">
+        </div>
+        <br/>
+        <div>
+            <label for="bumMoney" class="control-label">每集多少钱：</label>
+            <input id="bumMoney" type="text" class="form-control">
+        </div>
+        <br/>
+
+
+        <div>
+            <button type='button' class='btn btn-primary' onclick='albumSubmit()'>修改</button>
+            </td>
+            &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+            <button type='button' class='btn btn-primary' onclick='cancel()'>取消</button>
+            </td>
+        </div>
+    </div>
+
+
+    <div class="modal-recording-body" style="display: none">
+        <table class="table table-hover table-bordered">
+            <thead>
+            <tr>
+                <th class="text-center">用户名</th>
+                <th class="text-center">标题</th>
+                <th class="text-center">录音</th>
+                <th class="text-center">点击量</th>
+                <th class="text-center">播放量</th>
+                <th class="text-center">创建时间</th>
+                <th class="text-center">操作</th>
+            </tr>
+            </thead>
+            <tbody id="tableRecording"></tbody>
+        </table>
+        <div class="box" id="boxRecording"></div>
+
+    </div>
+
+
+    <!-- /.content -->
+
+</div>
+<!-- /.content-wrapper -->
+<!-- /.control-sidebar -->
+<!-- Add the sidebar's background. This div must be placed
+     immediately after the control sidebar -->
+<div class="control-sidebar-bg"></div>
+
+<!-- ./wrapper -->
+
+<!-- jQuery 3 -->
+<!-- Bootstrap 3.3.7 -->
+<!-- DataTables -->
+<!--<script src="bower_components/datatables.net/js/jquery.dataTables.min.js"></script>-->
+
+<!-- SlimScroll -->
+<!--<script src="bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>-->
+<!-- FastClick -->
+<script src="bower_components/fastclick/lib/fastclick.js"></script>
+<!-- AdminLTE App -->
+<!--<script src="dist/js/adminlte.min.js"></script>-->
+<!-- AdminLTE for demo purposes -->
+<!--<script src="dist/js/demo.js"></script>-->
+<!-- page script -->
+<script type="text/javascript" src="//g.alicdn.com/sj/lib/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript" src="//g.alicdn.com/sui/sui3/0.0.18/js/sui.min.js"></script>
+<script type="text/javascript" src="js/common.js"></script>
+<script type="text/javascript" src="js/md5.js"></script>
+<script type="text/javascript" src="js/layer/layer.js"></script>
+<script type="text/javascript" src="js/paging.min.js"></script>
+<script type="text/javascript" src="js/album.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $('#header').load('head.html');
+    })
+    $(function () {
+        /**
+         * 检查登录态
+         */
+        checkLoginStatus();
+    })
+
+
+    $(function () {
+        $('.sel').change(function () {    // 选择后替换内容并恢复箭头方向
+            $("#span_mian1").html($('.sel').find('option:selected').html());
+            $('.sel_mask').find('img').attr('src', 'img/1.png');
+        })
+        $('.sel').blur(function () {      //什么也不选恢复箭头方向
+            $('.sel_mask').find('img').attr('src', 'img/2.png');
+        })
+        $('.sel').click(function () {     // 点击后更改箭头方向
+            $('.sel_mask').find('img').attr('src', 'img/1.png');
+        })
+    })
+
+
+    $(function () {
+        $('.sel1').change(function () {    // 选择后替换内容并恢复箭头方向
+            $("#span_mian2").html($('.sel1').find('option:selected').html());
+            $('.sel_mask1').find('img').attr('src', 'img/1.png');
+        })
+        $('.sel1').blur(function () {      //什么也不选恢复箭头方向
+            $('.sel_mask1').find('img').attr('src', 'img/2.png');
+        })
+        $('.sel1').click(function () {     // 点击后更改箭头方向
+            $('.sel_mask1').find('img').attr('src', 'img/1.png');
+        })
+    })
+
+    $(function () {
+        $('.sel2').change(function () {    // 选择后替换内容并恢复箭头方向
+            $("#span_mian3").html($('.sel2').find('option:selected').html());
+            $('.sel_mask2').find('img').attr('src', 'img/1.png');
+        })
+        $('.sel1').blur(function () {      //什么也不选恢复箭头方向
+            $('.sel_mask2').find('img').attr('src', 'img/2.png');
+        })
+        $('.sel1').click(function () {     // 点击后更改箭头方向
+            $('.sel_mask2').find('img').attr('src', 'img/1.png');
+        })
+    })
+
+
+</script>
+
+
+</body>
+</html>

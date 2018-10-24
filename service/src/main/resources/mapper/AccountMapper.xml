@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.empathy.dao.AccountDao">
+
+    <sql id="fields">
+        id,username,code,password,role_id roleId,
+        create_time createTime,
+        last_revamp_time lastRevampTime
+    </sql>
+    <sql id="wb">
+        WHERE del_flag = 0
+    </sql>
+
+    <select id="findById" parameterType="long" resultType="com.empathy.domain.account.Account">
+        SELECT
+        <include refid="fields"/>
+        FROM tb_account WHERE id = #{id}
+    </select>
+
+    <insert id="save" parameterType="com.empathy.domain.account.Account" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO tb_account (username,code,password,role_id,create_time,last_revamp_time,del_flag)
+        VALUES (#{username},#{code},#{password},#{roleId},#{createTime},#{lastRevampTime},#{delFlag})
+    </insert>
+
+    <update id="update" parameterType="com.empathy.domain.account.Account">
+        UPDATE tb_account SET username = #{username}, code = #{code}, password = #{password}, role_id =
+        #{roleId},last_revamp_time=#{lastRevampTime} WHERE id = #{id}
+    </update>
+
+    <update id="delById" parameterType="long">
+        UPDATE tb_account SET del_flag = 1 WHERE id = #{id}
+    </update>
+
+    <select id="list" parameterType="com.empathy.common.PageBo" resultType="com.empathy.domain.account.Account">
+        SELECT a.id, a.username,a.code,b.name roleName,a.create_time createTime
+        FROM tb_account a left join tb_role b on a.role_id =b.id WHERE a.del_flag = 0 LIMIT #{start},#{limit}
+    </select>
+
+    <select id="count" resultType="int">
+        SELECT count(id) from tb_account where del_flag=0
+
+    </select>
+
+    <select id="findCountByCode" resultType="int" parameterType="string">
+
+        select count(id) from tb_account where del_flag=0 and code=#{code}
+    </select>
+    <select id="findByCode" resultType="com.empathy.domain.account.Account" parameterType="string">
+
+        select <include refid="fields"></include> from tb_account where del_flag=0 and code=#{code}
+    </select>
+
+    <select id="findByRoleId" resultType="int" parameterType="long">
+        select count(id) from tb_account where del_flag =0  and role_id = #{id}
+
+    </select>
+
+
+</mapper>

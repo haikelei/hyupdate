@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.empathy.dao.RoomManageDao">
+
+    <sql id="fields">
+        id,user_id userId,freeze_status freezeStatus,status,live_id liveId,manage_user_id manageUserId,
+        create_time createTime,
+        last_revamp_time lastRevampTime
+    </sql>
+    <sql id="wb">
+        WHERE del_flag = 0
+    </sql>
+
+    <select id="findById" parameterType="long" resultType="com.empathy.domain.live.RoomManage">
+        SELECT
+        <include refid="fields"/>
+        FROM base_room_manage WHERE id = #{id}
+    </select>
+
+    <insert id="save" parameterType="com.empathy.domain.live.RoomManage" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO base_room_manage (user_id,freeze_status,status,live_id,manage_user_id,create_time,last_revamp_time,del_flag)
+        VALUES (#{userId},#{freezeStatus},#{status},#{liveId},#{manageUserId},#{createTime},#{lastRevampTime},#{delFlag})
+    </insert>
+
+    <update id="update" parameterType="com.empathy.domain.live.RoomManage">
+        UPDATE base_room_manage SET freeze_status = #{freezeStatus}, status = #{status},last_revamp_time=#{lastRevampTime} WHERE id =
+        #{id}
+    </update>
+
+    <update id="delById" parameterType="long">
+        UPDATE base_room_manage SET del_flag = 1 WHERE id = #{id}
+    </update>
+
+    <select id="findByTwoId" parameterType="com.empathy.domain.live.bo.RoomUpddManageBo" resultType="com.empathy.domain.live.RoomManage">
+        SELECT
+        <include refid="fields"/>
+        FROM base_room_manage WHERE user_id = #{id} and manage_user_id = #{userId}
+
+    </select>
+
+    <select id="count" parameterType="long" resultType="int">
+      SELECT count(id) FROM  base_room_manage where user_id=#{id}
+
+
+    </select>
+    <select id="findCountByPlayBo" parameterType="com.empathy.domain.live.bo.JoinPlayBo" resultType="int">
+      SELECT count(id) FROM  base_room_manage where manage_user_id=#{userId} and live_id = #{liveId} and del_flag = 0
+
+
+    </select>
+
+    <select id="list" parameterType="com.empathy.domain.live.bo.ManageListBo" resultType="com.empathy.domain.live.RoomManage">
+      select a.manage_user_id manageUserId ,b.username,c.url from
+      base_room_manage a left join base_member b on a.manage_user_id = b.id
+      LEFT  join base_file c on a.manage_user_id = c.purpose_id and c.type='image' and c.purpose='user'
+      where a.user_id = #{id} and a.status=1 order by a.create_time  LIMIT #{start},#{limit}
+
+    </select>
+
+
+
+
+</mapper>

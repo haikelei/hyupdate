@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.empathy.dao.AlbumMoneyDao">
+
+    <sql id="fields">
+        id,
+        album_id albumId,type,charge_status chargeStatus,bum_set bumSet,bum_money bumMoney,
+        create_time createTime,
+        last_revamp_time lastRevampTime
+    </sql>
+    <sql id="wb">
+        WHERE del_flag = 0
+    </sql>
+
+    <select id="findById" parameterType="long" resultType="com.empathy.domain.album.AlbumMoney">
+        SELECT
+        <include refid="fields"/>
+        FROM base_album_money WHERE id = #{id}
+    </select>
+
+    <insert id="save" parameterType="com.empathy.domain.album.AlbumMoney" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO base_album_money
+        (album_id,type,charge_status,bum_set,bum_money,create_time,last_revamp_time,del_flag)
+        VALUES (#{albumId},#{type},#{chargeStatus},#{bumSet},#{bumMoney},#{createTime},#{lastRevampTime},#{delFlag})
+    </insert>
+
+    <update id="update" parameterType="com.empathy.domain.album.AlbumMoney">
+        UPDATE base_album_money SET album_id = #{albumId},type = #{type},charge_status = #{chargeStatus},bum_set =
+        #{bumSet},bum_money = #{bumMoney},last_revamp_time=#{lastRevampTime} WHERE id = #{id}
+    </update>
+
+    <update id="delById" parameterType="long">
+        UPDATE base_album_money SET del_flag = 1 WHERE id = #{id}
+    </update>
+
+    <select id="findByAlbumId" parameterType="long" resultType="com.empathy.domain.album.AlbumMoney">
+        SELECT a.id,
+        a.album_id albumId,a.type,a.charge_status chargeStatus,a.bum_set bumSet,a.bum_money bumMoney,
+        a.create_time createTime,
+        a.last_revamp_time lastRevampTime,b.album_name albumName
+
+        from base_album_money a
+        LEFT join base_album b on a.album_id = b.id
+        where a.del_flag = 0 and a.album_id = #{id}
+
+    </select>
+
+    <!-- <select id="list" resultType="com.empathy.domain.album.Album">
+       SELECT <include refid="fields"></include> from base_classify where del_flag = 0
+
+     </select>-->
+
+
+</mapper>

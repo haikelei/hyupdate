@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.empathy.dao.BaseGiftDao">
+
+    <sql id="fields">
+        id,
+        gift_name giftName,code,
+        price,money,default_price defaultPrice,default_money defaultMoney,
+        create_time createTime,exp,
+        last_revamp_time lastRevampTime
+    </sql>
+    <sql id="wb">
+        WHERE del_flag = 0
+    </sql>
+
+    <select id="findById" parameterType="long" resultType="com.empathy.domain.baseGift.BaseGift">
+        SELECT
+        <include refid="fields"/>
+        FROM base_gift WHERE id = #{id}
+    </select>
+
+    <insert id="save" parameterType="com.empathy.domain.baseGift.BaseGift" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO base_gift
+        (gift_name,code,price,money,default_price,default_money,exp,create_time,last_revamp_time,del_flag)
+        VALUES
+        (#{giftName},#{code},#{price},#{defaultPrice},#{defaultMoney},#{money},#{exp},#{createTime},#{lastRevampTime},#{delFlag})
+    </insert>
+
+    <update id="update" parameterType="com.empathy.domain.baseGift.BaseGift">
+        UPDATE base_gift SET gift_name = #{giftName},code = #{code}, default_price = #{defaultPrice}, default_money =
+        #{defaultMoney}, price = #{price}, money = #{money},last_revamp_time=#{lastRevampTime},exp=#{exp} WHERE id = #{id}
+    </update>
+
+    <update id="delById" parameterType="long">
+        UPDATE base_gift SET del_flag = 1 WHERE id = #{id}
+    </update>
+
+    <select id="list" resultType="com.empathy.domain.baseGift.BaseGift">
+        SELECT  a.id,
+        a.gift_name giftName,code,
+        a.price,money,a.default_price defaultPrice,a.default_money defaultMoney,a.exp,
+        a.create_time createTime,b.url  from base_gift a
+         left join base_file b on a.id = b.purpose_id and b.purpose='gift' and b.type = 'image'
+         where a.del_flag = 0 order by a.code
+
+    </select>
+
+    <select id="count" resultType="int">
+
+        select count(id) from base_gift where del_flag=0
+    </select>
+
+
+</mapper>

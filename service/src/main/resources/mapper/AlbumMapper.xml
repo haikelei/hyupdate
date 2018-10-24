@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.empathy.dao.AlbumDao">
+
+    <sql id="fields">
+        id,
+        album_name albumName,
+        classify_id classifyId,
+        user_id userId,
+        detail,
+        create_time createTime,
+        last_revamp_time lastRevampTime
+    </sql>
+    <sql id="wb">
+        WHERE del_flag = 0
+    </sql>
+
+    <select id="findById" parameterType="long" resultType="com.empathy.domain.album.Album">
+        SELECT
+        <include refid="fields"/>
+        FROM base_album WHERE id = #{id}
+    </select>
+
+    <insert id="save" parameterType="com.empathy.domain.album.Album" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO base_album (album_name,classify_id,user_id,detail,create_time,last_revamp_time,del_flag)
+        VALUES (#{albumName},#{classifyId},#{userId},#{detail},#{createTime},#{lastRevampTime},#{delFlag})
+    </insert>
+
+    <update id="update" parameterType="com.empathy.domain.album.Album">
+        UPDATE base_album SET album_name = #{albumName},classify_id = #{classifyId},user_id = #{userId},detail =
+        #{detail},last_revamp_time=#{lastRevampTime} WHERE id = #{id}
+    </update>
+
+    <update id="delById" parameterType="long">
+        UPDATE base_album SET del_flag = 1 WHERE id = #{id}
+    </update>
+
+    <!-- <select id="list" resultType="com.empathy.domain.album.Album">
+       SELECT <include refid="fields"></include> from base_classify where del_flag = 0
+
+     </select>-->
+
+    <select id="findAlbumById" parameterType="long" resultType="com.empathy.domain.album.vo.AlbumVo">
+        SELECT a.id id ,a.album_name albumName,c.name classifyName,a.user_id userId,a.detail,a.create_time
+        createTime,b.type,d.url,e.username username
+        ,b.charge_status chargeStatus,b.bum_set bumSet,b.bum_money bumMoney,d.url
+        FROM base_album a left join base_album_money b on a.id = b.album_id LEFT join base_classify c on a.classify_id =
+        c.id
+        LEFT join base_file d on a.id = d.purpose_id and d.type ='image' and d.purpose='album'
+        left join base_member e on a.user_id = e.id
+        where a.del_flag = 0 and a.id = #{id}
+    </select>
+
+
+    <select id="findAlbumByUserId" parameterType="com.empathy.domain.album.bo.AlbumFindByUserIdBo"
+            resultType="com.empathy.domain.album.vo.AlbumVo">
+        SELECT a.id id ,a.album_name albumName,c.name classifyName,a.user_id userId,a.detail,a.create_time
+        createTime,b.type,d.url,e.username username
+        ,b.charge_status chargeStatus,b.bum_set bumSet,b.bum_money bumMoney
+        FROM base_album a left join base_album_money b on a.id = b.album_id LEFT join base_classify c on a.classify_id =
+        c.id
+        LEFT join base_file d on a.id = d.purpose_id and d.type ='image' and d.purpose='album'
+         left join base_member e on a.user_id = e.id
+        where a.del_flag = 0 and a.user_id = #{userId} order by a.create_time desc LIMIT #{start},#{limit}
+
+    </select>
+    <select id="findAlbumCountByUserId" parameterType="long" resultType="int">
+        SELECT count(id) FROM base_album where del_flag=0 and user_id = #{userId}
+
+    </select>
+
+
+    <select id="findByClassifyId" resultType="com.empathy.domain.album.vo.AlbumVo"
+            parameterType="com.empathy.domain.album.bo.AlbumFindByClassifyIdBo">
+        SELECT a.id id ,a.album_name albumName,c.name classifyName,a.user_id userId,a.detail,a.create_time
+        createTime,b.type,e.username username
+        ,b.charge_status chargeStatus,b.bum_set bumSet,b.bum_money bumMoney,d.url
+        FROM base_album a left join base_album_money b on a.id = b.album_id LEFT join base_classify c on a.classify_id =
+        c.id
+        LEFT join base_file d on a.id = d.purpose_id and d.type ='image' and d.purpose='album'
+         left join base_member e on a.user_id = e.id
+        where a.del_flag = 0 and a.classify_id = #{classifyId} order by create_time desc LIMIT #{start},#{limit}
+
+    </select>
+
+    <select id="findCountByClassifyId" parameterType="long" resultType="int">
+        SELECT count(id) FROM base_album where del_flag=0 and a.classify_id = #{classifyId}
+
+    </select>
+
+
+    <select id="findAlbumForAccount" parameterType="com.empathy.domain.album.bo.FindAlbumForAccountBo"
+            resultType="com.empathy.domain.album.vo.AlbumAccountVo">
+        select a.id id ,a.album_name albumName,c.name classifyName,a.user_id userId,a.detail,a.create_time
+        createTime,b.type
+        ,b.charge_status chargeStatus,b.bum_set bumSet,b.bum_money bumMoney,d.username username,d.phone FROM base_album
+        a
+        left join base_album_money b on a.id = b.album_id
+        LEFT join base_classify c on a.classify_id = c.id
+        left join base_member d on a.user_id = d.id
+        <where>
+            <if test="classifyId != null">
+                a.classifyId = #{classifyId} and
+            </if>
+
+
+            <if test="str != null and str != ''">
+                (a.album_name like CONCAT('%',#{str},'%') or d.username like CONCAT('%',#{str},'%')) and
+            </if>
+
+
+            <if test="memberStatus != null">
+                b.charge_status = #{memberStatus} and
+            </if>
+
+
+            <if test="moneyStatus != null">
+                b.type = #{moneyStatus} and
+            </if>
+            a.del_flag=0
+
+
+        </where>
+
+        order by a.create_time desc LIMIT #{start},#{limit}
+
+    </select>
+
+    <select id="findAlbumForAccountCount" parameterType="com.empathy.domain.album.bo.FindAlbumForAccountBo"
+            resultType="int">
+        select count(a.id) FROM base_album a
+        left join base_album_money b on a.id = b.album_id
+        LEFT join base_classify c on a.classify_id = c.id
+        left join base_member d on a.user_id = d.id
+        <where>
+            <if test="classifyId != null">
+                a.classifyId = #{classifyId} and
+            </if>
+
+            <if test="str != null  and str != ''">
+                (a.album_name like CONCAT('%',#{str},'%') or d.username like CONCAT('%',#{str},'%')) and
+            </if>
+            <if test="memberStatus != null">
+                b.charge_status = #{memberStatus} and
+            </if>
+
+
+            <if test="moneyStatus != null">
+                b.type = #{moneyStatus} and
+            </if>
+            a.del_flag=0
+
+
+        </where>
+
+
+    </select>
+
+
+
+    <select id="findAlbumByClassify" parameterType="com.empathy.domain.live.bo.FindLiveByClassifyBo" resultType="com.empathy.domain.album.vo.AlbumVo">
+         SELECT a.id id ,a.album_name albumName,c.name classifyName,a.user_id userId,a.detail,a.create_time
+        createTime,b.type,e.username username,f.url
+        ,b.charge_status chargeStatus,b.bum_set bumSet,b.bum_money bumMoney
+        FROM base_album a left join base_album_money b on a.id = b.album_id LEFT join base_classify c on a.classify_id =
+        c.id
+         left join base_member e on a.user_id = e.id
+         left join base_file f on a.id = f.purpose_id and f.purpose='album'
+        where a.del_flag = 0 and a.classify_id = #{id} order by a.create_time desc  LIMIT #{start},#{limit}
+
+    </select>
+
+    <select id="findAlbumByClassifyCount" resultType="int" parameterType="com.empathy.domain.live.bo.FindLiveByClassifyBo">
+        select count(id) from base_album where del_flag =0  and classify_id = #{id}
+
+    </select>
+
+    <select id="findAlbumByBuy" parameterType="com.empathy.domain.album.bo.FindBuyBo" resultType="com.empathy.domain.album.vo.AlbumVo">
+         SELECT a.id id ,a.album_name albumName,c.name classifyName,a.user_id userId,a.detail,a.create_time
+        createTime,b.type,e.username username,f.url
+        ,b.charge_status chargeStatus,b.bum_set bumSet,b.bum_money bumMoney
+        FROM tb_user_record t LEFT join base_album a on t.album_id = a.id
+        left join base_album_money b on a.id = b.album_id LEFT join base_classify c on a.classify_id =
+        c.id
+         left join base_member e on a.user_id = e.id
+         left join base_file f on a.id = f.purpose_id and f.purpose='album'
+        where t.del_flag = 0 and t.user_id = #{id}
+        GROUP BY a.id
+        order by t.create_time desc  LIMIT #{start},#{limit}
+
+    </select>
+
+    <select id="findAlbumByBuyCount" resultType="int" parameterType="com.empathy.domain.album.bo.FindBuyBo">
+        select count(id) from tb_user_record where del_flag =0  and user_id = #{id}
+
+    </select>
+    <select id="findRecording" resultType="string" parameterType="com.empathy.domain.baseRecording.bo.RecordingFindBo">
+        select record_id from tb_user_record where del_flag =0  and album_id = #{albumId} and user_id =#{userId}
+
+    </select>
+    <select id="findAlbumForCollection" parameterType="com.empathy.domain.collection.bo.CollectionFindBo" resultType="com.empathy.domain.album.vo.AlbumVo">
+         SELECT a.id id ,a.album_name albumName,c.name classifyName,a.user_id userId,a.detail,a.create_time
+        createTime,b.type,e.username username
+        ,b.charge_status chargeStatus,b.bum_set bumSet,b.bum_money bumMoney
+        from base_user_collection d
+        left join  base_album a on a.id = d.type_id left join base_album_money b on a.id = b.album_id LEFT join base_classify c on a.classify_id =
+        c.id
+         left join base_member e on a.user_id = e.id
+        where d.del_flag = 0 and d.user_id =#{userId} order by d.create_time desc  LIMIT #{start},#{limit}
+
+    </select>
+    <select id="findAlbumForCollectionCount" parameterType="com.empathy.domain.collection.bo.CollectionFindBo" resultType="int">
+         SELECT count(d.id)
+        from base_user_collection d
+        where d.del_flag = 0 and d.user_id =#{userId}
+    </select>
+
+
+    <update id="addMyBuy"  parameterType="com.empathy.domain.album.TbUserRecord">
+       INSERT INTO tb_user_record (album_id,record_id,user_id,create_time,last_revamp_time,del_flag)
+        VALUES (#{albumId},#{recordId},#{userId},#{createTime},#{lastRevampTime},#{delFlag})
+
+    </update>
+
+    <select id="findMyBuy" resultType="int">
+        SELECT count(id) from tb_user_record where user_id = #{userId} and record_id=#{id}
+    </select>
+</mapper>

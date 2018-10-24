@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.empathy.dao.CommentDao">
+
+    <sql id="fields">
+        id,
+        comment_type commentType,
+        comment_id commentId,
+        user_id userId,
+        content,
+        create_time createTime,
+        last_revamp_time lastRevampTime
+    </sql>
+    <sql id="wb">
+        WHERE del_flag = 0
+    </sql>
+
+    <select id="findById" parameterType="long" resultType="com.empathy.domain.comments.Comments">
+        SELECT
+        <include refid="fields"/>
+        FROM base_comment WHERE id = #{id}
+    </select>
+
+    <insert id="save" parameterType="com.empathy.domain.comments.Comments" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO base_comment (comment_type,comment_id,user_id,content,create_time,last_revamp_time,del_flag)
+        VALUES (#{commentType},#{commentId},#{userId},#{content},#{createTime},#{lastRevampTime},#{delFlag})
+    </insert>
+
+    <update id="update" parameterType="com.empathy.domain.comments.Comments">
+        UPDATE base_comment SET comment_type = #{commentType},comment_id = #{commentId},user_id = #{userId},content =
+        #{content},last_revamp_time=#{lastRevampTime} WHERE id = #{id}
+    </update>
+
+    <update id="delById" parameterType="long">
+        UPDATE base_comment SET del_flag = 1 WHERE id = #{id}
+    </update>
+
+    <select id="list" parameterType="com.empathy.domain.comments.bo.CommentsFindBo"
+            resultType="com.empathy.domain.comments.Comments">
+        select a.id, a.comment_id commentId ,b.username username, a.content ,a.create_time createTime ,f.url from base_comment a
+        left join base_member b on a.user_id = b.id
+        left join base_file f on  f.purpose_id = b.id and f.purpose='user' and f.type='image'
+        where a.comment_type = #{commentType} and a.comment_id = #{commentId} and a.del_flag = 0 order by a.create_time
+        desc LIMIT #{start},#{limit}
+
+    </select>
+
+    <select id="count" parameterType="com.empathy.domain.comments.bo.CommentsFindBo" resultType="int">
+
+        SELECT count(id) from base_comment where del_flag = 0 and comment_type = #{commentType} and comment_id =
+        #{commentId}
+    </select>
+    <select id="findCountByDynamic" parameterType="long" resultType="int">
+        SELECT count(id) from base_comment where del_flag = 0 and comment_type = 'dynamic' and comment_id =
+        #{id}
+    </select>
+
+</mapper>

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>项目管理 | 系统</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.7 -->
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="bower_components/Ionicons/css/ionicons.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="dist/css/AdminLTE.min.css">
+    <!-- AdminLTE Skins. Choose a skin from the css/skins
+         folder instead of downloading all of them to reduce the load. -->
+    <link rel="stylesheet" href="dist/css/skins/_all-skins.min.css">
+    <link rel="stylesheet" href="js/layer/mobile/need/layer.css">
+    <!-- Morris chart -->
+    <link rel="stylesheet" href="bower_components/morris.js/morris.css">
+    <!-- jvectormap -->
+    <link rel="stylesheet" href="bower_components/jvectormap/jquery-jvectormap.css">
+    <!-- Date Picker -->
+    <link rel="stylesheet" href="bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
+    <link rel="stylesheet" href="//g.alicdn.com/sui/sui3/0.0.18/css/sui.min.css">
+    <link rel="stylesheet" href="css/iconfont.css">
+    <link rel="stylesheet" href="css/paging.css">
+    <link rel="stylesheet" href="css/H-ui.min.css">
+    <link rel="stylesheet" href="css/select.style.css">
+    <link rel="stylesheet" href="css/main.css">
+    <!-- Daterange picker -->
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Google Font -->
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+
+
+<!-- Content Wrapper. Contains page content -->
+<div>
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <section class="content-header">
+            <ol id="nav_title" class="breadcrumb" style="position: static; float: none;">
+                <li onclick="goIndex()" class="active"><i class="fa fa-home"
+                                                          style="font-size: 20px; position: relative; top: 2px; left: -3px;"></i>
+                    &nbsp; 华语
+                </li>
+                <li class="active"> 提现管理</li>
+            </ol>
+        </section>
+
+    </section>
+
+    <div style="padding-left: 20px;margin-top: 10px;display:table-cell">
+        <button type='button' class='btn btn-primary' onclick='getExcle()'>导出Excle</button>
+    </div>
+    <div style="padding-left: 20px;margin-top: 10px;display:table-cell">
+        <button id="import_excle" type='button' class='btn btn-primary' onclick='importExcle()'>
+            <i class="fa fa-cloud-upload">导入Excle</i>
+        </button>
+    </div>
+    <div style="padding-left: 20px;margin-top: 10px;display:table-cell" >
+        <a style="display:table-cell" href="javascript:void(0)" class="sel_mask"><span id="span_mian">提现方式</span><img src="img/1.png"/>
+            <select id="selectForClass" class="sel">
+                <option>提现方式</option>
+                <option value="0">支付宝提现</option>
+                <option value="1">银行卡提现</option>
+            </select>
+        </a>
+
+        <div style="padding-left: 20px;margin-top: 10px;display:table-cell"></div>
+
+        <a style="display:table-cell" href="javascript:void(0)" class="sel_mask1"><span id="span_mian1">提现状态</span><img src="img/1.png"/>
+            <select id="selectForStatus" class="sel1">
+                <option>提现状态</option>
+                <option value="100">待审核</option>
+                <option value="200">成功</option>
+                <option value="300">失败</option>
+            </select>
+        </a>
+
+    </div>
+    <div style="padding-left: 20px;margin-top: 10px;display:table-cell">
+        <button type='button' class='btn btn-primary' onclick='lookUp()'>查看</button>
+    </div>
+
+    <!--支付宝提现 -->
+    <div id="aliMode" class="panel-body text-center" style="display: none">
+        <table class="table table-hover table-bordered">
+            <thead>
+            <tr>
+                <th class="text-center">用户名</th>
+                <th class="text-center">用户手机号</th>
+                <th class="text-center">提现状态</th>
+                <th class="text-center">提现编码</th>
+                <th class="text-center">支付宝账号</th>
+                <th class="text-center">姓名</th>
+                <th class="text-center">金额</th>
+                <th class="text-center">操作</th>
+            </tr>
+            </thead>
+            <tbody id="table"></tbody>
+        </table>
+        <div class="box" id="box"></div>
+    </div>
+
+    <!--银行卡提现 -->
+    <div id="bankMode" class="panel-body text-center" style="display: none">
+        <table class="table table-hover table-bordered">
+            <thead>
+            <tr>
+                <th class="text-center">用户名</th>
+                <th class="text-center">用户手机号</th>
+                <th class="text-center">提现状态</th>
+                <th class="text-center">提现编码</th>
+                <th class="text-center">银行名</th>
+                <th class="text-center">银行卡号</th>
+                <th class="text-center">姓名</th>
+                <th class="text-center">金额</th>
+                <th class="text-center">操作</th>
+            </tr>
+            </thead>
+            <tbody id="tableBank"></tbody>
+        </table>
+        <div class="box" id="boxBank"></div>
+    </div>
+
+
+    <!-- 审核的模块-->
+
+    <div class="modal-body" style="display: none">
+        <input type="hidden" id="withdrawId">
+        <div>
+            <button type='button' class='btn btn-primary' onclick='updateProveForSuccessSubmit()'>通过</button>
+            </td>
+            &nbsp&nbsp&nbsp
+            <button type='button' class='btn btn-primary' onclick='updateProveForFailSubmit()'>不通过</button>
+            </td>
+            &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+            <button type='button' class='btn btn-primary' onclick='cancel()'>取消</button>
+            </td>
+        </div>
+    </div>
+
+
+    <!-- /.content -->
+
+</div>
+<!-- /.content-wrapper -->
+<!-- /.control-sidebar -->
+<!-- Add the sidebar's background. This div must be placed
+     immediately after the control sidebar -->
+<div class="control-sidebar-bg"></div>
+
+<!-- ./wrapper -->
+
+<!-- jQuery 3 -->
+<!-- Bootstrap 3.3.7 -->
+<!-- DataTables -->
+<!--<script src="bower_components/datatables.net/js/jquery.dataTables.min.js"></script>-->
+
+<!-- SlimScroll -->
+<!--<script src="bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>-->
+<!-- FastClick -->
+<script src="bower_components/fastclick/lib/fastclick.js"></script>
+<!-- AdminLTE App -->
+<!--<script src="dist/js/adminlte.min.js"></script>-->
+<!-- AdminLTE for demo purposes -->
+<!--<script src="dist/js/demo.js"></script>-->
+<!-- page script -->
+<script type="text/javascript" src="//g.alicdn.com/sj/lib/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript" src="//g.alicdn.com/sui/sui3/0.0.18/js/sui.min.js"></script>
+<script type="text/javascript" src="js/common.js"></script>
+<script type="text/javascript" src="js/md5.js"></script>
+<script type="text/javascript" src="js/layer/layer.js"></script>
+<script type="text/javascript" src="js/paging.min.js"></script>
+<script type="text/javascript" src="js/ajaxupload.js"></script>
+<script type="text/javascript" src="js/withdraw.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $('#header').load('head.html');
+    })
+    $(function () {
+        /**
+         * 检查登录态
+         */
+        checkLoginStatus();
+    })
+
+    $(function () {
+        $('.sel').change(function () {    // 选择后替换内容并恢复箭头方向
+            $("#span_mian").html($('.sel').find('option:selected').html());
+            $('.sel_mask').find('img').attr('src', 'img/1.png');
+        })
+        $('.sel').blur(function () {      //什么也不选恢复箭头方向
+            $('.sel_mask').find('img').attr('src', 'img/2.png');
+        })
+        $('.sel').click(function () {     // 点击后更改箭头方向
+            $('.sel_mask').find('img').attr('src', 'img/1.png');
+        })
+
+        $('.sel1').change(function () {    // 选择后替换内容并恢复箭头方向
+            $("#span_mian1").html($('.sel1').find('option:selected').html());
+            $('.sel_mask1').find('img').attr('src', 'img/1.png');
+        })
+        $('.sel1').blur(function () {      //什么也不选恢复箭头方向
+            $('.sel_mask1').find('img').attr('src', 'img/2.png');
+        })
+        $('.sel1').click(function () {     // 点击后更改箭头方向
+            $('.sel_mask1').find('img').attr('src', 'img/1.png');
+        })
+
+    })
+
+
+
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <!-- 只扫描controller -->
+    <context:component-scan base-package="com.empathy.web"/>
+
+    <bean id="contentNegotiationManager"
+          class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+        <property name="mediaTypes">
+            <value>
+                json=application/json
+                xml=application/xml
+            </value>
+        </property>
+        <property name="ignoreAcceptHeader" value="true"/>
+        <property name="favorPathExtension" value="true"/>
+    </bean>
+
+    <!-- 文件上传限制大小 -->
+    <bean id="multipartResolver"
+          class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!-- set the max upload size 5GB -->
+        <property name="maxUploadSize">
+            <value>5048576000</value>
+        </property>
+        <property name="maxInMemorySize">
+            <value>4096</value>
+        </property>
+    </bean>
+
+
+    <!-- json -->
+    <mvc:annotation-driven content-negotiation-manager="contentNegotiationManager">
+        <mvc:message-converters register-defaults="true">
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <constructor-arg value="UTF-8"/>
+            </bean>
+            <bean class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter4">
+                <property name="supportedMediaTypes">
+                    <list>
+                        <value>text/html;charset=UTF-8</value>
+                        <value>application/json</value>
+                    </list>
+                </property>
+                <property name="fastJsonConfig">
+                    <bean class="com.alibaba.fastjson.support.config.FastJsonConfig">
+                        <property name="charset" value="UTF-8"/>
+                        <!-- 注意封装 不能是方法，不然无法格式化日期 -->
+                        <property name="dateFormat" value="yyyy/MM/dd HH:mm"/>
+                        <property name="serializerFeatures">
+                            <list>
+                                <value>QuoteFieldNames</value>
+                                <!--<value>WriteNullNumberAsZero</value>
+                                <value>WriteNullListAsEmpty</value>
+                                <value>WriteNullStringAsEmpty</value>
+                                <value>WriteNullBooleanAsFalse</value>-->
+                                <value>PrettyFormat</value>
+                                <value>WriteDateUseDateFormat</value>
+                                <value>WriteBigDecimalAsPlain</value>
+                                <value>SkipTransientField</value>
+                            </list>
+                        </property>
+                    </bean>
+                </property>
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+
+    <!-- aop -->
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
+    <bean id="securityInteceptor" class="com.empathy.security.SecurityInterceptor">
+        <property name="taskService" ref="taskService"/>
+        <property name="excludePaths">
+            <list>
+                <value>/v2</value>
+                <value>/swagger-resources</value>
+            </list>
+        </property>
+    </bean>
+    <aop:config>
+        <aop:aspect ref="securityInteceptor">
+            <aop:around method="execute"
+                        pointcut="@annotation(org.springframework.web.bind.annotation.RequestMapping)"/>
+        </aop:aspect>
+    </aop:config>
+
+    <!-- swagger2 -->
+    <bean class="com.empathy.security.SwaggerConfig"/>
+
+    <mvc:resources mapping="swagger-ui.html" location="classpath:/META-INF/resources/"/>
+    <mvc:resources mapping="/webjars/**" location="classpath:/META-INF/resources/webjars/"/>
+</beans>

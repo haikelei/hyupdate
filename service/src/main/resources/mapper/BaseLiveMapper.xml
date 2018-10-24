@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.empathy.dao.BaseLiveDao">
+
+    <sql id="fields">
+        id,
+        user_id userId,
+        live_code liveCode,
+        new_code newCode,
+        title,
+        begin_time beginTime,
+        code,
+        classify_id classifyId,
+        person_count personCount,
+        live_number liveNumber,
+        live_status liveStatus,
+        level,theme,time_sum timeSum,
+        create_time createTime,
+        last_revamp_time lastRevampTime
+    </sql>
+    <sql id="wb">
+        WHERE del_flag = 0
+    </sql>
+
+    <select id="findById" parameterType="long" resultType="com.empathy.domain.live.BaseLive">
+        SELECT
+        <include refid="fields"/>
+        FROM base_live WHERE id = #{id}
+    </select>
+
+    <insert id="save" parameterType="com.empathy.domain.live.BaseLive" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO base_live
+        (user_id,classify_id,code,person_count,live_number,live_code,level,theme,live_status,time_sum,create_time,last_revamp_time,del_flag)
+        VALUES
+        (#{userId},#{classifyId},#{code},#{personCount},#{liveNumber},#{liveCode},#{level},#{theme},#{liveStatus},#{timeSum},#{createTime},#{lastRevampTime},#{delFlag})
+    </insert>
+
+    <update id="update" parameterType="com.empathy.domain.live.BaseLive">
+        UPDATE base_live SET user_id = #{userId}, classify_id = #{classifyId}, code = #{code}, person_count =
+        #{personCount}, live_number = #{liveNumber}, live_code = #{liveCode}, live_status = #{liveStatus}, level =
+        #{level}, title = #{title}, theme = #{theme},begin_time = #{beginTime},time_sum = #{timeSum},new_code = #{newCode},last_revamp_time=#{lastRevampTime} WHERE id =
+        #{id}
+    </update>
+
+    <update id="delById" parameterType="long">
+        UPDATE base_live SET del_flag = 1 WHERE id = #{id}
+    </update>
+
+    <select id="findByUserId" resultType="com.empathy.domain.live.BaseLive" parameterType="long">
+
+        SELECT
+        <include refid="fields"/>
+        FROM base_live WHERE user_id = #{id} and del_flag=0
+    </select>
+
+
+    <select id="countById" resultType="int" parameterType="long">
+        SELECT count(id) FROM base_live where id=#{id}
+    </select>
+
+    <update id="cancleProve" parameterType="long">
+
+        UPDATE base_live SET del_flag = 0 WHERE id = #{id}
+    </update>
+
+
+    <select id="findLiveByClassify" resultType="com.empathy.domain.live.BaseLive" parameterType="com.empathy.domain.live.bo.FindLiveByClassifyBo">
+
+        SELECT
+       a.id,
+        a.user_id userId,
+        a.live_code liveCode,
+        a.new_code newCode,
+        a.title,
+        a.begin_time beginTime,
+        a.code,
+        a.classify_id classifyId,
+        a.person_count personCount,
+        a.live_number liveNumber,
+        a.live_status liveStatus,
+        a.level,a.theme,a.time_sum timeSum,
+        a.create_time createTime,
+        a.last_revamp_time lastRevampTime,f.url,m.username
+        FROM base_live a
+        left join base_file f  on f.purpose_id = a.id and f.purpose='live' and f.type= 'image'
+        left join base_member m on m.id = a.user_id
+        WHERE a.classify_id = #{id} and a.del_flag=0  order by a.create_time desc,a.code  LIMIT #{start},#{limit}
+
+    </select>
+
+    <select id="findLiveByClassifyCount" resultType="int" parameterType="com.empathy.domain.live.bo.FindLiveByClassifyBo">
+
+        SELECT
+        count(id)
+        FROM base_live WHERE classify_id = #{id} and del_flag=0
+
+    </select>
+
+
+    <select id="findLiveForDetail" resultType="com.empathy.domain.live.LiveAll" parameterType="com.empathy.domain.live.bo.FindLiveForDetailBo">
+      SELECT a.id,
+        a.user_id userId,
+        a.live_code liveCode,
+        a.title,
+        a.code,
+        a.classify_id classifyId,
+        a.person_count personCount,
+        a.live_number liveNumber,
+        a.live_status liveStatus,
+        a.level,a.theme,
+        b.room_id roomId,
+        b.broadcasturl,
+        b.cid,
+        b.name,
+        b.push_url pushUrl,
+        b.rtmp_pull_url rtmpPullUrl,
+        b.http_pull_url httpPullUrl,
+        b.hls_pull_url hlsPullUrl,f.url,m.username
+        from base_live a LEFT join base_live_channel b on a.id = b.live_id
+          left join base_file f  on f.purpose_id = a.id and f.purpose='live' and f.type= 'image'
+          left join base_member m on m.id = a.user_id
+        where a.id = #{id}
+
+    </select>
+
+
+    <select id="findLiveForFour" parameterType="com.empathy.domain.live.bo.FindLiveForFourBo" resultType="com.empathy.domain.live.BaseLive">
+
+        SELECT
+         a.id,
+        a.user_id userId,
+        a.live_code liveCode,
+        a.new_code newCode,
+        a.title,
+        a.begin_time beginTime,
+        a.code,
+        a.classify_id classifyId,
+        a.person_count personCount,
+        a.live_number liveNumber,
+        a.live_status liveStatus,
+        a.level,a.theme,a.time_sum timeSum,
+        a.create_time createTime,
+        a.last_revamp_time lastRevampTime,f.url,m.username
+        FROM base_live a
+        left join base_file f  on f.purpose_id = a.id and f.purpose='live' and f.type= 'image'
+        left join base_member m on m.id = a.user_id
+        where live_status = 1   ORDER by a.create_time desc LIMIT 4
+    </select>
+
+    <select id="searchCount" parameterType="com.empathy.domain.live.bo.SearchAllBo" resultType="int">
+        SELECT
+        count(a.id)
+        FROM base_live a LEFT JOIN base_member b on a.user_id = b.id where (a.live_code like CONCAT('%',#{str},'%') or b.username like  CONCAT('%',#{str},'%')) and a.del_flag =0
+
+
+
+    </select>
+
+    <select id="search" parameterType="com.empathy.domain.live.bo.SearchAllBo" resultType="com.empathy.domain.live.BaseLive">
+  SELECT
+       a.id,
+        a.user_id userId,
+        a.live_code liveCode,
+        a.title,
+        a.code,
+        a.classify_id classifyId,
+        a.person_count personCount,
+        a.live_number liveNumber,
+        a.live_status liveStatus,
+        a.level,a.theme,b.username,f.url,b.username
+        FROM base_live a LEFT JOIN base_member b on a.user_id = b.id
+
+          left join base_file f  on f.purpose_id = a.id and f.purpose='live' and f.type= 'image'
+         where (a.live_code like CONCAT('%',#{str},'%') or b.username like  CONCAT('%',#{str},'%')) and a.del_flag =0
+        order by a.create_time desc,a.code   LIMIT #{start},#{limit}
+
+    </select>
+
+    <select id="findLiveForNew" parameterType="com.empathy.common.PageBo" resultType="com.empathy.domain.live.BaseLive">
+       SELECT
+       a.id,
+        a.user_id userId,
+        a.live_code liveCode,
+        a.title,
+        a.code,
+        a.classify_id classifyId,
+        a.person_count personCount,
+        a.live_number liveNumber,
+        a.live_status liveStatus,
+        a.level,a.theme,b.username,f.url,b.username
+        FROM base_live a LEFT JOIN base_member b on a.user_id = b.id
+        left join base_file f  on f.purpose_id = a.id and f.purpose='live' and f.type= 'image'
+
+        where a.del_flag =0  and a.live_status =1
+        order by a.create_time desc,a.new_code   LIMIT #{start},#{limit} </select>
+
+    <select id="findLiveForHot" parameterType="com.empathy.common.PageBo" resultType="com.empathy.domain.live.BaseLive">
+       SELECT
+       a.id,
+        a.user_id userId,
+        a.live_code liveCode,
+        a.title,
+        a.code,
+        a.classify_id classifyId,
+        a.person_count personCount,
+        a.live_number liveNumber,
+        a.live_status liveStatus,
+        a.level,a.theme,b.username,f.url,b.username
+        FROM base_live a LEFT JOIN base_member b on a.user_id = b.id
+          left join base_file f  on f.purpose_id = a.id and f.purpose='live' and f.type= 'image'
+        where a.del_flag =0 and a.live_status =1
+        order by a.level desc,a.time_sum desc   LIMIT #{start},#{limit}
+
+    </select>
+
+    <select id="findLiveForAppointment" parameterType="com.empathy.common.PageBo" resultType="com.empathy.domain.live.BaseLive">
+       SELECT
+       a.id,
+        a.user_id userId,
+        a.live_code liveCode,
+        a.title,
+        a.code,
+        a.classify_id classifyId,
+        a.person_count personCount,
+        a.live_number liveNumber,
+        a.live_status liveStatus,
+        a.level,a.theme,b.username ,f.url,b.username
+        FROM base_live a LEFT JOIN base_member b on a.user_id = b.id
+          left join base_file f  on f.purpose_id = a.id and f.purpose='live' and f.type= 'image'
+         where a.del_flag =0 and a.live_status =2
+        order by a.level desc,a.time_sum desc   LIMIT #{start},#{limit}
+
+    </select>
+
+    <select id="findForCollection" parameterType="com.empathy.domain.collection.bo.CollectionFindBo" resultType="com.empathy.domain.live.BaseLive">
+       SELECT
+       a.id,
+        a.user_id userId,
+        a.live_code liveCode,
+        a.title,
+        a.code,
+        a.classify_id classifyId,
+        a.person_count personCount,
+        a.live_number liveNumber,
+        a.live_status liveStatus,
+        a.level,a.theme,b.username
+        ,f.url
+        from base_user_collection c
+        left join  base_live a on a.id = c.type_id
+        LEFT JOIN base_member b on a.user_id = b.id
+          left join base_file f  on f.purpose_id = a.id and f.purpose='live' and f.type= 'image'
+        where c.del_flag =0 and c.user_id= #{userId}
+        order by c.create_time desc   LIMIT #{start},#{limit}
+
+    </select>
+    <select id="findForCollectionCount" parameterType="com.empathy.domain.collection.bo.CollectionFindBo" resultType="int">
+       SELECT
+        count(c.id)
+        from base_user_collection c
+        where c.del_flag =0 and c.user_id= #{userId}
+
+    </select>
+
+    <select id="giftList" parameterType="com.empathy.domain.live.bo.GifiListBo" resultType="com.empathy.domain.user.BaseMember">
+          SELECT a.*,b.url,(SELECT SUM(money) from base_live_gift where user_id = a.id) giftMoney
+           from base_member a
+           LEFT join base_file b  on a.id = b.purpose_id and b.purpose='user' and b.type='image'
+           LEFT join base_live_gift c on a.id = c.user_id
+           where c.live_user_id = #{id} and week(c.create_time) = week(now())
+            order by giftMoney
+               LIMIT #{start},#{limit}
+    </select>
+    <select id="giftListForWeek" parameterType="com.empathy.domain.live.bo.GifiListBo" resultType="com.empathy.domain.user.BaseMember">
+          SELECT a.*,b.url,(SELECT SUM(money) from base_live_gift where user_id = a.id) giftMoney
+           from base_member a
+           LEFT join base_file b  on a.id = b.purpose_id and b.purpose='user' and b.type='image'
+           LEFT join base_live_gift c on a.id = c.user_id
+           where c.live_user_id = #{id} and c.create_time &lt;= ( SELECT create_time FROM base_live_time order by create_time limit 1)
+            order by giftMoney
+               LIMIT #{start},#{limit}
+    </select>
+    <select id="giftCount" parameterType="long" resultType="int">
+          SELECT count(a.id)
+           from base_member a
+           LEFT join base_file b  on a.id = b.purpose_id and b.purpose='user' and b.type='image'
+           LEFT join base_live_gift c on a.id = c.user_id
+           where c.live_user_id = #{id}
+    </select>
+
+    <select id="findRank" resultType="com.empathy.domain.live.vo.RankVo">
+    select live_id liveId,sum(price) price from base_live_gift group by live_id;
+    </select>
+
+    <select id="giftByUserRank" parameterType="map" resultType="com.empathy.domain.user.BaseMember">
+          select a.*,b.url,m.giftMoney
+            from base_member a
+            LEFT join base_file b  on a.id = b.purpose_id and b.purpose='user' and b.type='image'
+            LEFT JOIN (SELECT g.*,SUM(money) giftMoney FROM `base_live_gift` g where g.create_time >= #{liveTime} group by g.user_id) m on m.user_id = a.id
+            where m.live_id = #{bo.id}
+            order by giftMoney desc
+            LIMIT #{bo.start},#{bo.limit}
+    </select>
+
+    <select id="getGiftMoney" parameterType="map" resultType="java.math.BigDecimal">
+          SELECT SUM(money) giftMoney
+          FROM `base_live_gift` g
+          where live_id = #{bo.liveId} and live_user_id = #{bo.userId} and g.create_time >= #{liveTime}
+    </select>
+
+    <select id="findRankByPrice" resultType="com.empathy.domain.live.vo.RankVo">
+        select live_id liveId,sum(price) price from base_live_gift group by live_id order by price desc;
+    </select>
+
+</mapper>

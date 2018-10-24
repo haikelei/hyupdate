@@ -1,0 +1,62 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/assets/img/favicon.ico" rel="icon" type="image/x-icon"/>
+    <title>友佳票据-登录</title>
+    <link href="/assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link href="/assets/css/animate.css" rel="stylesheet">
+    <link href="/assets/css/style.css" rel="stylesheet">
+    <!-- Toastr style -->
+    <link href="/assets/css/plugins/toastr/toastr.min.css" rel="stylesheet">
+</head>
+<body class="gray-bg" style="background-image:url('/assets/img/morning.jpg'); width: 100%;">
+<div class="middle-box text-center loginscreen animated fadeInDown">
+    <div style="margin-top: 55%;">
+        <form class="m-t" role="form" action="/admin/login/check" method="post">
+            <div class="form-group">
+                <input type="text" class="form-control" name="username" placeholder="登录名" required="true">
+            </div>
+            <div class="form-group">
+                <input type="password" class="form-control" name="password" placeholder="密码" required="true">
+            </div>
+            <button type="submit" class="btn btn-primary block full-width m-b">登录</button>
+            <!--<a href="#"><small><input type="checkbox" name="rememberMe">记住密码</small></a>
+            <a href="#"><small>忘记密码?</small></a>
+            <a class="btn btn-sm btn-white btn-block" href="/register">注册</a>-->
+        </form>
+        <p class="m-t">
+            <small>&copy; 2017 tybest</small>
+            All Rights Reserved
+        </p>
+    </div>
+</div>
+<!-- Mainly scripts -->
+<script src="/assets/js/jquery-2.1.1.js"></script>
+<script src="/assets/js/bootstrap.min.js"></script>
+<!-- Toastr -->
+<script src="/assets/js/plugins/toastr/toastr.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        [#if (message) ? ?
+        ]
+        setTimeout(function () {
+            toastr.options = {
+                closeButton: true,
+                progressBar: true,
+                showMethod: 'slideDown',
+                timeOut: 5000
+            };
+            toastr.error('${message}', '提示');
+        }, 1300);
+        [ /#if]
+        var curUrl = window.location.href;
+        if (curUrl.indexOf("login") == -1) {
+            window.parent.location.href = "/admin/login";
+        }
+    });
+</script>
+</body>
+</html>

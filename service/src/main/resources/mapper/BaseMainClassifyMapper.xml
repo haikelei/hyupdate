@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.empathy.dao.BaseMainClassifyDao">
+
+    <sql id="fields">
+        id,
+        name,
+        code,
+        type,
+        create_time createTime,
+        last_revamp_time lastRevampTime
+    </sql>
+    <sql id="wb">
+        WHERE del_flag = 0
+    </sql>
+
+    <select id="findById" parameterType="long" resultType="com.empathy.domain.classify.BaseMainClassify">
+        SELECT
+        <include refid="fields"/>
+        FROM base_main_classify WHERE id = #{id}
+    </select>
+
+    <insert id="save" parameterType="com.empathy.domain.classify.BaseMainClassify" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO base_main_classify (code,name,type,create_time,last_revamp_time,del_flag)
+        VALUES (#{code},#{name},#{type},#{createTime},#{lastRevampTime},#{delFlag})
+    </insert>
+
+    <update id="update" parameterType="com.empathy.domain.classify.BaseMainClassify">
+        UPDATE base_main_classify SET name = #{name}, code = #{code},last_revamp_time=#{lastRevampTime} WHERE id = #{id}
+    </update>
+
+    <update id="delById" parameterType="long">
+        UPDATE base_main_classify SET del_flag = 1 WHERE id = #{id}
+    </update>
+
+    <select id="findCountForMain" parameterType="long" resultType="int">
+
+        select count(id) from base_classify where parent_id=#{id} and del_flag=0
+    </select>
+
+
+    <select id="findByType" parameterType="com.empathy.domain.classify.bo.FindClassifyBo" resultType="int">
+        select count(id) FROM  base_main_classify
+
+
+        where type =#{type} and del_flag = 0;
+
+
+    </select>
+
+    <select id="listByType" parameterType="com.empathy.domain.classify.bo.FindClassifyBo" resultType="com.empathy.domain.classify.BaseMainClassify">
+       select
+        a.id,
+        a.name,
+        a.code,
+        a.type,
+        a.create_time createTime,
+        b.url url
+        FROM  base_main_classify a
+        LEFT  join  base_file b on a.id=b.purpose_id and b.type='image' and b.purpose='MainClassify'
+    where a.type=#{type} and a.del_flag = 0 order by a.create_time desc,a.code  LIMIT  #{start},#{limit}
+
+    </select>
+
+
+    <select id="findDetail" parameterType="long" resultType="com.empathy.domain.classify.BaseMainClassify">
+       select
+        a.id,
+        a.name,
+        a.code,
+        a.type,
+        a.create_time createTime,
+        b.url url
+        FROM  base_main_classify a
+        LEFT  join  base_file b on a.id=b.purpose_id and b.type='image' and b.purpose='MainClassify'
+    where a.id=#{id} and a.del_flag = 0
+
+    </select>
+
+</mapper>

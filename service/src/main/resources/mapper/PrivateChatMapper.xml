@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.empathy.dao.PrivateChatDao">
+
+    <sql id="fields">
+        id,user_id,chat_user_id,content,
+        create_time createTime,
+        last_revamp_time lastRevampTime
+    </sql>
+    <sql id="wb">
+        WHERE del_flag = 0
+    </sql>
+
+    <select id="findById" parameterType="long" resultType="com.empathy.domain.user.PrivateChat">
+        SELECT
+        <include refid="fields"/>
+        FROM base_private_chat WHERE id = #{id}
+    </select>
+
+    <insert id="save" parameterType="com.empathy.domain.user.PrivateChat" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO base_private_chat (user_id,chat_user_id,content,create_time,last_revamp_time,del_flag)
+        VALUES (#{userId},#{chatUserId},#{content},#{createTime},#{lastRevampTime},#{delFlag})
+    </insert>
+
+    <update id="update" parameterType="com.empathy.domain.user.PrivateChat">
+        UPDATE base_private_chat SET  user_id = #{userId}, chat_user_id = #{chatUserId},  content = #{content},last_revamp_time=#{lastRevampTime} WHERE id = #{id}
+    </update>
+
+    <update id="delById" parameterType="long">
+        UPDATE base_private_chat SET del_flag = 1 WHERE id = #{id}
+    </update>
+
+
+    <select id="list" parameterType="com.empathy.domain.user.bo.PrivateChatFindBo" resultType="com.empathy.domain.user.PrivateChat">
+        SELECT <include refid="fields"></include>
+               FROM base_private_chat where del_flag = 0 and chat_user_id=#{userId} order by create_time desc
+        LIMIT #{start},#{limit}
+
+    </select>
+    <select id="count" parameterType="long" resultType="int">
+        SELECT count(id)
+               FROM base_private_chat where del_flag = 0 and chat_user_id=#{userId}
+
+    </select>
+
+
+</mapper>

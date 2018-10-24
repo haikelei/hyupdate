@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.empathy.dao.UserinfoDao">
+
+    <sql id="fields">
+        id,
+        login_type loginType,
+        member_id memberId,
+        qq,
+        wechat,
+        token,
+        password,
+        create_time createTime,
+        last_revamp_time lastRevampTime
+    </sql>
+    <sql id="wb">
+        WHERE del_flag = 0
+    </sql>
+
+    <select id="findById" parameterType="long" resultType="com.empathy.domain.user.Userinfo">
+        SELECT
+        <include refid="fields"/>
+        FROM base_user WHERE id = #{id}
+    </select>
+
+
+    <insert id="save" parameterType="com.empathy.domain.user.Userinfo" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO base_user (login_type,member_id,qq,wechat,token,password,create_time,last_revamp_time,del_flag)
+        VALUES
+        (#{loginType},#{memberId},#{qq},#{wechat},#{token},#{password},#{createTime},#{lastRevampTime},#{delFlag})
+    </insert>
+
+    <update id="update" parameterType="com.empathy.domain.user.Userinfo">
+        UPDATE base_user SET qq = #{qq},member_id =#{memberId},wechat =
+        #{wechat},token=#{token},password=#{password},last_revamp_time=#{lastRevampTime} WHERE id = #{id}
+    </update>
+
+    <update id="delById" parameterType="long">
+        UPDATE base_user SET del_flag = 1 WHERE id = #{id}
+    </update>
+
+    <select id="findCountByPhone" parameterType="com.empathy.domain.user.FindPhone" resultType="int">
+
+        SELECT count(id) from base_user where del_flag = 0 and token= #{phone} and login_type = #{type}
+    </select>
+    <select id="findCountByPhoneByFreeze" parameterType="com.empathy.domain.user.FindPhone" resultType="int">
+
+        SELECT count(id) from base_user where token= #{phone} and login_type = #{type}
+    </select>
+
+    <select id="findByPhone" parameterType="string" resultType="com.empathy.domain.user.Userinfo">
+        select <include refid="fields"></include> from base_user where token = #{phone} and del_flag = 0 and login_type
+        = 'phone'
+
+    </select>
+
+    <select id="findByMemberId" parameterType="long" resultType="com.empathy.domain.user.Userinfo">
+        SELECT <include refid="fields"></include> from base_user where del_flag = 0 and member_id=#{memberId} and
+        login_type = 'phone'
+
+    </select>
+
+    <select id="findPhoneCountByToken" resultType="int" parameterType="com.empathy.domain.user.bo.TokenFindBo">
+        SELECT count(a.id) from base_user a LEFT join base_user b on a.member_id = b.member_id where a.del_flag=0 and
+        a.login_type = 'phone'
+        and b.login_type= #{loginType} and b.token = #{token}
+    </select>
+
+    <select id="findCountByToken" resultType="int" parameterType="com.empathy.domain.user.bo.TokenFindBo">
+        SELECT count(id) from base_user where del_flag=0 and login_type = 'loginType' and token = #{token}
+    </select>
+
+    <select id="findMemberByToken" parameterType="com.empathy.domain.user.bo.TokenFindBo"
+            resultType="com.empathy.domain.user.BaseMember">
+        SELECT a.id,
+        a.username,
+        a.sex,
+        a.phone,
+        a.intro,
+        a.address,
+        a.create_time createTime,
+        a.last_revamp_time lastRevampTime from base_member a left join base_user b on a.id= b.member_id where a.del_flag
+        = 0 and b.del_flag = 0 and
+        b.token=#{token} and b.login_type= #{loginType}
+
+    </select>
+
+    <select id="findByToken" parameterType="com.empathy.domain.user.bo.TokenFindBo"
+            resultType="com.empathy.domain.user.Userinfo">
+        SELECT <include refid="fields"></include> from base_user where del_flag = 0 and login_type = #{loginType} and
+        token=#{token}
+
+    </select>
+
+
+</mapper>

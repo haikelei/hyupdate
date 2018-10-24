@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.empathy.dao.BaseMessageDao">
+
+    <sql id="fields">
+        id,title,code,content,head_message headMessage,read_status readStatus,type,user_id userId,
+        create_time createTime,
+        last_revamp_time lastRevampTime,del_flag delFlag
+    </sql>
+    <sql id="wb">
+        WHERE del_flag = 0
+    </sql>
+
+    <select id="findById" parameterType="long" resultType="com.empathy.domain.baseMessage.BaseMessage">
+        SELECT
+        <include refid="fields"/>
+        FROM base_message WHERE id = #{id}
+    </select>
+
+    <insert id="save" parameterType="com.empathy.domain.baseMessage.BaseMessage" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO base_message (title,code,content,user_id,head_message,read_status,type,create_time,last_revamp_time,del_flag)
+        VALUES (#{title},#{code},#{content},#{userId},#{headMessage},#{readStatus},#{type},#{createTime},#{lastRevampTime},#{delFlag})
+    </insert>
+
+    <update id="update" parameterType="com.empathy.domain.baseMessage.BaseMessage">
+        UPDATE base_message SET title = #{title},read_status = #{readStatus},code = #{code}, content = #{content}, head_message = #{headMessage},last_revamp_time=#{lastRevampTime} WHERE id =
+        #{id}
+    </update>
+
+    <update id="delById" parameterType="long">
+        UPDATE base_message SET del_flag = 1 WHERE id = #{id}
+    </update>
+
+    <select id="count" resultType="int">
+        SELECT count(id) from base_message where del_flag = 0
+    </select>
+
+
+    <select id="list" parameterType="com.empathy.domain.baseMessage.bo.MessageFindBo" resultType="com.empathy.domain.baseMessage.BaseMessage">
+      SELECT <include refid="fields"></include> FROM  base_message where del_flag = 0 order by  code, create_time desc   LIMIT #{start},#{limit}
+
+    </select>
+
+
+    <select id="listForApp" parameterType="com.empathy.domain.baseMessage.bo.MessageFindBo" resultType="com.empathy.domain.baseMessage.BaseMessage">
+      SELECT  id,title,code,head_message headMessage,read_status readStatus,
+        create_time createTime  FROM  base_message where del_flag = 0 and user_id =#{id} order by code, create_time desc    LIMIT #{start},#{limit}
+
+    </select>
+
+
+
+</mapper>

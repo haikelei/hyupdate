@@ -1,0 +1,66 @@
+<div class="wrapper wrapper-content  animated">
+    <form class="form-horizontal" id="addFormId">
+        <div class="tabs-container">
+            <ul class="nav nav-tabs">
+                <li class="active"><a data-toggle="tab" href="#tab-11">基础信息</a></li>
+            </ul>
+            <div class="tab-content">
+                <div id="tab-11" class="tab-pane active">
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label class="col-xs-2 control-label">登录名</label>
+                            <div class="col-xs-4">
+                                <input type="text" placeholder="登录名" name="username" class="form-control" required>
+                            </div>
+                            <label class="col-xs-2 control-label">密码</label>
+                            <div class="col-xs-4">
+                                <input type="password" placeholder="密码" class="form-control" name="password">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-2 control-label">状态</label>
+                            <div class="col-xs-4">
+                                <select name="statuz" class="form-control">
+                                    <option value="1">正常</option>
+                                    <option value="2">禁用</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-2 control-label">分配角色</label>
+                            <div class="col-xs-10">
+                                <select class="form-control dual_select" name="roleIds" multiple>
+                                    [#list roles as p]
+                                    <option value="${p.id}">${p.name}</option>
+                                    [/#list]
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    $(document).ready(function () {
+        $("#addFormId").validate({
+            rules: {
+                password: {
+                    required: true,
+                    minlength: 3
+                },
+                username: {
+                    required: true
+                }
+            }
+        });
+        $('.dual_select').bootstrapDualListbox({
+            selectorMinimalHeight: 160,
+            showFilterInputs: false,
+            filterTextClear: "所有",
+            infoText: '',
+            infoTextEmpty: ''
+        });
+    });
+</script>

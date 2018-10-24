@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.empathy.dao.BaseMemberDao">
+
+    <sql id="fields">
+        id,
+        username,
+        sex,
+        phone,
+        token,
+        prove_status proveStatus,
+        intro,
+        level,
+        member_status memberStatus,
+        address,
+        create_time createTime,
+        last_revamp_time lastRevampTime
+    </sql>
+    <sql id="wb">
+        WHERE del_flag = 0
+    </sql>
+
+    <select id="findById" parameterType="long" resultType="com.empathy.domain.user.BaseMember">
+         select a.id,a.username,a.token,a.sex,a.prove_status,a.phone,a.address,a.prove_status proveStatus,a.member_status
+        memberStatus,a.intro,a.level,a.create_time createTime,a.del_flag delFlag,b.money,c.end_time lastDate
+        from base_member a left join base_user_money b on a.id=b.user_id LEFT join base_user_member c on c.user_id = a.id
+       WHERE a.id = #{id}
+    </select>
+
+    <insert id="save" parameterType="com.empathy.domain.user.BaseMember" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO base_member
+        (username,sex,token,prove_status,member_status,phone,intro,level,experience,create_time,last_revamp_time,address,del_flag)
+        VALUES
+        (#{username},#{sex},#{token},#{proveStatus},#{memberStatus},#{phone},#{intro},#{level},#{experience},#{createTime},#{lastRevampTime},#{address},#{delFlag})
+    </insert>
+
+    <update id="update" parameterType="com.empathy.domain.user.BaseMember">
+        UPDATE base_member SET username = #{username},token = #{token}, level = #{level}, prove_status = #{proveStatus}, member_status =
+        #{memberStatus}, address = #{address},sex =#{sex},experience=#{experience},
+        phone=#{phone},intro=#{intro},last_revamp_time=#{lastRevampTime} ,del_flag=#{delFlag} WHERE id = #{id}
+    </update>
+
+    <update id="delById" parameterType="long">
+        UPDATE base_member SET del_flag = 1 WHERE id = #{id}
+    </update>
+
+    <select id="findAllUserCount" resultType="int">
+        select count(id) from base_member
+
+    </select>
+
+    <select id="findAllUser" parameterType="com.empathy.common.PageBo" resultType="com.empathy.domain.user.vo.MemberVo">
+        select a.id,a.username,a.sex,a.prove_status,a.phone,a.address,a.prove_status proveStatus,a.member_status
+        memberStatus,a.intro,a.level,a.create_time createTime,a.del_flag delFlag,b.money
+        from base_member a left join base_user_money b on a.id=b.user_id order by a.create_time desc
+        LIMIT #{start},#{limit}
+    </select>
+
+
+    <select id="findProveCount" parameterType="com.empathy.domain.account.bo.ProveListBo" resultType="int">
+        select count(a.id)
+        from base_member a left join base_live b on a.id=b.user_id
+        LEFT join base_classify c on b.classify_id = c.id
+
+        <where>
+            <if test="classifyId != null">
+                b.classifyId = #{classifyId} and
+            </if>
+
+
+            <if test="str != null and str != ''">
+                (b.id =#{str} or a.username like CONCAT('%',#{str},'%')
+                or b.theme like CONCAT('%',#{str},'%') or b.title like CONCAT('%',#{str},'%')) and
+            </if>
+
+
+            <if test="sex != null">
+                a.sex = #{sex} and
+            </if>
+
+
+            <if test="liveStatus != null">
+                b.live_status = #{liveStatus} and
+            </if>
+            a.prove_status=1 and a.del_flag=0
+
+
+        </where>
+    </select>
+
+    <select id="findProve" parameterType="com.empathy.domain.account.bo.ProveListBo"
+            resultType="com.empathy.domain.account.vo.ProveVo">
+        select a.id,a.username,a.sex,a.member_status memberStatus,a.phone,b.id liveId,b.live_code liveCode,
+        b.live_status liveStatus,b.level level,b.theme,b.code,b.new_code newCode,
+        b.person_count personCount,b.title,b.create_time createTime,b.time_sum timeSum,b.del_flag delFlag,
+        c.id classifyId,c.name classifyName
+        from base_member a left join base_live b on a.id=b.user_id
+        LEFT join base_classify c on b.classify_id = c.id
+
+        <where>
+            <if test="classifyId != null">
+                b.classifyId = #{classifyId} and
+            </if>
+
+
+            <if test="str != null and str != ''">
+                (b.id =#{str} or a.username like CONCAT('%',#{str},'%')
+                or b.theme like CONCAT('%',#{str},'%') or b.title like CONCAT('%',#{str},'%')) and
+            </if>
+
+
+            <if test="sex != null">
+                a.sex = #{sex} and
+            </if>
+
+
+            <if test="liveStatus != null">
+                b.live_status = #{liveStatus} and
+            </if>
+            a.prove_status=1 and a.del_flag=0
+
+
+        </where>
+
+
+        order by b.code,b.create_time desc LIMIT #{start},#{limit}
+
+    </select>
+
+    <select id="findByIdUser" parameterType="long" resultType="com.empathy.domain.user.BaseMember">
+       select a.id,a.username,a.token,a.sex,a.prove_status,a.phone,a.address,a.prove_status proveStatus,a.member_status
+              memberStatus,a.intro,a.level,a.experience,a.create_time createTime,a.del_flag delFlag ,b.url
+        from base_member a
+		left join base_file b on b.purpose_id = a.id and b.purpose='user' and b.type= 'image'
+        WHERE a.id = #{id}
+    </select>
+
+
+</mapper>

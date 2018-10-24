@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.empathy.dao.PermissionDao">
+
+    <sql id="fields">
+        id,
+        role_id,
+
+        code,
+        memo,
+        create_time createTime,
+        last_revamp_time lastRevampTime,
+        del_flag delFlag
+    </sql>
+
+    <sql id="wb">
+        WHERE delflag = 0
+    </sql>
+
+    <select id="findById" parameterType="long" resultType="com.empathy.domain.permission.Permission">
+        SELECT
+        <include refid="fields"/>
+        FROM permission WHERE id = #{id}
+    </select>
+
+    <insert id="save" parameterType="com.empathy.domain.permission.Permission">
+        INSERT INTO permission (code,memo,role_id,create_time,last_revamp_time,del_flag) VALUES (#{code},#{memo},#{roleId},#{createTime},#{lastRevampTime},#{delFlag})
+    </insert>
+
+    <update id="update" parameterType="com.empathy.domain.permission.Permission">
+        UPDATE permission SET code = #{code},memo=#{memo},role_id=#{roleId} ,last_revamp_time=#{lastRevampTime} WHERE id = #{id}
+    </update>
+
+    <update id="delById" parameterType="long">
+        UPDATE permission SET del_flag = 1 WHERE id = #{id}
+    </update>
+
+    <select id="list" parameterType="com.empathy.domain.permission.bo.PermissionBo"
+            resultType="com.empathy.domain.permission.Permission">
+        SELECT
+        <include refid="fields"/>
+        FROM permission
+        <include refid="wb"/>
+        LIMIT #{start},#{limit}
+    </select>
+
+    <select id="count" parameterType="com.empathy.domain.permission.bo.PermissionBo" resultType="long">
+        SELECT COUNT(*) FROM permission
+        <include refid="wb"/>
+    </select>
+
+    <select id="findAll" resultType="com.empathy.domain.permission.Permission">
+        SELECT
+        <include refid="fields"/>
+        FROM permission WHERE delflag=0
+    </select>
+
+    <select id="findPermissionsByMemberId" parameterType="long" resultType="string">
+        SELECT p.code
+        FROM member_role mr
+        INNER JOIN role_permission rp ON mr.role_id = rp.role_id
+        INNER JOIN permission p ON rp.permission_id = p.id
+        WHERE mr.member_id = #{memberId}
+    </select>
+
+    <!--<select id="findHadPermittedByRoleId" parameterType="long" resultType="long">
+
+    </select>-->
+</mapper>

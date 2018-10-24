@@ -1,0 +1,4 @@
+<apilog>
+    <node name="课程上线" url="/course/online"/>
+    <node name="查看同时在线用户" url="/course/online/users"/>
+</apilog>

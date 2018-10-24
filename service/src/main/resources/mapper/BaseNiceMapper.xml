@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.empathy.dao.BaseNiceDao">
+
+
+
+    <sql id="fields">
+        id,
+        parent_id parentId,
+        album_id albumId,
+        code,
+        create_time createTime,
+        last_revamp_time lastRevampTime
+    </sql>
+    <sql id="wb">
+        WHERE del_flag = 0
+    </sql>
+
+    <select id="findById" parameterType="long" resultType="com.empathy.domain.album.BaseNice">
+        SELECT
+        <include refid="fields"/>
+        FROM base_nice WHERE id = #{id}
+    </select>
+
+    <insert id="save" parameterType="com.empathy.domain.album.BaseNiceTitle" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO base_nice (parent_id,code,album_id,create_time,last_revamp_time,del_flag)
+        VALUES (#{parentId},#{code},#{albumId},#{createTime},#{lastRevampTime},#{delFlag})
+    </insert>
+
+    <update id="update" parameterType="com.empathy.domain.album.BaseNice">
+        UPDATE base_nice SET parent_id = #{parentId}, code = #{code},  album_id = #{albumId},last_revamp_time=#{lastRevampTime} WHERE id = #{id}
+    </update>
+
+    <update id="delById" parameterType="long">
+        UPDATE base_nice SET del_flag = 1 WHERE id = #{id}
+    </update>
+
+    <select id="list" parameterType="com.empathy.domain.album.bo.AlbumFindBestBo"
+            resultType="com.empathy.domain.album.vo.AlbumVo">
+        SELECT a.album_id id,b.album_name albumName,(select count(id) from base_recording where album_id = a.album_id) count,c.url url,m.username,b.detail
+         FROM base_nice a left join base_album b on a.album_id = b.id
+         LEFT join base_file c on a.album_id = c.purpose_id and c.type='image' and c.purpose='album'
+         left join base_member m on m.id = b.user_id
+         where a.del_flag = 0 and a.parent_id = #{id} ordec by a.code
+        LIMIT #{start},#{limit}
+    </select>
+
+
+    <select id="findAlbumBest"
+            resultType="com.empathy.domain.album.vo.AlbumVo">
+        SELECT
+	a.album_id id,
+	b.album_name albumName,
+	(
+		SELECT
+			count(br.id)
+		FROM
+			base_recording br
+		WHERE
+			br.album_id = a.album_id
+	) count,
+	c.url url,m.username,b.detail
+FROM
+	base_nice a
+LEFT JOIN base_album b ON a.album_id = b.id
+LEFT JOIN base_file c ON a.album_id = c.purpose_id
+AND c.type = 'image'
+AND c.purpose = 'album'
+left join base_member m on m.id = b.user_id
+where a.parent_id=1 ORDER BY a.code limit 3
+
+    </select>
+
+    <select id="findAlbumBest1"
+            resultType="com.empathy.domain.album.vo.AlbumVo">
+          SELECT
+	a.album_id id,
+	b.album_name albumName,
+	(
+		SELECT
+			count(br.id)
+		FROM
+			base_recording br
+		WHERE
+			br.album_id = a.album_id
+	) count,
+	c.url url,m.username,b.detail
+FROM
+	base_nice a
+LEFT JOIN base_album b ON a.album_id = b.id
+LEFT JOIN base_file c ON a.album_id = c.purpose_id
+AND c.type = 'image'
+AND c.purpose = 'album'
+left join base_member m on m.id = b.user_id
+where a.parent_id=2 ORDER BY a.code limit 3
+
+    </select>
+
+    <select id="findAlbumBest2"
+            resultType="com.empathy.domain.album.vo.AlbumVo">
+       SELECT
+	a.album_id id,
+	b.album_name albumName,
+	(
+		SELECT
+			count(br.id)
+		FROM
+			base_recording br
+		WHERE
+			br.album_id = a.album_id
+	) count,
+	c.url url,m.username,b.detail
+FROM
+	base_nice a
+LEFT JOIN base_album b ON a.album_id = b.id
+LEFT JOIN base_file c ON a.album_id = c.purpose_id
+AND c.type = 'image'
+AND c.purpose = 'album'
+left join base_member m on m.id = b.user_id
+where a.parent_id=3 ORDER BY a.code limit 3
+
+    </select>
+
+
+
+
+    <select id="listCount" parameterType="com.empathy.domain.album.bo.AlbumFindBestBo"
+            resultType="int">
+        SELECT count(id) FROM base_nice where del_flag = 0 and parent_id = #{id}
+
+    </select>
+
+    <select id="findCount" resultType="int">
+      select count(id) from base_nice where parent_id = #{id} and album_id=#{ids} and del_flag = 0
+
+    </select>
+
+
+
+</mapper>

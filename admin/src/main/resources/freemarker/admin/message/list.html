@@ -1,0 +1,87 @@
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h5></h5>
+        <ol class="breadcrumb">
+            <li><a href="${ctx}/admin/" class="fa fa-home">主页</a></li>
+            <li><a href="javascript:void(0);">消息管理</a></li>
+            <li class="active"><strong>列表</strong></li>
+        </ol>
+    </div>
+    <div class="col-lg-2"></div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content" id="ctxDivId">
+                    <form>
+                        <div class="row">
+                            <div class="col-sm-3 m-b-xs">
+                                <div class="input-group">
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-sm btn-default">用户</button>
+                                    </span>
+                                    <select class="form-control" name="userId" id="select2UserId"
+                                            onchange="reloadData()">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <div class="input-group">
+                                <span class="input-group-btn">
+                                        <button type="button" id="ctxSearchId" class="btn btn-sm btn-primary"><i
+                                                class="fa fa-search"></i>查询</button>
+                                </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="ctxTableId"></table>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script>
+    $(function () {
+        initBTable('${ctx}/admin/message/page',
+            [{field: 'state', checkbox: true},
+                {field: 'fname', title: '发送人', align: 'left', sortable: true},
+                {field: 'tname', title: '接收人', align: 'left', sortable: true},
+                {field: 'content', title: '内容', align: 'left', sortable: true},
+                {field: 'typeStr', title: '类型', align: 'left', sortable: true},
+                {
+                    field: 'readed', title: '已读', align: 'left', sortable: true, formatter: function (value) {
+                    if (1 == value) {
+                        return "已读";
+                    } else {
+                        return "未读";
+                    }
+                }
+                },
+                {field: 'reference', title: '关联ID', align: 'left', sortable: true},
+                {field: 'ext', title: '扩展信息', align: 'left', sortable: true},
+                {field: 'created', title: '创建时间', align: 'left', sortable: true},
+                {field: 'modified', title: '修改时间', align: 'left', sortable: true},
+                {
+                    field: 'id',
+                    title: '操作',
+                    align: 'left',
+                    cellStyle: norwap(),
+                    formatter: function (value) {
+                        var html = "";
+                        return html;
+                    }
+                }], 'createTime', 'desc', function () {
+                //init tools
+                var tools = '<div class="pull-left search">';
+                tools += '&nbsp;&nbsp;<a class="fa fa-plus" href="javascript:void(0);">批量移除</a>&nbsp;&nbsp;';
+                tools += '</div>';
+                $(".fixed-table-toolbar").append(tools);
+            });
+        initSelect2("select2UserId", "/admin/select2/users");
+    });
+</script>

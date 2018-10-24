@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>会员等级</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="stylesheet" href="../../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../plugins/jqgrid/ui.jqgrid-bootstrap.css">
+    <link rel="stylesheet" href="../../plugins/ztree/css/metroStyle/metroStyle.css">
+    <link rel="stylesheet" href="../../css/animate.min.css">
+    <link rel="stylesheet" href="../../css/main.css">
+    <link href="../../plugins/umeditor/themes/default/_css/umeditor.css" type="text/css" rel="stylesheet">
+</head>
+
+<body>
+<div id="rrapp" class="zxxAnimateFadeIn" style="display:none;" v-cloak>
+    <div v-show="showList">
+        <div class="grid-btn">
+            <div class="form-group">
+                <input type="text" class="form-control col-sm-2" style="width:180px;margin-right:10px;margin-top:10px;"
+                       v-model="q.s_id"
+                       @keyup.enter="query" placeholder="ID">
+                <input type="text" class="form-control col-sm-2" style="width:180px;margin-right:10px;margin-top:10px;"
+                       v-model="q.s_name"
+                       @keyup.enter="query" placeholder="名称">
+                <input type="text" class="form-control col-sm-2" style="width:180px;margin-right:10px;margin-top:10px;"
+                       v-model="q.s_description"
+                       @keyup.enter="query" placeholder="描述">
+            </div>
+            <a class="btn btn-default" @click="query" style="margin-top:10px;">
+                <i class="fa fa-search"></i>&nbsp;查询</a>
+            <a v-if="hasPermission('app:memberrank:save')" class="btn btn-default" @click="add"
+               style="margin-top:10px;">
+                <i class="fa fa-plus"></i>&nbsp;新增</a>
+            <a v-if="hasPermission('app:memberrank:update')" class="btn btn-default" @click="update"
+               style="margin-top:10px;">
+                <i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+            <a v-if="hasPermission('app:memberrank:delete')" class="btn btn-default" @click="del"
+               style="margin-top:10px;">
+                <i class="fa fa-trash-o"></i>&nbsp;删除</a>
+        </div>
+        <table id="jqGrid"></table>
+        <div id="jqGridPager"></div>
+    </div>
+
+    <div v-show="!showList" class="panel panel-default">
+        <div class="panel-heading">{{title}}</div>
+        <form class="form-horizontal">
+            <div class="form-group">
+                <div class="col-sm-2 control-label">名称</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="memberRank.name" placeholder="名称"/>
+                </div>
+            </div>
+            <!-- <div class="form-group">
+                <div class="col-sm-2 control-label"></div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="memberRank.pic" placeholder="" />
+                </div>
+            </div> -->
+            <div class="form-group">
+                <div class="col-sm-2 control-label">图标</div>
+                <div class="col-sm-10">
+                    <div class="input-group">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" id="upload-btn">
+                                <i class="fa fa-cloud-upload"></i></button>
+                        </div>
+                        <input type="text" class="form-control" v-model="memberRank.smallpic" placeholder="图标地址(仅一张)"/>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">分成基数</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="memberRank.divideCnum" placeholder="分成基数"
+                           onmouseover="tip('无符号整型数字，若购买等级礼包达到该等级，其唯一直接上线获得**元[仅2级以上的才能获得]',this,2)"
+                    />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">分成占比(%)</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="memberRank.dividePercent" placeholder="分成占比(不填百分号)"
+                           onmouseover="tip('单位:%，范围:[0,100]，若购买该等级礼包升级至该等级，其所有间接上线分成占比[仅2级以上才能获得]',this,2)"
+                    />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">解锁:直属达标下线人数</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="memberRank.deblockDirectnum" placeholder="直属达标下线"
+                           onmouseover="tip('解锁下级条件一:直属下线人数(每级叠加且有效下线为仅比自己低一级的人)',this,2)"
+                    />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">解锁:下线总数</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="memberRank.deblockNodenum" placeholder="下线总计"
+                           onmouseover="tip('解锁下级条件二:下线人数(每级叠加)',this,2)"
+                    />
+                </div>
+            </div>
+            <!-- <div class="form-group">
+                    <div class="col-sm-2 control-label"></div>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" v-model="memberRank.status" placeholder="" />
+                    </div>
+                </div> -->
+            <!-- <div class="form-group">
+                    <div class="col-sm-2 control-label"></div>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" v-model="memberRank.createTime" placeholder="" />
+                    </div>
+                </div> -->
+            <div class="form-group">
+                <div class="col-sm-2 control-label">描述</div>
+                <div class="col-sm-10">
+                        <textarea id="uecontent" class="form-control" v-model="memberRank.description"
+                                  placeholder="描述信息" style="width:600px;height:300px;">
+                                </textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label"></div>
+                <input type="button" class="btn btn-default" @click="saveOrUpdate" value="确定"/> &nbsp;&nbsp;
+                <input type="button" class="btn btn-default" @click="reload" value="返回"/>
+            </div>
+        </form>
+    </div>
+</div>
+<script src="../../libs/jquery.min.js"></script>
+<script src="../../plugins/layer/layer.js"></script>
+<script src="../../libs/bootstrap.min.js"></script>
+<script src="../../libs/vue.min.js"></script>
+<script src="../../plugins/jqgrid/grid.locale-cn.js"></script>
+<script src="../../plugins/jqgrid/jquery.jqGrid.min.js"></script>
+<script src="../../plugins/ztree/jquery.ztree.all.min.js"></script>
+<script type="text/javascript" charset="utf-8" src="../../plugins/umeditor/umeditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="../../plugins/umeditor/config/editor_api.js"></script>
+<script type="text/javascript" src="../../plugins/umeditor/lang/zh-cn/zh-cn.js"></script>
+<script src="../../js/ue.mine.js"></script>
+<script src="../../js/common.js"></script>
+<script src="../../libs/ajaxupload.js"></script>
+<script src="../../js/modules/app/memberrank.js"></script>
+<script>
+    $(function () {
+        renderUE(null, 2);
+    })
+</script>
+</body>
+
+</html>

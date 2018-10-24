@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>商品管理</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="stylesheet" href="../../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../plugins/jqgrid/ui.jqgrid-bootstrap.css">
+    <link rel="stylesheet" href="../../plugins/ztree/css/metroStyle/metroStyle.css">
+    <link rel="stylesheet" href="../../css/animate.min.css">
+    <link rel="stylesheet" href="../../css/main.css">
+    <link href="../../plugins/umeditor/themes/default/_css/umeditor.css" type="text/css" rel="stylesheet">
+</head>
+
+<body>
+<div id="rrapp" class="zxxAnimateFadeIn" style="display:none;" v-cloak>
+    <div v-show="showList">
+        <div class="grid-btn">
+            <div class="form-group">
+                <input type="text" class="form-control col-sm-2" style="width:180px;margin-right:10px;margin-top:10px;"
+                       v-model="q.s_id"
+                       @keyup.enter="query" placeholder="ID">
+                <input type="text" class="form-control col-sm-2" style="width:180px;margin-right:10px;margin-top:10px;"
+                       v-model="q.s_title"
+                       @keyup.enter="query" placeholder="标题">
+                <input type="text" class="form-control col-sm-2" style="width:180px;margin-right:10px;margin-top:10px;"
+                       v-model="q.s_price"
+                       @keyup.enter="query" placeholder="价格">
+                <input type="text" class="form-control col-sm-2" style="width:180px;margin-right:10px;margin-top:10px;"
+                       v-model="q.s_content"
+                       @keyup.enter="query" placeholder="图文信息">
+            </div>
+            <a class="btn btn-default" @click="query" style="margin-top:10px;">
+                <i class="fa fa-search"></i>&nbsp;查询</a>
+            <a v-if="hasPermission('app:goods:save')" class="btn btn-default" @click="add" style="margin-top:10px;">
+                <i class="fa fa-plus"></i>&nbsp;新增</a>
+            <a v-if="hasPermission('app:goods:update')" class="btn btn-default" @click="update"
+               style="margin-top:10px;">
+                <i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+            <a v-if="hasPermission('app:goods:delete')" class="btn btn-default" @click="del" style="margin-top:10px;">
+                <i class="fa fa-trash-o"></i>&nbsp;删除</a>
+            <a v-if="hasPermission('app:goods:status')" class="btn btn-default" @click="del" style="margin-top:10px;">
+                <i class="fa fa-cart-o"></i>&nbsp;发货</a>
+        </div>
+        <table id="jqGrid"></table>
+        <div id="jqGridPager"></div>
+    </div>
+
+    <div v-show="!showList" class="panel panel-default">
+        <div class="panel-heading">{{title}}</div>
+        <form class="form-horizontal">
+            <div class="form-group">
+                <div class="col-sm-2 control-label">绑定等级</div>
+                <div class="col-sm-10">
+                    <input id="mrf" type="text" class="form-control" v-model="goods.memberRankId"
+                           @blur="checkMemberRank" placeholder="绑定等级"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">标题</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="goods.title" placeholder="标题"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">价格</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="goods.price" placeholder="价格(元)"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">轮播图</div>
+                <div id="ad-up" class="col-sm-10">
+                    <div id="final-up" class="input-group">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" id="upload-btn">
+                                <i class="fa fa-cloud-upload"></i>
+                            </button>
+                        </div>
+                        <input type="text" name="banner" class="form-control" v-model="goods.banners"
+                               placeholder="轮播图(可上传多张,分号间隔)"/>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">排序</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="goods.sort" placeholder="排序"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">描述信息</div>
+                <div class="col-sm-10">
+                        <textarea id="uecontent" class="form-control" v-model="goods.content" placeholder="描述信息"
+                                  style="width:800px;height:300px;">
+                            </textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label"></div>
+                <input type="button" class="btn btn-default" @click="saveOrUpdate" value="确定"/> &nbsp;&nbsp;
+                <input type="button" class="btn btn-default" @click="reload" value="返回"/>
+            </div>
+        </form>
+    </div>
+</div>
+<script src="../../libs/jquery.min.js"></script>
+<script src="../../plugins/layer/layer.js"></script>
+<script src="../../libs/bootstrap.min.js"></script>
+<script src="../../libs/vue.min.js"></script>
+<script src="../../plugins/jqgrid/grid.locale-cn.js"></script>
+<script src="../../plugins/jqgrid/jquery.jqGrid.min.js"></script>
+<script src="../../plugins/ztree/jquery.ztree.all.min.js"></script>
+<script type="text/javascript" charset="utf-8" src="../../plugins/umeditor/umeditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="../../plugins/umeditor/config/editor_api.js"></script>
+<script type="text/javascript" src="../../plugins/umeditor/lang/zh-cn/zh-cn.js"></script>
+<script src="../../js/ue.mine.js"></script>
+<script src="../../libs/formvalidator.js"></script>
+<script src="../../js/common.js"></script>
+<script src="../../libs/ajaxupload.js"></script>
+<script src="../../js/modules/app/goods.js"></script>
+<script>
+    $(function () {
+        renderUE();
+    })
+</script>
+</body>
+
+</html>

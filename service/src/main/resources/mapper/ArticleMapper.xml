@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.empathy.dao.ArticleDao">
+
+    <sql id="fields">
+        id,title,first_content firstContent,content,red_point redPoint,user_id userId,code,record_id recordId,
+        create_time createTime,
+        last_revamp_time lastRevampTime
+    </sql>
+    <sql id="wb">
+        WHERE del_flag = 0
+    </sql>
+
+    <select id="findById" parameterType="long" resultType="com.empathy.domain.article.Article">
+        SELECT
+        <include refid="fields"/>
+        FROM base_article WHERE id = #{id}
+    </select>
+
+    <insert id="save" parameterType="com.empathy.domain.article.Article" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO base_article (title,record_id,first_content,content,red_point,user_id,code,type,create_time,last_revamp_time,del_flag)
+        VALUES (#{title},#{recordId},#{firstContent},#{content},#{redPoint},#{userId},#{code},#{type},#{createTime},#{lastRevampTime},#{delFlag})
+    </insert>
+
+    <insert id="addPointInfo" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO base_point_info (user_id,article_id)
+        VALUES (#{userId},#{id})
+    </insert>
+
+    <delete id="delPointInfo" parameterType="map">
+      delete from base_point_info
+      where user_id = #{userId} and article_id = #{articleId}
+    </delete>
+
+    <select id="findCount" resultType="int">
+
+        select count(id) from base_point_info where user_id = #{userId} and article_id = #{id}
+    </select>
+
+    <update id="update" parameterType="com.empathy.domain.article.Article">
+        UPDATE base_article SET title = #{title}, record_id = #{recordId}, first_content = #{firstContent}, content = #{content}, code = #{code}, red_point = #{redPoint},last_revamp_time=#{lastRevampTime} WHERE id =
+        #{id}
+    </update>
+
+    <update id="delById" parameterType="long">
+        UPDATE base_article SET del_flag = 1 WHERE id = #{id}
+    </update>
+
+    <select id="count" parameterType="com.empathy.domain.article.bo.ArticleFindBo" resultType="int">
+        select count(a.id) from base_article a left join base_member b on a.user_id = b.id
+
+        <where>
+            <if test="str != null">
+                ( a.first_content like  CONCAT('%',#{str},'%') or a.content like CONCAT('%',#{str},'%') or a.title like  CONCAT('%',#{str},'%')
+                or b.username like  CONCAT('%',#{str},'%')
+                ) and
+
+            </if>
+            <if test="type != null">
+                a.type = #{type} and
+            </if>
+            a.del_flag=0
+
+
+        </where>
+
+
+    </select>
+
+
+    <select id="list" parameterType="com.empathy.domain.article.bo.ArticleFindBo" resultType="com.empathy.domain.article.vo.ArticleVo">
+        select a.id,a.user_id userId,a.content,a.first_content firstContent,a.red_point redPoint,a.title,a.code,
+        b.username,d.url articleUrl,a.record_id recordId,a.type
+
+        from base_article a left join base_member b on a.user_id = b.id
+
+        left join base_file d on a.id = d.purpose_id  and d.type="image" and d.purpose="article"
+
+        <where>
+            <if test="str != null">
+                ( a.first_content like  CONCAT('%',#{str},'%') or a.content like CONCAT('%',#{str},'%') or a.title like  CONCAT('%',#{str},'%')
+                or b.username like  CONCAT('%',#{str},'%')
+                ) and
+
+            </if>
+            <if test="type != null">
+                a.type = #{type} and
+            </if>
+            a.del_flag=0
+
+
+        </where>
+        GROUP BY a.id
+        order by a.create_time desc,a.code
+        LIMIT #{start},#{limit}
+    </select>
+
+
+    <select id="listFor" parameterType="com.empathy.domain.article.bo.ArticleFindBo" resultType="com.empathy.domain.article.vo.ArticleVo">
+        select a.id,a.user_id userId,a.first_content firstContent,a.red_point redPoint,a.title,a.code,
+        b.username,c.url,a.create_time createTime,a.content,a.record_id recordId,a.type
+
+        from base_article a left join base_member b on a.user_id = b.id
+
+        left join base_file c on a.id = c.purpose_id  and c.type="image" and c.purpose="user"
+
+        <where>
+            <if test="str != null">
+                ( a.first_content like  CONCAT('%',#{str},'%') or a.content like CONCAT('%',#{str},'%') or a.title like  CONCAT('%',#{str},'%')
+                or b.username like  CONCAT('%',#{str},'%')
+                ) and
+
+            </if>
+            a.type = #{type} and
+            a.del_flag=0
+
+
+        </where>
+        order by a.create_time desc,a.code
+        LIMIT #{start},#{limit}
+    </select>
+
+
+    <select id="findDetail" parameterType="long" resultType="com.empathy.domain.article.vo.ArticleVo">
+   select a.id,a.user_id userId,a.first_content firstContent,a.red_point redPoint,a.title,a.code,
+        b.username,c.url,a.content,a.create_time createTime,a.content content
+        from base_article a
+        left join base_member b on a.user_id = b.id
+        left join base_file c on a.id = c.purpose_id  and c.type="image" and c.purpose="user"
+        where a.id=#{id} and  a.del_flag=0
+
+    </select>
+
+
+    <update id="addPoint" parameterType="long">
+
+          UPDATE base_article SET red_point = red_point+1 where id=#{id}
+    </update>
+
+    <update id="cancelPoint" parameterType="long">
+        UPDATE base_article SET red_point = red_point-1 where id=#{articleId}
+    </update>
+
+
+</mapper>

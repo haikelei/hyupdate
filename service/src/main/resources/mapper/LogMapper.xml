@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.empathy.dao.LogDao">
+
+    <insert id="save" parameterType="com.empathy.domain.log.Log">
+        INSERT INTO log (user_id,type,target_id,created,times,province,city,country,content)
+        VALUES (#{userId},#{type},#{targetId},#{created},#{times},#{province},#{city},#{country},#{content})
+    </insert>
+
+    <sql id="wb">
+        WHERE 1=1
+        <if test="type != null and type != 0">
+            AND lg.type = #{type}
+        </if>
+        <if test="province != null">
+            AND lg.province = #{province}
+        </if>
+        <if test="city != null">
+            AND lg.city = #{city}
+        </if>
+        <if test="country != null">
+            AND lg.country = #{country}
+        </if>
+    </sql>
+
+    <select id="count" parameterType="com.empathy.domain.log.bo.LogBo" resultType="long">
+        SELECT count(*) FROM log lg
+        <include refid="wb"/>
+    </select>
+
+    <select id="page" parameterType="com.empathy.domain.log.bo.LogBo" resultType="com.empathy.domain.log.vo.LogVo">
+        SELECT
+        lg.id,lg.user_id userId,
+        IFNULL(ub.realname,ub.phone) userName,
+        lg.type,
+        lg.target_id targetId,
+        lg.created,
+        lg.times,
+        lg.province,
+        lg.city,
+        lg.country,
+        lg.content
+        FROM log lg
+        INNER JOIN user_base ub ON lg.user_id = ub.id
+        <include refid="wb"/>
+        ORDER BY created DESC
+        LIMIT #{start},#{limit}
+    </select>
+</mapper>

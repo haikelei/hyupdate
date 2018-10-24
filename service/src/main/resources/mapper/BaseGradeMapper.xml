@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.empathy.dao.BaseGradeDao">
+    <resultMap id="BaseResultMap" type="com.empathy.domain.grade.BaseGrade">
+        <id column="id" property="id"/>
+        <result column="grade" property="grade"/>
+        <result column="min_exp" property="minExp"/>
+        <result column="max_exp" property="maxExp"/>
+        <result column="rule" property="rule"/>
+        <result column="del_flag" property="delFlag"></result>
+        <result column="create_time" property="createTime"/>
+        <result column="last_revamp_time" property="lastRevampTime"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+      id, grade, min_exp, max_exp, live_time liveTime, exp, rule, create_time,del_flag
+    </sql>
+
+    <select id="findByExp" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from base_grade
+        where #{exp} BETWEEN min_exp and max_exp
+    </select>
+
+
+
+</mapper>

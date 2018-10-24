@@ -1,0 +1,14 @@
+{
+  "properties": [
+    {
+      "name": "yn.redis.open",
+      "type": "java.lang.String",
+      "description": "A description for 'yn.redis.open'"
+    },
+    {
+      "name": "yn.shiro.redis",
+      "type": "java.lang.String",
+      "description": "A description for 'yn.shiro.redis'"
+    }
+  ]
+}

@@ -1,0 +1,92 @@
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h5></h5>
+        <ol class="breadcrumb">
+            <li><a href="${ctx}/admin/" class="fa fa-home">主页</a></li>
+            <li><a href="javascript:void(0);">系统管理</a></li>
+            <li class="active"><strong>日志</strong></li>
+        </ol>
+    </div>
+    <div class="col-lg-2"></div>
+</div>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content" id="ctxDivId">
+                    <form>
+                        <div class="row">
+                            <div class="col-sm-4 m-b-xs">
+                                <div class="input-group" id="city_4">
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-sm btn-default">省/市/区</button>
+                            </span>
+                                    <select class="prov" name="province"
+                                            style="min-width:100px;height:30px;vertical-align: middle;border:1px solid #e5e6e7;"></select>
+                                    <select class="city" name="city"
+                                            style="margin-left:2px;min-width:100px;height:30px;vertical-align: middle;border:1px solid #e5e6e7;"></select>
+                                    <select class="dist" name="country"
+                                            style="margin-left:2px;min-width:100px;height:30px;vertical-align: middle;border:1px solid #e5e6e7;"></select>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 m-b-xs">
+                                <div class="input-group">
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-sm btn-default">起止日期 <i class="fa fa-calendar"></i></button>
+                            </span>
+                                    <input type="text" name="startDate" id="startDate" placeholder="开始日期"
+                                           class="input-sm form-control">
+                                </div>
+                            </div>
+                            <div class="col-sm-2 m-b-xs">
+                                <div class="input-group">
+                                    <input type="text" name="endDate" id="endDate" placeholder="截止日期"
+                                           class="input-sm form-control">
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <div class="input-group">
+                                <span class="input-group-btn">
+                                        <button type="button" id="ctxSearchId" class="btn btn-sm btn-primary"><i
+                                                class="fa fa-search"></i>查询</button>
+                                </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="ctxTableId"></table>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script src="/assets/js/area/js/jquery.cityselect.js"></script>
+<script>
+    $(function () {
+        initBTable('${ctx}/admin/log/page',
+            [{field: 'userName', title: '姓名', align: 'left'},
+                {field: 'typeStr', title: '类型', align: 'left'},
+                {field: 'targetId', title: '目标ID', align: 'left'},
+                {field: 'times', title: '耗时', align: 'left'},
+                {field: 'province', title: '省', align: 'left'},
+                {field: 'city', title: '市', align: 'left'},
+                {field: 'country', title: '区', align: 'left'},
+                {field: 'content', title: '内容', align: 'left'},
+                {field: 'created', title: '创建时间', align: 'left'}
+            ], 'createTime', 'desc', function () {
+                var tools = '<div class="pull-left search">';
+                //tools +='&nbsp;&nbsp;<a class="fa fa-plus" href="javascript:void(0);">批量删除</a>&nbsp;&nbsp;';
+                tools += '</div>';
+                $(".fixed-table-toolbar").append(tools);
+            });
+        bindDatepicker("startDate");
+        bindDatepicker("endDate");
+        $("#city_4").citySelect({
+            nodata: "",
+            required: false
+        });
+    });
+</script>

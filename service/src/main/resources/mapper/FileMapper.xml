@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.empathy.dao.FileDao">
+    <resultMap id="BaseResultMap" type="com.empathy.domain.bidding.File">
+        <id column="id" property="id"/>
+        <result column="type" property="type"/>
+        <result column="purpose" property="purpose"/>
+        <result column="purpose_id" property="purposeId"/>
+        <result column="url" property="location"/>
+        <result column="del_flag" property="delFlag"></result>
+        <result column="create_time" property="createTime"/>
+        <result column="last_revamp_time" property="lastRevampTime"/>
+    </resultMap>
+
+    <!--<resultMap id="BaseMap" type="com.jutong.shop.domain.Userinfo" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="phone_number" property="phoneNumber" jdbcType="VARCHAR" />
+        <result column="email" property="email" jdbcType="VARCHAR" />
+        <result column="password" property="password" jdbcType="VARCHAR" />
+        <result column="head_path" property="headPath" jdbcType="VARCHAR" />
+        <result column="real_name" property="realName" jdbcType="VARCHAR" />
+        <result column="ID_number" property="IDNumber" jdbcType="VARCHAR" />
+        <result column="ID_frontage" property="IDFrontage" jdbcType="VARCHAR" />
+        <result column="ID_contrary" property="IDContrary" jdbcType="VARCHAR" />
+        <result column="creation_time" property="creationTime" />
+        <result column="type" property="type"/>
+        <result column="post" property="post"/>
+        <result column="token" property="token"/>
+        <result column="last_revamp_time" property="lastRevampTime"  />
+    </resultMap>-->
+
+    <delete id="deleteByPrimaryKey">
+        delete from base_file
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into base_file (type,purpose, purpose_id, url,
+        create_time, last_revamp_time,del_flag)
+        values (#{type},#{purpose},#{purposeId},#{location},#{createTime},#{lastRevampTime},#{delFlag})
+    </insert>
+    <update id="updateByPrimaryKey">
+        update base_file
+        set purpose = #{purpose},
+        purpose_id = #{purposeId},
+        type = #{type},
+        url = #{location},
+        create_time = #{createTime},
+        last_revamp_time = #{lastRevampTime}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+        select id,type,purpose, purpose_id, url,
+        del_flag, create_time, last_revamp_time
+        from base_file
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+
+    <select id="queryPurposeId" resultMap="BaseResultMap">
+        select id,type,purpose, purpose_id,url,
+        del_flag, create_time, last_revamp_time
+        from base_file
+        WHERE purpose = #{purpose} and purpose_id=#{purposeId}
+    </select>
+
+    <select id="findFileByPurposeIdAndType" parameterType="com.empathy.domain.file.bo.FileCarBo"
+            resultMap="BaseResultMap">
+        SELECT id,type,purpose, purpose_id, url,
+        del_flag, create_time, last_revamp_time from base_file where purpose = #{type} and purpose_id=#{purposeId} and
+        del_flag=0
+
+    </select>
+    <select id="findFileByPurposeIdAndTypeList" parameterType="com.empathy.domain.file.bo.FileCarBo"
+            resultMap="BaseResultMap">
+        SELECT id,type,purpose, purpose_id, url,
+        del_flag, create_time, last_revamp_time from base_file where purpose = #{type} and purpose_id=#{purposeId} and
+        del_flag=0
+
+    </select>
+
+
+    <select id="findFileByPurposeIdAndTypeList1" parameterType="com.empathy.domain.file.bo.FileCarBo"
+            resultType="string">
+        SELECT  url from base_file where purpose = #{type} and purpose_id=#{purposeId} and
+        del_flag=0
+
+    </select>
+
+
+    <select id="findFileByPurposeType" parameterType="com.empathy.domain.file.bo.FilesFindBo" resultType="string">
+        select url from base_file where purpose=#{purpose} and type=#{type} and del_flag =0 and purpose_id =#{purposeId}
+
+    </select>
+
+
+    <!--
+        <select id="queryCount" resultType="int">
+            select count(id) from file
+        </select>
+
+        <select id="query" resultMap="BaseResultMap" >
+            select id,phone, username, password,
+            sex, type, code, create_time,
+            last_revamp_time
+            from file
+
+        </select>
+    -->
+
+</mapper>

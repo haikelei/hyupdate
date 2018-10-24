@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>佣金管理</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="stylesheet" href="../../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../plugins/jqgrid/ui.jqgrid-bootstrap.css">
+    <link rel="stylesheet" href="../../plugins/ztree/css/metroStyle/metroStyle.css">
+    <link rel="stylesheet" href="../../css/animate.min.css">
+    <link rel="stylesheet" href="../../css/main.css">
+    <script src="../../libs/jquery.min.js"></script>
+    <script src="../../plugins/layer/layer.js"></script>
+    <script src="../../libs/bootstrap.min.js"></script>
+    <script src="../../libs/vue.min.js"></script>
+    <script src="../../plugins/jqgrid/grid.locale-cn.js"></script>
+    <script src="../../plugins/jqgrid/jquery.jqGrid.min.js"></script>
+    <script src="../../plugins/ztree/jquery.ztree.all.min.js"></script>
+    <script src="../../js/common.js"></script>
+</head>
+
+<body>
+<div id="rrapp" class="zxxAnimateFadeIn" style="display:none;" v-cloak>
+    <div v-show="showList">
+        <div class="grid-btn">
+            <div class="form-group">
+                <input type="text" class="form-control col-sm-2" style="width:180px;margin-right:10px;margin-top:10px;"
+                       v-model="q.s_id" @keyup.enter="query"
+                       placeholder="ID">
+                <input type="text" class="form-control col-sm-2" style="width:180px;margin-right:10px;margin-top:10px;"
+                       v-model="q.s_user_name" @keyup.enter="query"
+                       placeholder="佣金所属用户">
+                <input type="text" class="form-control col-sm-2" style="width:180px;margin-right:10px;margin-top:10px;"
+                       v-model="q.s_order_serial_num" @keyup.enter="query"
+                       placeholder="订单流水号">
+                <input type="text" class="form-control col-sm-2" style="width:180px;margin-right:10px;margin-top:10px;"
+                       v-model="q.s_money" @keyup.enter="query"
+                       placeholder="佣金">
+            </div>
+            <a class="btn btn-default" @click="query" style="margin-top:10px;">
+                <i class="fa fa-search"></i>&nbsp;查询</a>
+        </div>
+        <table id="jqGrid"></table>
+        <div id="jqGridPager"></div>
+    </div>
+</div>
+<script src="../../js/modules/app/commission.js"></script>
+</body>
+
+</html>

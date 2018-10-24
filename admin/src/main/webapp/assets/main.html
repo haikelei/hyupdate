@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>仪表盘</title>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/animate.min.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <style>
+        .mobile-box {
+            width: 346px;
+            height: 600px;
+            float: left;
+            margin: 0 30px 30px 30px;
+        }
+
+        .phone-box {
+            width: 346px;
+            height: 620px;
+            background: url(images/phoneBg.png) no-repeat;
+            padding: 70px 0 0 14px;
+            position: relative;
+        }
+
+        .phone-box #zxxframe2 {
+            position: absolute;
+            width: 320px;
+            height: 480px;
+            margin: 0px 0 0 0px;
+            z-index: 5;
+        }
+    </style>
+</head>
+
+<body>
+<div id="rrapp" class="panel panel-default zxxAnimateFadeIn hiden" style="display:none;">
+    <div class="panel-heading">仪表盘</div>
+    <div style="padding: 10px 0 20px 10px;height:750px;">
+        <div style="float: left;padding-top:30px;padding-left:100px;">
+            <div class="mobile-box">
+                <div class="phone-box">
+                    <iframe id="zxxframe2" name="zxxframe2" scrolling="yes" frameborder="0" :src="main"></iframe>
+                </div>
+            </div>
+            <!-- <div style="margin-top: 20px;padding-left:131px;">
+                <button class="btn btn-default" onclick="document.frames['zxxframe2'].history.back()"><i class="fa fa-arrow-left"></i>&nbsp;返回</button>
+                <button class="btn btn-default">前进&nbsp;<i class="fa fa-arrow-right"></i></button>
+            </div> -->
+        </div>
+        <div style="float: left;padding-top:50px;padding-left:100px;width:600px;">
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">WebApp：</div>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" v-model="main"
+                               placeholder="WebApp地址( 格式:http://127.0.0.1:8001/ )"
+                               onmouseover="tip('修改后立即回显',this,2)"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2 control-label">首页通知</div>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" v-model="notification.content" @keyup.enter="doSubmit"
+                               placeholder="首页通知"
+                               onmouseover="tip('修改后回车立即提交',this,2)"/>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="libs/jquery.min.js"></script>
+    <script src="plugins/jqgrid/jquery.jqGrid.min.js"></script>
+    <script src="libs/vue.min.js"></script>
+    <script src="libs/bootstrap.min.js"></script>
+    <script src="plugins/layer/layer.js"></script>
+    <script src="js/js/common.js"></script>
+    <script>
+        var vm = new Vue({
+            el: '#rrapp',
+            data: {
+                main: webappURL,
+                notification: {},
+            },
+            created: function () {
+                this.getInfo(1);
+            },
+            methods: {
+                getInfo: function (id) {
+                    $.get(baseURL + "app/notification/info/" + id, function (r) {
+                        vm.notification = r.notification;
+                    });
+                },
+                doSubmit: function (event) {
+                    $.ajax({
+                        type: "POST",
+                        url: baseURL + "app/notification/update",
+                        contentType: "application/json",
+                        data: JSON.stringify(vm.notification),
+                        success: function (r) {
+                            if (r.code === 0) {
+                                $('#zxxframe2').attr('src', $('#zxxframe2').attr('src'))//刷新
+                                msg('修改成功');
+                            } else {
+                                alert(r.msg);
+                            }
+                        }
+                    });
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

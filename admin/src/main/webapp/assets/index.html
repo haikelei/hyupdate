@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html style="overflow-y:hidden;">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>华语之声 | 管理</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/AdminLTE.min.css">
+
+    <link rel="stylesheet" href="dist/css/skins/_all-skins.min.css">
+    <link rel="stylesheet" href="css/animate.min.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/select.style.css">
+
+</head>
+
+<body class="hold-transition skin-blue sidebar-mini" style="overflow-y: hidden;">
+
+
+<header class="main-header" id="rrapp" v-cloak>
+    <a href="javascript:;" class="logo">
+        <span class="logo-mini">
+          <b>华语</b>
+        </span>
+        <span class="logo-lg">
+          <b style="color: black">华语之声</b>
+        </span>
+    </a>
+    <nav class="navbar navbar-static-top" role="navigation">
+        <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button" style="color: black">
+            <span class="sr-only">Toggle navigation</span>
+        </a>
+        <div style="float:left;color:#000;padding:15px 10px;">你好，{{user.username}}！欢迎登录华语之声系统管理中心~</div>
+        <div class="navbar-custom-menu">
+            <ul class="nav navbar-nav">
+                <li>
+                    <a href="javascript:;" @click="updatePassword()" style="color: black">
+                        <i class="fa fa-lock"></i> &nbsp;修改密码</a>
+                </li>
+                <li>
+                    <a href="javascript:;" @click="logout" style="color: black">
+                        <i class="fa fa-sign-out"></i> &nbsp;退出系统</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</header>
+<aside class="main-sidebar">
+    <section class="sidebar">
+        <ul class="sidebar-menu">
+            <li class="header">导航菜单</li>
+
+            <ul class="sidebar-menu" data-widget="tree">
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-user-o"></i> <span>用户管理</span>
+                        <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li><a href="user.html" target='zxxframe'><i class="fa fa-circle-o"></i>用户管理</a></li>
+                    </ul>
+                </li>
+            </ul>
+
+
+            <ul class="sidebar-menu" data-widget="tree">
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-user-circle-o"></i> <span>管理员管理</span>
+                        <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <!--<li><a href="person.html"><i class="fa fa-circle-o"></i>管理员管理</a></li>-->
+                        <li><a href="person.html" target='zxxframe'><i class="fa fa-circle-o"></i>管理员管理</a></li>
+                        <li><a href="role.html" target='zxxframe'><i class="fa fa-circle-o"></i>权限管理</a></li>
+                    </ul>
+                </li>
+            </ul>
+
+
+            <ul class="sidebar-menu" data-widget="tree">
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-user-md"></i> <span>主播管理</span>
+                        <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li><a href="prove.html" target='zxxframe'><i class="fa fa-circle-o"></i>主播管理</a></li>
+                        <li><a href="prove_add.html" target='zxxframe'><i class="fa fa-circle-o"></i>主播审核</a></li>
+                        <li><a href="gift.html" target='zxxframe'><i class="fa fa-circle-o"></i>礼物列表</a></li>
+                    </ul>
+                </li>
+            </ul>
+
+
+            <ul class="sidebar-menu" data-widget="tree">
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-drivers-license"></i> <span>财务管理</span>
+                        <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li><a href="withdraw.html" target='zxxframe'><i class="fa fa-circle-o"></i>提现列表</a></li>
+                        <li><a href="money.html" target='zxxframe'><i class="fa fa-circle-o"></i>财务管理</a></li>
+                    </ul>
+                </li>
+            </ul>
+
+
+            <ul class="sidebar-menu" data-widget="tree">
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-volume-up"></i> <span>音频列表</span>
+                        <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li><a href="album.html" target='zxxframe'><i class="fa fa-circle-o"></i>音频列表</a></li>
+                    </ul>
+                </li>
+            </ul>
+
+
+            <ul class="sidebar-menu" data-widget="tree">
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-map-o"></i> <span>文章管理</span>
+                        <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li><a href="article.html" target='zxxframe'><i class="fa fa-circle-o"></i>文章详情</a></li>
+                    </ul>
+                </li>
+            </ul>
+
+
+            <ul class="sidebar-menu" data-widget="tree">
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-gears"></i> <span>系统设置</span>
+                        <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li><a href="comment.html" target='zxxframe'><i class="fa fa-circle-o"></i>评论管理</a></li>
+                        <li><a href="resource.html" target='zxxframe'><i class="fa fa-circle-o"></i>资源位管理</a></li>
+                        <li><a href="agreement.html" target='zxxframe'><i class="fa fa-circle-o"></i>协议管理</a></li>
+                        <li><a href="message.html" target='zxxframe'><i class="fa fa-circle-o"></i>消息管理</a></li>
+                        <li><a href="nice.html" target='zxxframe'><i class="fa fa-circle-o"></i>精品页面管理</a></li>
+                    </ul>
+                </li>
+            </ul>
+
+            <ul class="sidebar-menu" data-widget="tree">
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-balance-scale"></i> <span>分类管理</span>
+                        <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li><a href="mainClassify.html" target='zxxframe'><i class="fa fa-circle-o"></i>主分类管理</a></li>
+                        <li><a href="classify.html" target='zxxframe'><i class="fa fa-circle-o"></i>分类管理</a></li>
+                    </ul>
+                </li>
+            </ul>
+
+        </ul>
+        </ul>
+        </ul>
+        <!--<menu-item :item="item" :index="index" v-for="(item, index) in menuList"></menu-item>-->
+        </ul>
+    </section>
+</aside>
+
+<!--<div id="header" name="header"></div>-->
+<!--<iframe  frameborder=0 width=230 height=800 marginheight=0 marginwidth=0  scrolling="auto" src="head.html"></iframe>-->
+<!-- =============================================== -->
+<div class="content-wrapper">
+    <!--<section class="content-header">-->
+        <!--<section class="content-header">-->
+            <!--<ol id="nav_title" class="breadcrumb" style="position: static; float: none;">-->
+                <!--<li onclick="goIndex()" class="active"><i class="fa fa-home"-->
+                                                          <!--style="font-size: 20px; position: relative; top: 2px; left: -3px;"></i>-->
+                    <!--&nbsp; 华语-->
+                <!--</li>-->
+                <!--<li class="active">首页</li>-->
+            <!--</ol>-->
+        <!--</section>-->
+    <!--</section>-->
+    <!-- =============================================== -->
+    <section class="content" style="background:#fff;height:auto;">
+        <iframe id="zxxframe" name="zxxframe" scrolling="yes" frameborder="0"
+                style="width:100%;min-height:200px;overflow:visible;background:#fff;"
+                :src="main"></iframe>
+    </section>
+</div>
+<!-- =============================================== -->
+<div class="control-sidebar-bg"></div>
+
+<footer class="main-footer" style="position:fixed;bottom:0;left:-230px;width:100%;">
+    <div class="pull-right hidden-xs">
+        Version 1.0.0
+    </div>
+    Copyright &copy; 2018 华语之声系统 All Rights Reserved
+</footer>
+<div class="control-sidebar-bg"></div>
+<!-- =============================================== -->
+
+
+<div id="passwordLayer" style="display:none;">
+    <form class="form-horizontal">
+        <div class="form-group">
+            <div class="form-group">
+                <div class="col-sm-2 control-label">原密码</div>
+                <div class="col-sm-10">
+                    <input id="oldPass" type="password" class="form-control" v-model="form.password" placeholder="原密码"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">新密码</div>
+                <div class="col-sm-10">
+                    <input id="newPass" type="text" class="form-control" v-model="form.newPassword" placeholder="新密码"/>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<!-- =============================================== -->
+
+
+</div>
+<!-- ./wrapper -->
+
+<!-- jQuery 3 -->
+<script src="bower_components/jquery/dist/jquery.min.js"></script>
+<!-- jQuery UI 1.11.4 -->
+<script src="bower_components/jquery-ui/jquery-ui.min.js"></script>
+<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+<script>
+    $.widget.bridge('uibutton', $.ui.button);
+</script>
+<!-- Bootstrap 3.3.7 -->
+<!--<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>-->
+<!-- Morris.js charts -->
+<!--<script src="bower_components/raphael/raphael.min.js"></script>-->
+<!--<script src="bower_components/morris.js/morris.min.js"></script>-->
+<!--&lt;!&ndash; Sparkline &ndash;&gt;-->
+<!--<script src="bower_components/jquery-sparkline/dist/jquery.sparkline.min.js"></script>-->
+<!-- jvectormap -->
+<!--<script src="plugins/jvectormap/jquery-jvectormap-1.2.2.min.js"></script>-->
+<!--<script src="plugins/jvectormap/jquery-jvectormap-world-mill-en.js"></script>-->
+<!--&lt;!&ndash; jQuery Knob Chart &ndash;&gt;-->
+<!--<script src="bower_components/jquery-knob/dist/jquery.knob.min.js"></script>-->
+<!-- daterangepicker -->
+<!--<script src="bower_components/moment/min/moment.min.js"></script>-->
+<!--<script src="bower_components/bootstrap-daterangepicker/daterangepicker.js"></script>-->
+<!-- datepicker -->
+<!--<script src="bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>-->
+<!-- Bootstrap WYSIHTML5 -->
+<!--<script src="plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>-->
+<!--&lt;!&ndash; Slimscroll &ndash;&gt;-->
+<!--<script src="bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>-->
+<!-- FastClick -->
+<script src="bower_components/fastclick/lib/fastclick.js"></script>
+<!-- AdminLTE App -->
+<script src="dist/js/adminlte.min.js"></script>
+<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+<!--<script src="dist/js/pages/dashboard.js"></script>-->
+<!-- AdminLTE for demo purposes -->
+<!--<script src="dist/js/demo.js"></script>-->
+<script type="text/javascript" src="//g.alicdn.com/sj/lib/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript" src="//g.alicdn.com/sui/sui3/0.0.18/js/sui.min.js"></script>
+<script type="text/javascript" src="js/common.js"></script>
+<script type="text/javascript" src="js/layer/layer.js"></script>
+<script type="text/javascript" src="js/md5.js"></script>
+<script src="libs/vue.min.js"></script>
+<script type="text/javascript" src="js/index.js"></script>
+<script type="text/javascript">
+    $(function () {
+        /**
+         * 检查登录态
+         */
+        checkLoginStatus();
+    })
+
+
+    //iframe自适应
+    $(window).on('resize', function () {
+        var $content = $('.content');
+        $content.height($(this).height() - 75);
+        $content.find('iframe').each(function () {
+            $(this).height($content.height());
+        });
+    }).resize();
+
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.empathy.dao.WithdrawDao">
+
+    <sql id="fields">
+        id,
+        withdraw_type withdrawType,
+        bank,
+        card,
+        money,
+        last_money lastMoney,
+        code,
+        user_id userId,
+        alipay_account alipayAccount,
+        withdraw_status withdrawStatus,
+        name,
+        create_time createTime,
+        last_revamp_time lastRevampTime
+    </sql>
+    <sql id="wb">
+        WHERE del_flag = 0
+    </sql>
+
+    <select id="findById" parameterType="long" resultType="com.empathy.domain.withdraw.Withdraw">
+        SELECT
+        <include refid="fields"/>
+        FROM tp_withdrawal WHERE id = #{id}
+    </select>
+
+    <insert id="save" parameterType="com.empathy.domain.withdraw.Withdraw" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO tp_withdrawal
+        (withdraw_type,bank,card,money,user_id,code,alipay_account,withdraw_status,name,last_money,create_time,last_revamp_time,del_flag)
+        VALUES
+        (#{withdrawType},#{bank},#{card},#{money},#{userId},#{code},#{alipayAccount},#{withdrawStatus},#{name},#{lastMoney},#{createTime},#{lastRevampTime},#{delFlag})
+    </insert>
+
+    <update id="update" parameterType="com.empathy.domain.withdraw.Withdraw">
+        UPDATE tp_withdrawal SET withdraw_status = #{withdrawStatus},last_revamp_time=#{lastRevampTime} WHERE id = #{id}
+    </update>
+
+    <update id="delById" parameterType="long">
+        UPDATE tp_withdrawal SET del_flag = 1 WHERE id = #{id}
+    </update>
+
+    <select id="list" parameterType="com.empathy.domain.withdraw.bo.WithdrawFindBo"
+            resultType="com.empathy.domain.withdraw.Withdraw">
+        SELECT
+        a.id,
+        a.withdraw_type withdrawType,
+        a.bank,
+        a.card,
+        a.money,
+        a.last_money lastMoney,
+        a.code,
+        a.user_id userId,
+        a.alipay_account alipayAccount,
+        a.withdraw_status withdrawStatus,
+        a.name,
+        a.create_time createTime,
+        b.username,
+        b.phone
+
+
+        from tp_withdrawal a left join base_member b on a.user_id = b.id
+        <where>
+             1=1
+            <if test="withdrawStatus != null">
+                and a.withdraw_status = #{withdrawStatus}
+            </if>
+
+            <if test="withdrawType!=null">
+                and a.withdraw_type = #{withdrawType}
+            </if>
+            and a.del_flag = 0
+
+        </where>
+
+
+        order by a.create_time desc
+        LIMIT #{start},#{limit}
+
+    </select>
+
+    <select id="count" parameterType="com.empathy.domain.withdraw.bo.WithdrawFindBo" resultType="int">
+
+        SELECT count(id) from tp_withdrawal
+        <where>
+            <if test="withdrawStatus != null">
+                withdraw_status = #{withdrawStatus}
+            </if>
+            and del_flag = 0
+
+        </where>
+    </select>
+
+
+    <select id="countByBo" parameterType="com.empathy.domain.withdraw.bo.WithdrawFindBo" resultType="int">
+
+        SELECT count(id) from tp_withdrawal
+        <where>
+              1=1
+            <if test="withdrawStatus != null">
+                and withdraw_status = #{withdrawStatus}
+            </if>
+            <if test="withdrawType!=null">
+                and withdraw_type = #{withdrawType}
+            </if>
+
+            and del_flag = 0
+        </where>
+
+    </select>
+
+    <update id="editStatus" parameterType="com.empathy.domain.withdraw.Withdraw">
+        update tp_withdrawal set withdraw_status = #{withdrawStatus}
+        where id = #{id}
+
+    </update>
+</mapper>

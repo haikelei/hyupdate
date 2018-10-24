@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd">
+    <!-- 只扫描controller -->
+    <context:component-scan base-package="com.empathy.web"/>
+
+    <bean id="contentNegotiationManager"
+          class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+        <property name="mediaTypes">
+            <value>
+                json=application/json
+                xml=application/xml
+            </value>
+        </property>
+        <property name="ignoreAcceptHeader" value="true"/>
+        <property name="favorPathExtension" value="true"/>
+    </bean>
+
+    <!-- json -->
+    <mvc:annotation-driven content-negotiation-manager="contentNegotiationManager">
+        <mvc:message-converters>
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <constructor-arg value="UTF-8"/>
+            </bean>
+            <bean class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter4">
+                <property name="supportedMediaTypes">
+                    <list>
+                        <value>text/html;charset=UTF-8</value>
+                        <value>application/json</value>
+                    </list>
+                </property>
+                <property name="fastJsonConfig">
+                    <bean class="com.alibaba.fastjson.support.config.FastJsonConfig">
+                        <property name="charset" value="UTF-8"/>
+                        <property name="dateFormat" value="yyyy/MM/dd HH:mm:ss"/>
+                        <property name="serializerFeatures">
+                            <list>
+                                <value>QuoteFieldNames</value>
+                                <value>PrettyFormat</value>
+                                <value>WriteDateUseDateFormat</value>
+                                <value>WriteBigDecimalAsPlain</value>
+                                <value>SkipTransientField</value>
+                                <value>WriteBigDecimalAsPlain</value>
+                            </list>
+                        </property>
+                    </bean>
+                </property>
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+
+
+    <!--	<mvc:view-controller path="/admin/" view-name="admin/index" />
+        <mvc:view-controller path="/" view-name="web/index" />-->
+
+
+    <!-- 静态文件 3000 -->
+    <mvc:resources location="/assets/" mapping="/assets/**" cache-period="0" order="0">
+        <mvc:resource-chain resource-cache="true">
+            <mvc:resolvers>
+                <bean class="org.springframework.web.servlet.resource.GzipResourceResolver"/>
+            </mvc:resolvers>
+        </mvc:resource-chain>
+    </mvc:resources>
+
+    <bean
+            class="org.springframework.validation.beanvalidation.MethodValidationPostProcessor"/>
+
+    <!-- 上传大小限制 -->
+    <bean id="multipartResolver"
+          class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="defaultEncoding" value="UTF-8"/>
+        <property name="maxUploadSize" value="20480000"/>
+    </bean>
+
+    <!-- aop -->
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
+
+    <mvc:interceptors>
+        <!-- 管理平台拦截器 -->
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <mvc:exclude-mapping path="/assets/**"/>
+            <mvc:exclude-mapping path="/image/**"/>
+            <mvc:exclude-mapping path="/web/**"/>
+            <mvc:exclude-mapping path="/admin/403"/>
+            <mvc:exclude-mapping path="/admin/500"/>
+            <mvc:exclude-mapping path="/admin/login"/>
+            <mvc:exclude-mapping path="/admin/register"/>
+            <mvc:exclude-mapping path="/admin/logout"/>
+            <mvc:exclude-mapping path="/admin/login/check"/>
+            <mvc:exclude-mapping path="/admin/register/check"/>
+            <mvc:exclude-mapping path="/admin/error"/>
+            <bean class="com.empathy.security.AuthInterceptor"/>
+        </mvc:interceptor>
+        <!-- WEB端控制登录 -->
+        <!--<mvc:interceptor>
+            <mvc:mapping path="/**" />
+            <mvc:exclude-mapping path="/assets/**" />
+            <mvc:exclude-mapping path="/image/**"/>
+            <mvc:exclude-mapping path="/admin/**"/>
+            <mvc:exclude-mapping path="/login" />
+            <mvc:exclude-mapping path="/register" />
+            <mvc:exclude-mapping path="/logout" />
+            <mvc:exclude-mapping path="/login/check" />
+            <mvc:exclude-mapping path="/register/check" />
+            <mvc:exclude-mapping path="/error" />
+            <bean class="AuthWebInterceptorptor" />
+
+        </mvc:interceptor>-->
+    </mvc:interceptors>
+
+    <bean id="hasPermDirective" class="com.empathy.security.HasPermDirective"/>
+
+    <!-- freemarker视图设置 -->
+    <bean id="viewResolver" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+        <property name="viewClass" value="org.springframework.web.servlet.view.freemarker.FreeMarkerView"/>
+        <property name="cache" value="true"/>
+        <property name="suffix" value=".html"/>
+        <property name="contentType" value="text/html;charset=utf-8"/>
+        <property name="requestContextAttribute" value="request"/>
+        <property name="exposeSpringMacroHelpers" value="true"/>
+        <property name="exposeRequestAttributes" value="true"/>
+        <property name="exposeSessionAttributes" value="true"/>
+    </bean>
+</beans>

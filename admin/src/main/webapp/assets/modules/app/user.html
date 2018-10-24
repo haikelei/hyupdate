@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>App用户管理</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="stylesheet" href="../../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../plugins/jqgrid/ui.jqgrid-bootstrap.css">
+    <link rel="stylesheet" href="../../plugins/ztree/css/metroStyle/metroStyle.css">
+    <link rel="stylesheet" href="../../css/animate.min.css">
+    <link rel="stylesheet" href="../../css/main.css">
+    <script src="../../libs/jquery.min.js"></script>
+    <script src="../../plugins/layer/layer.js"></script>
+    <script src="../../libs/bootstrap.min.js"></script>
+    <script src="../../libs/vue.min.js"></script>
+    <script src="../../plugins/jqgrid/grid.locale-cn.js"></script>
+    <script src="../../plugins/jqgrid/jquery.jqGrid.min.js"></script>
+    <script src="../../plugins/ztree/jquery.ztree.all.min.js"></script>
+    <script src="../../js/common.js"></script>
+</head>
+
+<body>
+<div id="rrapp" class="zxxAnimateFadeIn" style="display:none;" v-cloak>
+    <div v-show="showList">
+        <div class="grid-btn">
+            <div class="form-group">
+                <input type="text" class="form-control col-sm-2" style="width:180px;margin-right:10px;margin-top:10px;"
+                       v-model="q.s_user_id" @keyup.enter="query"
+                       placeholder="ID">
+                <input type="text" class="form-control col-sm-2" style="width:180px;margin-right:10px;margin-top:10px;"
+                       v-model="q.s_username" @keyup.enter="query"
+                       placeholder="用户名">
+                <input type="text" class="form-control col-sm-2" style="width:180px;margin-right:10px;margin-top:10px;"
+                       v-model="q.recommend_username" @keyup.enter="query"
+                       placeholder="推荐人">
+                <input type="text" class="form-control col-sm-2" style="width:180px;margin-right:10px;margin-top:10px;"
+                       v-model="q.s_mobile" @keyup.enter="query"
+                       placeholder="手机号">
+                <input type="text" class="form-control col-sm-2" style="width:180px;margin-right:10px;margin-top:10px;"
+                       v-model="q.s_wechat" @keyup.enter="query"
+                       placeholder="微信号">
+                <input type="text" class="form-control col-sm-2" style="width:180px;margin-right:10px;margin-top:10px;"
+                       v-model="q.s_realname" @keyup.enter="query"
+                       placeholder="真实姓名">
+                <input type="text" class="form-control col-sm-2" style="width:180px;margin-right:10px;margin-top:10px;"
+                       v-model="q.s_idcard" @keyup.enter="query"
+                       placeholder="身份证号">
+            </div>
+            <a class="btn btn-default" @click="query" style="margin-top:10px;">
+                <i class="fa fa-search"></i>&nbsp;查询</a>
+            <a v-if="hasPermission('app:user:save')" class="btn btn-default" @click="add" style="margin-top:10px;">
+                <i class="fa fa-plus"></i>&nbsp;新增</a>
+            <a v-if="hasPermission('app:user:update')" class="btn btn-default" @click="update" style="margin-top:10px;">
+                <i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+            <a v-if="hasPermission('app:user:delete')" class="btn btn-default" @click="del" style="margin-top:10px;">
+                <i class="fa fa-trash-o"></i>&nbsp;删除</a>
+            <a v-if="hasPermission('app:user:resetPasw')" class="btn btn-default" @click="resetPasw"
+               style="margin-top:10px;">
+                <i class="fa fa-gears"></i>&nbsp;重置密码</a>
+        </div>
+        <table id="jqGrid"></table>
+        <div id="jqGridPager"></div>
+    </div>
+
+    <div v-show="!showList" class="panel panel-default">
+        <div class="panel-heading">{{title}}</div>
+        <form class="form-horizontal">
+            <div class="form-group">
+                <div class="col-sm-2 control-label">用户名</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="user.username" placeholder="用户名"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">手机号</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="user.mobile" placeholder="手机号"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">微信号</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="user.wechat" placeholder="微信号"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">真实姓名</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="user.realname" placeholder="真实姓名"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">身份证号</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="user.idcard" placeholder="身份证号"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">城市地区</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="user.addressRegion"
+                           placeholder="城市地区(格式：浙江省,杭州市,滨江区)"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">详细地址</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="user.addressDetail" placeholder="详细地址"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">推荐人ID</div>
+                <div class="col-sm-10">
+                    <input id="recomId" type="text" class="form-control" v-model="user.recommendId" readonly="readonly"
+                           @mouseOver="RecomTip" placeholder="推荐人ID(无推荐人填0)"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label"></div>
+                <input type="button" class="btn btn-default" @click="saveOrUpdate" value="确定"/> &nbsp;&nbsp;
+                <input type="button" class="btn btn-default" @click="reload" value="返回"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="../../js/modules/app/user.js"></script>
+</body>
+
+</html>

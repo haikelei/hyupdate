@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.empathy.dao.BaseRecordingDao">
+
+    <sql id="fields">
+        id,
+        album_id albumId,
+        user_id userId,
+        sign,
+        play_number playNumber,
+        click_number clickNumber,
+        title,
+        create_time createTime,
+        last_revamp_time lastRevampTime
+    </sql>
+    <sql id="wb">
+        WHERE del_flag = 0
+    </sql>
+
+    <select id="findById" parameterType="long" resultType="com.empathy.domain.baseRecording.BaseRecording">
+        SELECT
+        <include refid="fields"/>
+        FROM base_Recording WHERE id = #{id}
+    </select>
+
+    <insert id="save" parameterType="com.empathy.domain.baseRecording.BaseRecording" useGeneratedKeys="true"
+            keyProperty="id">
+        INSERT INTO base_Recording
+        (album_id,sign,title,user_id,play_number,click_number,create_time,last_revamp_time,del_flag)
+        VALUES (#{albumId},#{sign},#{title},#{userId},#{playNumber},#{clickNumber},#{createTime},#{lastRevampTime},#{delFlag})
+    </insert>
+
+    <update id="update" parameterType="com.empathy.domain.baseRecording.BaseRecording">
+        UPDATE base_Recording SET album_id = #{albumId},user_id = #{userId},play_number = #{playNumber},click_number =
+        #{clickNumber},title = #{title},sign = #{sign},last_revamp_time=#{lastRevampTime} WHERE id = #{id}
+    </update>
+
+    <update id="delById" parameterType="long">
+        UPDATE base_Recording SET del_flag = 1 WHERE id = #{id}
+    </update>
+    <update id="cancelDel" parameterType="long">
+        UPDATE base_Recording SET del_flag = 0 WHERE id = #{id}
+    </update>
+
+    <select id="list" parameterType="com.empathy.domain.baseRecording.bo.RecordingFindBo"
+            resultType="com.empathy.domain.baseRecording.BaseRecording">
+        select a.id,
+        a.album_id albumId,
+        b.username username,
+        a.sign,
+        a.play_number playNumber,
+        a.click_number clickNumber,
+        a.title,
+        a.create_time createTime,d.url url
+        from base_Recording a left join base_member b on a.user_id = b.id
+          LEFT join base_file d on a.id = d.purpose_id and d.type ='image' and d.purpose='recording'
+         where a.album_id = #{albumId} and a.del_flag =
+        0
+        order by a.create_time LIMIT #{start},#{limit}
+
+    </select>
+
+    <select id="findRecordingByUser" parameterType="com.empathy.domain.baseRecording.bo.RecordingFindBo"
+            resultType="com.empathy.domain.baseRecording.BaseRecording">
+        select a.id,
+        a.album_id albumId,
+        b.username username,
+        a.sign,
+        a.play_number playNumber,
+        a.click_number clickNumber,
+        a.title,
+        a.create_time createTime,d.url url
+        from base_Recording a left join base_member b on a.user_id = b.id
+          LEFT join base_file d on a.id = d.purpose_id and d.type ='image' and d.purpose='album'
+         where a.user_id = #{userId} and a.del_flag =
+        0
+        order by a.create_time LIMIT #{start},#{limit}
+
+    </select>
+
+    <select id="findRecordingCountByUser" resultType="int" parameterType="com.empathy.domain.baseRecording.bo.RecordingFindBo">
+
+        SELECT count(id) FROM base_Recording where user_id = #{userId} and del_flag = 0
+    </select>
+    <select id="count" resultType="int" parameterType="long">
+
+        SELECT count(id) FROM base_Recording where album_id = #{albumId} and del_flag = 0
+    </select>
+
+    <select id="listForAccount" parameterType="com.empathy.domain.baseRecording.bo.RecordingFindBo"
+            resultType="com.empathy.domain.baseRecording.BaseRecording">
+        select a.id,
+        a.album_id albumId,
+        b.username username,
+        a.play_number playNumber,
+        a.click_number clickNumber,
+        a.title,a.sign,
+        a.create_time createTime,
+        a.del_flag delFlag,d.url url
+        from base_Recording a left join base_member b on a.user_id = b.id
+           LEFT join base_file d on a.id = d.purpose_id and d.type ='image' and d.purpose='recording'
+
+           where a.album_id = #{albumId}
+        order by a.create_time LIMIT #{start},#{limit}
+
+    </select>
+    <select id="findByAlbumId" parameterType="long"
+            resultType="com.empathy.domain.baseRecording.BaseRecording">
+        select a.id,
+        a.album_id albumId,
+        b.username username,
+        a.play_number playNumber,
+        a.click_number clickNumber,
+        a.title,a.sign,
+        a.create_time createTime,
+        a.del_flag delFlag,d.url url
+        from base_Recording a left join base_member b on a.user_id = b.id
+           LEFT join base_file d on a.id = d.purpose_id and d.type ='image' and d.purpose='recording'
+
+           where a.album_id = #{albumId}
+        order by a.create_time
+
+    </select>
+
+    <select id="countForAccount" resultType="int" parameterType="long">
+
+        SELECT count(id) FROM base_Recording where album_id = #{albumId}
+    </select>
+
+
+    <select id="getPayNumber" parameterType="java.lang.Long" resultType="java.lang.Integer">
+      SELECT SUM(play_number) payNmber FROM `base_recording` where album_id = #{albumId}
+    </select>
+
+
+</mapper>

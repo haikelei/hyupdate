@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.empathy.dao.MessageDao">
+    <sql id="fields">
+        created,
+        modified,
+        content,
+        type,
+        readed,
+        reference,
+        ext
+    </sql>
+    <select id="findById" parameterType="long" resultType="com.empathy.domain.message.Message">
+        SELECT<include refid="fields"/>,id,fuser_id,tuser_id FROM message WHERE id = #{id}
+    </select>
+    <insert id="save" parameterType="com.empathy.domain.message.Message">
+        INSERT INTO message (<include refid="fields"/>,fuser_id,tuser_id)
+        VALUES (#{created},#{modified},#{content},#{type},#{readed},#{reference},#{ext},#{fuserId},#{tuserId})
+    </insert>
+    <!--<update id="readed" parameterType="long">
+        UPDATE message SET readed = 1,modified = CURRENT_TIMESTAMP  WHERE readed = 0 AND id = #{id}
+    </update>-->
+    <update id="delById" parameterType="long">
+        UPDATE message SET delflag =1 WHERE id = #{id}
+    </update>
+    <sql id="where">
+        WHERE m.delflag=0
+        <if test="userId != null">
+            AND m.tuser_id =#{userId}
+        </if>
+        <if test="type != 0">
+            ANd m.type = #{type}
+        </if>
+    </sql>
+
+    <select id="count" parameterType="com.empathy.domain.message.bo.MessageBo" resultType="long">
+        SELECT COUNT(*) FROM message m
+        <include refid="where"/>
+    </select>
+
+    <select id="list" parameterType="com.empathy.domain.message.bo.MessageBo"
+            resultType="com.empathy.domain.message.vo.MessageVo">
+        SELECT m.id,m.created,m.modified,m.content,m.type,m.readed,m.reference,m.ext,
+        m.fuser_id fuserId, IFNULL(ub1.realname,ub1.username) fname,ub1.avatar favatar,
+        m.tuser_id tuserId, IFNULL(ub2.realname,ub2.username) tname
+        FROM message m
+        INNER JOIN user_base ub1 ON ub1.delflag=0 AND m.fuser_id = ub1.id
+        INNER JOIN user_base ub2 ON ub2.delflag=0 AND m.tuser_id = ub2.id
+        <include refid="where"/>
+        ORDER BY m.created DESC
+        <if test="start != null">
+            LIMIT #{start},#{limit}
+        </if>
+    </select>
+</mapper>

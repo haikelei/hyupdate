@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.empathy.dao.BaseDynamicDao">
+
+    <sql id="fields">
+        id,
+        user_id userId,
+        content,check_content checkContent,title,red_point redPoint,
+        create_time createTime,
+        last_revamp_time lastRevampTime
+    </sql>
+    <sql id="wb">
+        WHERE del_flag = 0
+    </sql>
+
+    <select id="findById" parameterType="long" resultType="com.empathy.domain.baseDynamic.BaseDynamic">
+        SELECT
+        <include refid="fields"/>
+        FROM base_dynamic WHERE id = #{id}
+    </select>
+
+    <insert id="save" parameterType="com.empathy.domain.baseGift.BaseGift" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO base_dynamic (user_id,check_content,title,red_point,create_time,last_revamp_time,del_flag)
+        VALUES (#{userId},#{checkContent},#{title},#{redPoint},#{createTime},#{lastRevampTime},#{delFlag})
+    </insert>
+
+    <update id="update" parameterType="com.empathy.domain.baseGift.BaseGift">
+        UPDATE base_dynamic SET user_id = #{userId}, check_content = #{checkContent}, title = #{title}, red_point =
+        #{redPoint},last_revamp_time=#{lastRevampTime} WHERE id = #{id}
+    </update>
+
+    <update id="delById" parameterType="long">
+        UPDATE base_dynamic SET del_flag = 1 WHERE id = #{id}
+    </update>
+
+
+</mapper>
