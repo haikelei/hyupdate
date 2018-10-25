@@ -3,9 +3,7 @@ package com.empathy.web;
 import com.empathy.common.PageBo;
 import com.empathy.common.RspResult;
 import com.empathy.domain.user.bo.LoginBo;
-import com.empathy.domain.withdraw.bo.WithdrawAddBo;
-import com.empathy.domain.withdraw.bo.WithdrawFindBo;
-import com.empathy.domain.withdraw.bo.WithdrawUpdBo;
+import com.empathy.domain.withdraw.bo.*;
 import com.empathy.service.IWithdrawService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -28,6 +26,18 @@ public class WithdrawController {
 
     @Autowired
     private IWithdrawService withdrawService;
+
+    @ApiOperation(value = "修改支付密码", httpMethod = "POST", response = String.class)
+    @RequestMapping(value = "/modifyPayPassword", method = RequestMethod.POST)
+    public RspResult modifyPayPassword(ModifyPasswordBo bo) {
+        return withdrawService.modifyPayPassword(bo);
+    }
+
+    @ApiOperation(value = "获取修改支付密码的验证码", httpMethod = "POST", response = String.class)
+    @RequestMapping(value = "/modifyPayPasswordCode", method = RequestMethod.POST)
+    public RspResult getPayPasswordCode(ModifyPasswordCodeBo bo) {
+        return withdrawService.getPayPasswordCode(bo);
+    }
 
     @ApiOperation(value = "申请提现", httpMethod = "POST", response = String.class)
     @RequestMapping(value = "/addWithdraw", method = RequestMethod.POST)

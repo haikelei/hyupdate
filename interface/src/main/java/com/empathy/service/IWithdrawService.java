@@ -5,9 +5,7 @@ import com.empathy.common.PageBo;
 import com.empathy.common.RspResult;
 import com.empathy.domain.user.BaseMember;
 import com.empathy.domain.withdraw.Withdraw;
-import com.empathy.domain.withdraw.bo.WithdrawAddBo;
-import com.empathy.domain.withdraw.bo.WithdrawFindBo;
-import com.empathy.domain.withdraw.bo.WithdrawUpdBo;
+import com.empathy.domain.withdraw.bo.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
@@ -32,5 +30,7 @@ public interface IWithdrawService extends BaseService<Withdraw, Long, PageBo> {
     RspResult exportExcle(MultipartFile file);
 
 
+    RspResult modifyPayPassword(ModifyPasswordBo bo);
 
+    RspResult getPayPasswordCode(ModifyPasswordCodeBo bo);
 }

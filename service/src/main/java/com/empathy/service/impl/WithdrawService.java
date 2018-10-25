@@ -7,15 +7,14 @@ import com.empathy.domain.baseCode.BaseCode;
 import com.empathy.domain.configuration.Configuration;
 import com.empathy.domain.deal.BaseDeal;
 import com.empathy.domain.user.UserMoney;
+import com.empathy.domain.user.Userinfo;
 import com.empathy.domain.withdraw.Withdraw;
-import com.empathy.domain.withdraw.bo.WithdrawAddBo;
-import com.empathy.domain.withdraw.bo.WithdrawExcleBo;
-import com.empathy.domain.withdraw.bo.WithdrawFindBo;
-import com.empathy.domain.withdraw.bo.WithdrawUpdBo;
+import com.empathy.domain.withdraw.bo.*;
 import com.empathy.service.AbstractBaseService;
 import com.empathy.service.IWithdrawService;
 import com.empathy.utils.DateUtils;
 import com.empathy.utils.MD5Utils;
+import com.empathy.utils.sms.SmsNewUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -58,6 +57,8 @@ public class WithdrawService extends AbstractBaseService implements IWithdrawSer
     @Autowired
     private BaseDealDao baseDealDao;
 
+    @Autowired
+    UserinfoDao userinfoDao;
 
     @Override
     public String findWithdrawCount(WithdrawFindBo bo) {
@@ -72,6 +73,33 @@ public class WithdrawService extends AbstractBaseService implements IWithdrawSer
         int count = withdrawDao.count();
 
         return success(count, list);
+    }
+
+
+    //  修改提现密码
+    @Override
+    public RspResult modifyPayPassword(ModifyPasswordBo bo) {
+        Userinfo userinfo = userinfoDao.findByPhone(bo.getPhone());
+        if (userinfo == null) {
+            return new RspResult("手机号不存在", 1);
+        }
+        if (SmsNewUtils.checkCode(SmsNewUtils.CHANGE_WITHDRAW_PWS,bo.getCode(), bo.getPhone())) {
+            return new RspResult("验证码错误", 1);
+        }
+        UserMoney userMoney = userMoneyDao.findByUserId(userinfo.getMemberId());
+        if (userMoney.getPassword().equals(MD5Utils.encrypt(bo.getPassword()))) {
+            return new RspResult("密码不能与上次密码相同", 1);
+        }
+        userMoney.setPassword(MD5Utils.encrypt(bo.getPassword()));
+        userMoney.setLastRevampTime(System.currentTimeMillis());
+        userMoneyDao.update(userMoney);
+        return new RspResult();
+    }
+
+    @Override
+    public RspResult getPayPasswordCode(ModifyPasswordCodeBo bo) {
+        SmsNewUtils.sendTemplate(SmsNewUtils.CHANGE_WITHDRAW_PWS,bo.getPhone());
+        return null;
     }
 
     //审核提现
