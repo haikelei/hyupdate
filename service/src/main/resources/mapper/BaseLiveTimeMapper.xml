@@ -35,6 +35,10 @@
         UPDATE base_live_time SET del_flag = 1 WHERE id = #{id}
     </update>
 
+    <update id="delByLiveId" parameterType="long">
+        UPDATE base_live_time SET del_flag = 1 WHERE live_id = #{liveId}
+    </update>
+
 
     <select id="findByLiveIdForClose" resultType="com.empathy.domain.live.BaseLiveTime" parameterType="long">
         SELECT <include refid="fields"></include> FROM base_live_time order by create_time limit 1

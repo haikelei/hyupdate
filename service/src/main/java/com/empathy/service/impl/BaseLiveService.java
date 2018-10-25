@@ -24,11 +24,15 @@ import com.empathy.domain.live.*;
 import com.empathy.domain.live.bo.*;
 import com.empathy.domain.live.vo.GiveGiftVo;
 import com.empathy.domain.live.vo.RankVo;
+import com.empathy.domain.schedule.ScheduleJob;
 import com.empathy.domain.user.BaseMember;
 import com.empathy.domain.user.HostProve;
 import com.empathy.domain.user.UserMoney;
+import com.empathy.domain.user.bo.LiveAppointmentCancelBo;
 import com.empathy.domain.user.bo.ProveAddBo;
 import com.empathy.domain.user.bo.ProveUpdBo;
+import com.empathy.schedule.SendSmsTask;
+import com.empathy.schedule.SpringHelper;
 import com.empathy.service.AbstractBaseService;
 import com.empathy.service.IAlbumService;
 import com.empathy.service.IBaseLiveSerivce;
@@ -36,7 +40,9 @@ import com.empathy.service.IBaseMemberService;
 import com.empathy.utils.DateUtils;
 import com.empathy.utils.StringUtil;
 import com.empathy.utils.YXUtils;
+import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -108,6 +114,9 @@ public class BaseLiveService extends AbstractBaseService implements IBaseLiveSer
 
     @Autowired
     private BaseGradeDao baseGradeDao;
+
+    @Autowired
+    private ScheduleTaskDao scheduleTaskDao;
 
     @Override
     public RspResult moneyForLive(Long liveId) {
@@ -288,6 +297,30 @@ public class BaseLiveService extends AbstractBaseService implements IBaseLiveSer
         baseLiveTime.setStartTime(System.currentTimeMillis());
         baseLiveTime.setLiveId(baseLive.getId());
         baseLiveTimeDao.save(baseLiveTime);
+
+
+        ScheduleJob scheduleJob = new ScheduleJob();
+        scheduleJob.setStartTime(bo.getBeginTime());
+        scheduleJob.setPhone(baseMember.getPhone());
+        scheduleTaskDao.save(scheduleJob);
+
+        JobDetail realJob = JobBuilder.newJob(SendSmsTask.class)
+                // 根据name和默认的group(即"DEFAULT_GROUP")创建trigger的key
+                .withIdentity(String.valueOf(scheduleJob.getId()), "sendSms")
+                .usingJobData("phone",scheduleJob.getPhone())
+                //创建触发器
+                .build();
+        SimpleTrigger trigger = (SimpleTrigger) TriggerBuilder.newTrigger()
+                .withIdentity(String.valueOf(scheduleJob.getId()), "sendSms")
+                .startAt(new Date(Long.valueOf(scheduleJob.getStartTime()-30*60*1000))) // some Date
+                .build();
+        SchedulerFactoryBean schedulerFactoryBean = SpringHelper.getBean(SchedulerFactoryBean.class);
+        Scheduler sched = schedulerFactoryBean.getScheduler();
+        try {
+            sched.scheduleJob(realJob, trigger);
+        } catch (SchedulerException e) {
+            e.printStackTrace();
+        }
 
         return success();
     }
@@ -900,6 +933,28 @@ public class BaseLiveService extends AbstractBaseService implements IBaseLiveSer
             }
         }
         return success(map);
+    }
+
+    @Override
+    public RspResult cancelAppointment(LiveAppointmentCancelBo bo) {
+        BaseMember baseMember = baseMemberDao.findById(bo.getUserId());
+        if (baseMember.getProveStatus() != 1) {
+            return error(1, "您还不是主播");
+        }
+
+        BaseLive baseLive = baseLiveDao.findByUserIdAndLiveId(bo.getUserId(),bo.getLiveId());
+        if (baseLive!=null){
+            baseLive.setLiveStatus(0);
+            baseLiveDao.update(baseLive);
+        }
+        try{
+            baseLiveTimeDao.delByLiveId(bo.getLiveId());
+        }catch(Exception e){
+            e.printStackTrace();
+            return errorNo();
+        }
+
+        return success();
     }
 
     @Override

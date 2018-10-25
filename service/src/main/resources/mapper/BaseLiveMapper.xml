@@ -23,6 +23,13 @@
         WHERE del_flag = 0
     </sql>
 
+    <select id="findByUserIdAndLiveId" resultType="com.empathy.domain.live.BaseLive" parameterType="long">
+
+        SELECT
+        <include refid="fields"/>
+        FROM base_live WHERE user_id = #{param1} and del_flag=0 and id = #{param2}
+    </select>
+
     <select id="findById" parameterType="long" resultType="com.empathy.domain.live.BaseLive">
         SELECT
         <include refid="fields"/>

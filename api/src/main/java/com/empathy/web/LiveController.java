@@ -7,6 +7,7 @@ import com.empathy.domain.album.bo.RecordAddUrlBo;
 import com.empathy.domain.baseReport.bo.ReportAddBo;
 import com.empathy.domain.baseReport.bo.ReportFindBo;
 import com.empathy.domain.live.bo.*;
+import com.empathy.domain.user.bo.LiveAppointmentCancelBo;
 import com.empathy.domain.user.bo.LoginBo;
 import com.empathy.domain.user.bo.ProveAddBo;
 import com.empathy.domain.user.bo.ProveUpdBo;
@@ -69,6 +70,13 @@ public class LiveController {
 
 
         return baseLiveSerivce.beginAppointment(bo);
+    }
+
+    @ApiOperation(value = "主播取消预约", httpMethod = "POST", response = String.class)
+    @RequestMapping(value = "/cancelAppointment", method = RequestMethod.POST)
+    public RspResult cancelAppointment(LiveAppointmentCancelBo bo) {
+
+        return baseLiveSerivce.cancelAppointment(bo);
     }
 
 

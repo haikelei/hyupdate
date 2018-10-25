@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.empathy.dao.ScheduleTaskDao">
+
+    <sql id="fields">
+        id,
+        phone,
+        start_time startTime
+    </sql>
+
+    <select id="getAll" resultType="com.empathy.domain.schedule.ScheduleJob">
+        SELECT
+        a.id,
+        a.phone,
+        a.start_time startTime
+        FROM schedule_job a
+    </select>
+
+    <insert id="save" parameterType="com.empathy.domain.schedule.ScheduleJob" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO schedule_job
+        (phone,start_time)
+        VALUES
+        (#{phone},#{startTime})
+    </insert>
+
+
+
+
+
+
+
+
+
+</mapper>

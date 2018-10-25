@@ -21,7 +21,7 @@ public class BaseLive extends BaseDomain {
 
     private Integer level;
 
-    private Integer liveStatus;
+    private Integer liveStatus;//0没有直播  1直播中 2直播未开始
 
     private Integer liveNumber;
 

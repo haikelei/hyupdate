@@ -63,4 +63,6 @@ public interface BaseLiveDao extends BaseDao<BaseLive, Long, LogBo> {
 
     List<RankVo> findRankByPrice();
 
+    BaseLive findByUserIdAndLiveId(Long userId, Long liveId);
+
 }

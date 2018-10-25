@@ -8,6 +8,7 @@ import com.empathy.domain.baseReport.bo.ReportAddBo;
 import com.empathy.domain.baseReport.bo.ReportFindBo;
 import com.empathy.domain.live.bo.*;
 import com.empathy.domain.user.BaseMember;
+import com.empathy.domain.user.bo.LiveAppointmentCancelBo;
 import com.empathy.domain.user.bo.ProveAddBo;
 import com.empathy.domain.user.bo.ProveUpdBo;
 
@@ -89,4 +90,5 @@ public interface IBaseLiveSerivce extends BaseService<BaseMember, Long, PageBo> 
 
     RspResult rankByLiveRoom(Long liveId);
 
+    RspResult cancelAppointment(LiveAppointmentCancelBo bo);
 }

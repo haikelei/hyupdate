@@ -19,4 +19,6 @@ public interface BaseLiveTimeDao extends BaseDao<BaseLiveTime, Long, LogBo> {
     /** 直播房间号查询主播最后一次直播的直播时间 */
     BaseLiveTime findByLiveId(Long liveId);
 
+    void delByLiveId(Long liveId);
+
 }
