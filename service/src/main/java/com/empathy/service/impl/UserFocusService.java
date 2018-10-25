@@ -13,7 +13,6 @@ import com.empathy.domain.user.bo.FocusCancelBo;
 import com.empathy.domain.user.bo.FocusFindBo;
 import com.empathy.domain.user.vo.UserFocusVo;
 import com.empathy.service.AbstractBaseService;
-import com.empathy.service.IBaseMemberService;
 import com.empathy.service.IUserFocusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,7 +39,7 @@ public class UserFocusService extends AbstractBaseService implements IUserFocusS
         try {
 
             List<UserFocusVo> list = userFocusDao.list(bo);
-            int count = userFocusDao.count(bo);
+            Integer count = userFocusDao.count(bo);
             for (int i =0;i<list.size();i++){
                 BaseMember baseMember = baseMemberDao.findById(list.get(i).getFocusUserId());
                 list.get(i).setStatus(baseMember.getProveStatus());
@@ -54,7 +53,7 @@ public class UserFocusService extends AbstractBaseService implements IUserFocusS
                 }
             }
 
-            return success(count,list);
+            return success(count == null ? 0 : count,list);
         }catch (Exception e){
             e.printStackTrace();
             return errorNo();

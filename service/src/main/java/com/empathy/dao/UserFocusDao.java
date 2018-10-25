@@ -13,7 +13,7 @@ import java.util.List;
  * Created by MI on 2018/4/18.
  */
 public interface UserFocusDao extends BaseDao<UserFocus, Long, LogBo> {
-    int count(FocusFindBo bo);
+    Integer count(FocusFindBo bo);
 
     List<UserFocusVo> list(FocusFindBo bo);
 
