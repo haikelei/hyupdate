@@ -5,20 +5,13 @@ import com.empathy.common.RspResult;
 import com.empathy.dao.BaseGradeDao;
 import com.empathy.dao.BaseMemberDao;
 import com.empathy.dao.UserMoneyDao;
-import com.empathy.domain.account.bo.AccoutLoginBo;
 import com.empathy.domain.grade.BaseGrade;
 import com.empathy.domain.user.BaseMember;
 import com.empathy.domain.user.UserMoney;
-import com.empathy.domain.user.Userinfo;
 import com.empathy.domain.user.bo.FreezeUserBo;
 import com.empathy.domain.user.vo.MemberVo;
 import com.empathy.service.AbstractBaseService;
 import com.empathy.service.IBaseMemberService;
-import com.empathy.service.IMessageService;
-import io.swagger.models.auth.In;
-import lombok.Getter;
-import lombok.Setter;
-import net.bytebuddy.asm.Advice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -46,8 +39,7 @@ public class BaseMemberService extends AbstractBaseService implements IBaseMembe
     @Override
     public void addMoney(double money,long id) {
 
-        UserMoney byUserId =
-                userMoneyDao.findByUserId(id);
+        UserMoney byUserId = userMoneyDao.findByUserId(id);
         byUserId.setMoney(new BigDecimal(byUserId.getMoney().doubleValue()+money*10));
         byUserId.setLastRevampTime(System.currentTimeMillis());
         userMoneyDao.update(byUserId);

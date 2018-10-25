@@ -229,19 +229,17 @@ public class UserMemberService extends AbstractBaseService implements IUserMembe
         baseMemberDao.update(baseMember);
         if (count > 0) {
 
+            UserMember userMember = userMemberDao.findByUserId(id);
+            userMember.setEndTime(30 * 24 * 60 * 60 * 1000 + userMember.getEndTime());
+            userMember.setLastRevampTime(System.currentTimeMillis());
+            userMemberDao.update(userMember);
 
-        UserMember userMember = userMemberDao.findByUserId(id);
-        userMember.setEndTime(30 * 24 * 60 * 60 * 1000 + userMember.getEndTime());
-        userMember.setLastRevampTime(System.currentTimeMillis());
-        userMemberDao.update(userMember);
+        } else {
 
-
-    } else {
-
-        UserMember userMember = new UserMember();
-        userMember.setEndTime(System.currentTimeMillis() + 30 * 24 * 60 * 60 * 1000);
-        userMemberDao.save(userMember);
-    }
+            UserMember userMember = new UserMember();
+            userMember.setEndTime(System.currentTimeMillis() + 30 * 24 * 60 * 60 * 1000);
+            userMemberDao.save(userMember);
+        }
     }
 
 

@@ -1,13 +1,14 @@
 package com.empathy.web;
 
 import com.empathy.dao.BaseDealDao;
-
 import com.empathy.domain.deal.BaseDeal;
 import com.empathy.service.IBaseMemberService;
 import com.empathy.service.IUserMemberService;
 import com.empathy.utils.wx.WXPayConstants;
 import com.empathy.utils.wx.WXPayUtil;
 import io.swagger.annotations.Api;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,11 +20,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import static com.empathy.service.impl.UserinfoService.API_SECRET;
 //import static jdk.nashorn.internal.codegen.ObjectClassGenerator.LOG;
@@ -35,6 +34,8 @@ import static com.empathy.service.impl.UserinfoService.API_SECRET;
 @RequestMapping("/alipay")
 @Api(tags = {"支付宝回调接口"})
 public class AlipayController {
+
+    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private BaseDealDao baseDealDao;
@@ -83,13 +84,20 @@ public class AlipayController {
         deal.setStatus(1);
         deal.setLastRevampTime(System.currentTimeMillis());
         baseDealDao.update(deal);
-        if(deal.getType()==5){
-        userMemberService.tobeMemberForPay(deal.getUserId());
 
-        }else {
+        // 充值会员
+        if(deal.getType()==5){
+            userMemberService.tobeMemberForPay(deal.getUserId());
+        }
+        // 充值华语币
+        else {
             //用户加钱
             baseMemberService.addMoney(money,deal.getUserId());
+            System.out.println("3！");
         }
+
+
+        System.out.println("支付宝回调结束OK！");
 
       /*  Recharge recharge = rechargeService.queryRecharge(wcCode);
         System.out.println("3！");
@@ -125,13 +133,15 @@ public class AlipayController {
     public void wechatCallBack(HttpServletRequest request, HttpServletResponse response) {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/xml");
-        System.out.print("wechat进来了");
+        System.out.print("wechat进入回调...");
+        logger.info("wechat进入回调");
         try {
             ServletInputStream in = request.getInputStream();
             String resxml = convertStreamToString(in);
             Map<String, String> restmap = WXPayUtil.xmlToMap(resxml);
             //LOG.info("支付结果通知：" + restmap);
             System.out.print(restmap.get("return_code"));
+
             if ("SUCCESS".equals(restmap.get("return_code"))) {
                 // 订单支付成功 业务处理
                 String out_trade_no = restmap.get("out_trade_no"); // 商户订单号
@@ -143,6 +153,9 @@ public class AlipayController {
                 String signnow =  WXPayUtil.generateSignature(restmap, API_SECRET, WXPayConstants.SignType.MD5);
                 System.out.print("拿到签名"+signnow);
                 System.out.print("返回签名"+sing);
+
+                logger.info("拿到签名"+signnow + "返回签名"+sing);
+
                 if (signnow.equals(sing)) {
                     System.out.print("进行业务处理");
                     // 进行业务处理
@@ -153,15 +166,21 @@ public class AlipayController {
                             response.getWriter().print("failure");
                             return;
                         }}
+
+                        // 充值会员
                         if(baseDeal.getType()==5){
                             userMemberService.tobeMemberForPay(baseDeal.getUserId());
-                        }else {
+                        }
+                        // 充值华语币
+                        else {
 
                             double money = Double.valueOf(restmap.get("total_fee"));
                             baseMemberService.addMoney(money,baseDeal.getUserId());
+                            System.out.print("wechat ok");
+                            logger.info("微信支付获取回调成功");
                         }
                 } else {
-                    //LOG.info("订单支付通知：签名错误");
+                    logger.warn("订单支付通知：签名错误");
                    /* return error(CommonErrorResult.SECRET_FAIL, "订单支付通知：签名错误");*/
                 }
             } else {
@@ -170,6 +189,7 @@ public class AlipayController {
                         "订单支付通知：支付失败，" + restmap.get("err_code") + ":" + restmap.get("err_code_des"));*/
             }
         } catch (Exception e) {
+            logger.error("微信支付获取回调失败");
             //LOG.info("获取回调失败");
             /*throw new BusinessException(CommonErrorResult.SECRET_FAIL,"获取回调失败");*/
         }
