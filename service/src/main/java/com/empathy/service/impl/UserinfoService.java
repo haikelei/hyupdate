@@ -3,29 +3,26 @@ package com.empathy.service.impl;
 import com.alibaba.druid.util.StringUtils;
 import com.empathy.cache.CacheUtils;
 import com.empathy.common.RspResult;
-import com.empathy.domain.live.BaseLive;
-import com.empathy.domain.live.BaseLiveChannel;
-import com.empathy.domain.user.*;
-import org.apache.commons.httpclient.HttpClient;
 import com.empathy.dao.*;
 import com.empathy.domain.bidding.File;
 import com.empathy.domain.deal.BaseDeal;
 import com.empathy.domain.enumer.LoginType;
-import com.empathy.domain.file.FileTypeAndPath;
 import com.empathy.domain.file.bo.FileCarBo;
+import com.empathy.domain.live.BaseLive;
+import com.empathy.domain.live.BaseLiveChannel;
+import com.empathy.domain.user.*;
 import com.empathy.domain.user.bo.*;
 import com.empathy.pay.alipay.AlipayUtils;
 import com.empathy.pay.alipay.RefundContent;
 import com.empathy.service.AbstractBaseService;
-import com.empathy.service.IMemberService;
 import com.empathy.service.IUserinfoService;
 import com.empathy.utils.*;
 import com.empathy.utils.wx.WXPayConstants;
 import com.empathy.utils.wx.WXPayUtil;
+import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.SimpleHttpConnectionManager;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.io.IOUtils;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -73,13 +70,21 @@ public class UserinfoService extends AbstractBaseService implements IUserinfoSer
 
     private static final String ORDER_PAY = "https://api.mch.weixin.qq.com/pay/unifiedorder"; // 统一下单
 
-    private static final String WECHAT_APP_ID ="wxc27fe76af5a55120";
+//    private static final String WECHAT_APP_ID ="wxc27fe76af5a55120";
+//
+//    private static final String MCH_ID = "1496007892";
+//    //商户平台密钥
+//    public static final String API_SECRET = "WFFXB8wHrg4IRSagNhzZ7iIJo3QNC91h";
+//
+//    private static final String CALLBACK_URL_WECHAT = "http://pay.hy960.com/alipay/wechatCallBack/";
 
-    private static final String MCH_ID = "1496007892";
+    private static final String WECHAT_APP_ID ="wxad49888a3aa32ae8";
+
+    private static final String MCH_ID = "1517033091";
     //商户平台密钥
-    public static final String API_SECRET = "WFFXB8wHrg4IRSagNhzZ7iIJo3QNC91h";
+    public static final String API_SECRET = "gW7Zr2ry0mei7h1qCo35ormt4ZZC0ki8";
 
-    private static final String CALLBACK_URL_WECHAT = "http://pay.hy960.com/alipay/wechatCallBack/";
+    private static final String CALLBACK_URL_WECHAT = "http://47.106.196.89:8080/hy/alipay/wechatCallBack/";
 
 
     @Override
@@ -168,10 +173,11 @@ public class UserinfoService extends AbstractBaseService implements IUserinfoSer
             String al = AlipayUtils.buildPayInfo("杭州华语之声传媒有限公司", bo.getMoney().doubleValue()/10+"", map, baseDeal.getId() + "");
             return success(al);
 
-
-
-
         }else if(payType==1){
+            String body = "hy";
+            String spbillCreateIp = "47.106.196.89";
+            String tradeType = "APP";
+
             BigDecimal money = new BigDecimal(bo.getMoney().doubleValue()/10);
             Map<String, String> restmap = null;
             String total_fee = money.multiply(BigDecimal.valueOf(100)) .setScale(0, BigDecimal.ROUND_HALF_UP).toString();
@@ -181,13 +187,13 @@ public class UserinfoService extends AbstractBaseService implements IUserinfoSer
             //parm.put("device_info", "WEB");
             String nonceStr = WXPayUtil.generateNonceStr();
             parm.put("nonce_str", nonceStr);
-            parm.put("body", "gugu");
+            parm.put("body", body);
             //parm.put("attach", "Crocutax");   //附加数据
             parm.put("out_trade_no",baseDeal.getId()+"");
             parm.put("total_fee", total_fee);
-            parm.put("spbill_create_ip", "47.106.196.89");
+            parm.put("spbill_create_ip", spbillCreateIp);
             parm.put("notify_url", CALLBACK_URL_WECHAT); //微信服务器异步通知支付结果地址  下面的order/notify 方法
-            parm.put("trade_type", "APP");
+            parm.put("trade_type", tradeType);
 
             String sign = null;
             try {
@@ -201,14 +207,14 @@ public class UserinfoService extends AbstractBaseService implements IUserinfoSer
 
             String xml = "<xml>" +
                     "<appid>" + WECHAT_APP_ID + "</appid>" +
-                    "<body>" + "hy" + "</body>" +
+                    "<body>" + body + "</body>" +
                     "<mch_id>" + MCH_ID + "</mch_id>" +
                     "<nonce_str>" + nonceStr + "</nonce_str>" +
                     "<notify_url>" + CALLBACK_URL_WECHAT + "</notify_url>" +
                     "<out_trade_no>" + baseDeal.getId() + "</out_trade_no>" +
-                    "<spbill_create_ip>" + "47.106.196.89" + "</spbill_create_ip>" +
+                    "<spbill_create_ip>" + spbillCreateIp + "</spbill_create_ip>" +
                     "<total_fee>" + total_fee + "</total_fee>" +
-                    "<trade_type>" + "APP" + "</trade_type>" +
+                    "<trade_type>" + tradeType + "</trade_type>" +
                     "<sign>" + sign + "</sign>" +
                     "</xml>";
 
@@ -243,15 +249,13 @@ public class UserinfoService extends AbstractBaseService implements IUserinfoSer
             resultMap.put("prepayId", prepayId);
             resultMap.put("sign", finalsign);
             System.out.println("结果码:"+resultMap);
-            return success(resultMap);
 
+            String al = WXPayUtil.buildOrderParam(resultMap);
 
-
+            return success(al);
         }
 
-
-
-        return null;
+        return errorNo();
     }
 
     @Override
@@ -771,10 +775,10 @@ public class UserinfoService extends AbstractBaseService implements IUserinfoSer
     @Override
     @Transactional(rollbackFor = Exception.class)
     public RspResult regist(RegistBo bo) {
-//        Boolean b = checkCode(bo.getCode(), bo.getPhone());
-//        if (b) {
-//            return new RspResult("验证码错误", 1);
-//        }
+        Boolean b = checkCode(bo.getCode(), bo.getPhone());
+        if (b) {
+            return new RspResult("验证码错误", 1);
+        }
         FindPhone findPhone = new FindPhone(bo.getPhone(), "phone");
         int count = userinfoDao.findCountByPhone(findPhone);
         if (count > 0) {
