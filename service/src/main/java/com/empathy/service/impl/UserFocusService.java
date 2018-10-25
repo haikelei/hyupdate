@@ -42,7 +42,9 @@ public class UserFocusService extends AbstractBaseService implements IUserFocusS
             Integer count = userFocusDao.count(bo);
             for (int i =0;i<list.size();i++){
                 BaseMember baseMember = baseMemberDao.findById(list.get(i).getFocusUserId());
-                list.get(i).setStatus(baseMember.getProveStatus());
+                if (baseMember != null) {
+                    list.get(i).setStatus(baseMember.getProveStatus());
+                }
 
                 FileCarBo fileCarBo = new FileCarBo();
                 fileCarBo.setType("user");
