@@ -24,7 +24,6 @@ public class ScheduleJob extends BaseDomain implements Serializable {
 
 
     private Long jobId;
-    private Date createTime;
     private Date updateTime;
     private String jobName;
     private String jobGroup;
