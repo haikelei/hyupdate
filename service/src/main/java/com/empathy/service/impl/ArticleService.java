@@ -2,29 +2,26 @@ package com.empathy.service.impl;
 
 import com.empathy.common.RspResult;
 import com.empathy.dao.*;
-import com.empathy.domain.agreement.Agreement;
-import com.empathy.domain.agreement.bo.*;
 import com.empathy.domain.article.Article;
 import com.empathy.domain.article.bo.ArticleAddBo;
 import com.empathy.domain.article.bo.ArticleFindBo;
 import com.empathy.domain.article.bo.ArticleUpdBo;
+import com.empathy.domain.article.bo.PointFindBo;
 import com.empathy.domain.article.vo.ArticleVo;
+import com.empathy.domain.article.vo.PointFindVo;
 import com.empathy.domain.baseReadLog.BaseReadLog;
 import com.empathy.domain.baseRecording.BaseRecording;
 import com.empathy.domain.bidding.File;
 import com.empathy.domain.file.bo.FileCarBo;
 import com.empathy.domain.user.BaseMember;
 import com.empathy.service.AbstractBaseService;
-import com.empathy.service.IAgreementService;
 import com.empathy.service.IArticleService;
 import com.empathy.service.IBaseReadLogService;
 import com.empathy.utils.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.xml.crypto.Data;
 import java.util.List;
 
 /**
@@ -216,6 +213,25 @@ public class ArticleService extends AbstractBaseService implements IArticleServi
                 Long createTime = articleVo.getCreateTime();
                 double time = (System.currentTimeMillis() - createTime) / 1000 / 60 / 60;
                 articleVo.setTime(time);
+
+                PointFindBo pointFindBo = new PointFindBo();
+                pointFindBo.setId(articleVo.getId());
+                pointFindBo.setStart(0);
+                pointFindBo.setLimit(10);
+                List<PointFindVo> pointFindVoList = articleDao.findPoint(pointFindBo);
+//             Integer count = articleDao.countPoint(bo);
+
+                for (PointFindVo vo : pointFindVoList) {
+                    FileCarBo fileCar = new FileCarBo();
+                    fileCar.setType("user");
+                    fileCar.setPurposeId(vo.getUserId());
+                    File file = fileDao.findFileByPurposeIdAndType(fileCar);
+                    if(file!=null){
+                        vo.setUrl(file.getLocation());
+                    }
+                }
+                articleVo.setPoints(pointFindVoList);
+
                 if(StringUtil.isNotLongEmpty(articleVo.getRecordId())){
                     BaseRecording byId = baseRecordingDao.findById(articleVo.getRecordId());
                     articleVo.setAlbumId(byId.getAlbumId());
@@ -345,6 +361,30 @@ public class ArticleService extends AbstractBaseService implements IArticleServi
         } else {
             articleVo.setStatus(1);
             return success(articleVo);
+        }
+    }
+
+    @Override
+    public RspResult findPoint(PointFindBo bo) {
+        try {
+
+            List<PointFindVo> list = articleDao.findPoint(bo);
+            Integer count = articleDao.countPoint(bo);
+
+            for (PointFindVo vo : list) {
+                FileCarBo fileCarBo = new FileCarBo();
+                fileCarBo.setType("user");
+                fileCarBo.setPurposeId(vo.getUserId());
+                File file = fileDao.findFileByPurposeIdAndType(fileCarBo);
+                if(file!=null){
+                    vo.setUrl(file.getLocation());
+                }
+            }
+
+            return success(count != null ? count : 0,list);
+        }catch (Exception e){
+            e.printStackTrace();
+            return errorNo();
         }
     }
 
