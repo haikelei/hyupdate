@@ -775,10 +775,10 @@ public class UserinfoService extends AbstractBaseService implements IUserinfoSer
     @Override
     @Transactional(rollbackFor = Exception.class)
     public RspResult regist(RegistBo bo) {
-//        Boolean b = checkCode(bo.getCode(), bo.getPhone());
-//        if (b) {
-//            return new RspResult("验证码错误", 1);
-//        }
+        Boolean b = checkCode(bo.getCode(), bo.getPhone());
+        if (b) {
+            return new RspResult("验证码错误", 1);
+        }
         FindPhone findPhone = new FindPhone(bo.getPhone(), "phone");
         int count = userinfoDao.findCountByPhone(findPhone);
         if (count > 0) {

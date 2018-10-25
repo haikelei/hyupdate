@@ -2,19 +2,15 @@ package com.empathy.web;
 
 import com.empathy.common.RspResult;
 import com.empathy.domain.SmsBo;
-import com.empathy.domain.user.PrivateChat;
 import com.empathy.domain.user.bo.*;
 import com.empathy.service.IUserinfoService;
-import com.empathy.utils.SMSUtils;
-import io.swagger.annotations.*;
+import com.empathy.utils.sms.SmsNewUtils;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
 
 /**
  * Created by MI on 2018/4/13.
@@ -31,29 +27,45 @@ public class UserController {
     @ApiOperation(value = "注册发送短信验证码", httpMethod = "GET", response = String.class)
     @RequestMapping(value = "/get/captcha", method = RequestMethod.GET)
     public RspResult captcha(SmsBo bo) {
-        SMSUtils.beforeBinding(bo.getPhone());
-        return new RspResult("发送成功", 200);
+        boolean result = SmsNewUtils.beforeBinding(bo.getPhone());
+        if (result) {
+            return new RspResult("发送成功", 200);
+        } else {
+            return new RspResult("发送失败，请稍后再试", 502);
+        }
     }
 
     @ApiOperation(value = "绑定手机发送短信验证码", httpMethod = "GET", response = String.class)
     @RequestMapping(value = "/get/binding", method = RequestMethod.GET)
     public RspResult binding(SmsBo bo) {
-        SMSUtils.beforeRegister(bo.getPhone());
-        return new RspResult("发送成功", 200);
+        boolean result = SmsNewUtils.beforeRegister(bo.getPhone());
+        if (result) {
+            return new RspResult("发送成功", 200);
+        } else {
+            return new RspResult("发送失败，请稍后再试", 502);
+        }
     }
 
     @ApiOperation(value = "忘记密码发送短信验证码", httpMethod = "GET", response = String.class)
     @RequestMapping(value = "/get/forgetPassword", method = RequestMethod.GET)
     public RspResult forgetPassword(SmsBo bo) {
-        SMSUtils.changePassword(bo.getPhone());
-        return new RspResult("发送成功", 200);
+        boolean result = SmsNewUtils.changePassword(bo.getPhone());
+        if (result) {
+            return new RspResult("发送成功", 200);
+        } else {
+            return new RspResult("发送失败，请稍后再试", 502);
+        }
     }
 
     @ApiOperation(value = "修改交易密码发送短信验证码", httpMethod = "GET", response = String.class)
     @RequestMapping(value = "/get/changeDealPassword", method = RequestMethod.GET)
     public RspResult changeDealPassword(SmsBo bo) {
-        SMSUtils.changeDealPassword(bo.getPhone());
-        return new RspResult("发送成功", 200);
+        boolean result = SmsNewUtils.changeDealPassword(bo.getPhone());
+        if (result) {
+            return new RspResult("发送成功", 200);
+        } else {
+            return new RspResult("发送失败，请稍后再试", 502);
+        }
     }
 
 
