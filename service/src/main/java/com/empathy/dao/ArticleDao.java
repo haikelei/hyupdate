@@ -1,11 +1,11 @@
 package com.empathy.dao;
 
 import com.empathy.common.BaseDao;
-import com.empathy.domain.agreement.Agreement;
 import com.empathy.domain.article.Article;
 import com.empathy.domain.article.bo.ArticleFindBo;
-import com.empathy.domain.article.bo.ArticleUpdBo;
+import com.empathy.domain.article.bo.PointFindBo;
 import com.empathy.domain.article.vo.ArticleVo;
+import com.empathy.domain.article.vo.PointFindVo;
 import com.empathy.domain.log.bo.LogBo;
 import org.apache.ibatis.annotations.Param;
 
@@ -35,4 +35,7 @@ public interface ArticleDao extends BaseDao<Article, Long, LogBo> {
 
     void delPointInfo(@Param(value = "articleId") Long articleId,@Param(value = "userId")Long userId);
 
+    Integer countPoint(PointFindBo bo);
+
+    List<PointFindVo> findPoint(PointFindBo bo);
 }

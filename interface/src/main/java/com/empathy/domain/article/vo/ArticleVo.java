@@ -35,4 +35,7 @@ public class ArticleVo extends Article{
 
     /** 学堂是否阅读，0未阅读，1已阅读 */
     private Integer isRead;
+
+    /* 点赞人列表 */
+    private List<PointFindVo> points;
 }

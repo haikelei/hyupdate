@@ -142,5 +142,22 @@
         UPDATE base_article SET red_point = red_point-1 where id=#{articleId}
     </update>
 
+    <select id="countPoint" resultType="int"
+            parameterType="com.empathy.domain.article.bo.PointFindBo">
+
+        SELECT count(a.id)
+        FROM base_point_info a
+        WHERE a.article_id = #{id} LIMIT #{start},#{limit}
+    </select>
+
+    <select id="findPoint" resultType="com.empathy.domain.article.vo.PointFindVo"
+            parameterType="com.empathy.domain.article.bo.PointFindBo">
+
+        SELECT a.id id ,a.user_id userId, a.article_id articleId, a.create_time createTime,
+                b.username username, b.level level
+        FROM base_point_info a left join base_member b on a.user_id = b.id
+        WHERE a.article_id = #{id}
+        order by a.create_time desc LIMIT #{start},#{limit}
+    </select>
 
 </mapper>
