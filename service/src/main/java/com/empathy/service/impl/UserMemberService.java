@@ -1,6 +1,7 @@
 package com.empathy.service.impl;
 
 import com.alibaba.druid.util.StringUtils;
+import com.alibaba.fastjson.JSON;
 import com.empathy.common.RspResult;
 import com.empathy.dao.BaseDealDao;
 import com.empathy.dao.BaseMemberDao;
@@ -174,7 +175,8 @@ public class UserMemberService extends AbstractBaseService implements IUserMembe
             resultMap.put("sign", finalsign);
             System.out.println("结果码:"+resultMap);
 
-            String al = WXPayUtil.buildOrderParam(resultMap);
+//            String al = WXPayUtil.buildOrderParam(resultMap);
+            String al = JSON.toJSONString(resultMap);
 
             return success(al);
         }
