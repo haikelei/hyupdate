@@ -214,6 +214,14 @@ public class ArticleService extends AbstractBaseService implements IArticleServi
                 double time = (System.currentTimeMillis() - createTime) / 1000 / 60 / 60;
                 articleVo.setTime(time);
 
+                FileCarBo urlFileCarBo = new FileCarBo();
+                urlFileCarBo.setType("user");
+                urlFileCarBo.setPurposeId(articleVo.getUserId());
+                File urlFile = fileDao.findFileByPurposeIdAndType(urlFileCarBo);
+                if (urlFile != null) {
+                    articleVo.setUrl(urlFile.getLocation());
+                }
+
                 PointFindBo pointFindBo = new PointFindBo();
                 pointFindBo.setId(articleVo.getId());
                 pointFindBo.setStart(0);
