@@ -99,7 +99,7 @@ public class UserMemberService extends AbstractBaseService implements IUserMembe
             return success(al);
 
         }else if(payType==1){
-            String body = "hy";
+            String body = "购买会员";
             String spbillCreateIp = "47.106.196.89";
             String tradeType = "APP";
 
@@ -225,20 +225,24 @@ public class UserMemberService extends AbstractBaseService implements IUserMembe
     public void tobeMemberForPay(Long id){
 
         BaseMember baseMember = baseMemberDao.findById(id);
+
         int count = userMemberDao.findCountByUserId(id);
         baseMember.setLastRevampTime(System.currentTimeMillis());
         baseMember.setMemberStatus(1);
         baseMemberDao.update(baseMember);
         if (count > 0) {
 
-            UserMember userMember = userMemberDao.findByUserId(id);
+            System.out.println("会员续费: " + baseMember.getId() );
+            UserMember userMember = userMemberDao.findByUserId(baseMember.getId());
             userMember.setEndTime(30 * 24 * 60 * 60 * 1000 + userMember.getEndTime());
             userMember.setLastRevampTime(System.currentTimeMillis());
             userMemberDao.update(userMember);
 
         } else {
 
+            System.out.println("会员新增: " + baseMember.getId() );
             UserMember userMember = new UserMember();
+            userMember.setUserId(baseMember.getId());
             userMember.setEndTime(System.currentTimeMillis() + 30 * 24 * 60 * 60 * 1000);
             userMemberDao.save(userMember);
         }

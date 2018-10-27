@@ -175,7 +175,7 @@ public class UserinfoService extends AbstractBaseService implements IUserinfoSer
             return success(al);
 
         }else if(payType==1){
-            String body = "hy";
+            String body = "充值";
             String spbillCreateIp = "47.106.196.89";
             String tradeType = "APP";
 

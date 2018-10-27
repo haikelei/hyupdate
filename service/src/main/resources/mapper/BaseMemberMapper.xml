@@ -23,7 +23,7 @@
 
     <select id="findById" parameterType="long" resultType="com.empathy.domain.user.BaseMember">
          select a.id,a.username,a.token,a.sex,a.prove_status,a.phone,a.address,a.prove_status proveStatus,a.member_status
-        memberStatus,a.intro,a.level,a.create_time createTime,a.del_flag delFlag,b.money,c.end_time lastDate
+        memberStatus,a.intro,a.level,a.experience,a.create_time createTime,a.del_flag delFlag,b.money,c.end_time lastDate
         from base_member a left join base_user_money b on a.id=b.user_id LEFT join base_user_member c on c.user_id = a.id
        WHERE a.id = #{id}
     </select>

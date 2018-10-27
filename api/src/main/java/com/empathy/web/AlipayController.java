@@ -76,6 +76,9 @@ public class AlipayController {
         double money = Double.valueOf(params.get("total_amount"));
         String wcCode = params.get("trade_no");
         String outTradeNo = params.get("out_trade_no");
+
+        System.out.println("out_trade_no: " + outTradeNo + " , total_amount: " + money);
+
         BaseDeal deal = baseDealDao.findById(Long.parseLong(outTradeNo));
         if(deal.getStatus()==1){
            response.getWriter().print("failure");
@@ -161,26 +164,45 @@ public class AlipayController {
                     // 进行业务处理
                     //LOG.info("订单支付通知： 支付成功，订单号" + out_trade_no);
                     BaseDeal baseDeal = baseDealDao.findById(Long.parseLong(out_trade_no));
-                    if(baseDeal!=null){
-                        if (baseDeal.getStatus()==1) {//已经支付过，重复通知
+                    if(baseDeal!=null) {
+                        System.out.println("out_trade_no: " + out_trade_no);
+                        System.out.println("money: " + baseDeal.getMoney());
+
+                        if (baseDeal.getStatus() == 1) {//已经支付过，重复通知
                             response.getWriter().print("failure");
                             return;
-                        }}
+                        }
 
                         // 充值会员
-                        if(baseDeal.getType()==5){
+                        if (baseDeal.getType() == 5) {
                             userMemberService.tobeMemberForPay(baseDeal.getUserId());
                         }
                         // 充值华语币
                         else {
 
                             double money = Double.valueOf(restmap.get("total_fee"));
-                            baseMemberService.addMoney(money,baseDeal.getUserId());
+                            baseMemberService.addMoney(money, baseDeal.getUserId());
                             System.out.print("wechat ok");
+
                             logger.info("微信支付获取回调成功");
+                            System.out.println("微信支付获取回调成功");
                         }
+
+                        String successXml = "<xml>\n" +
+                                "\n" +
+                                "  <return_code><![CDATA[SUCCESS]]></return_code>\n" +
+                                "  <return_msg><![CDATA[OK]]></return_msg>\n" +
+                                "</xml>";
+                        response.getWriter().print(successXml);
+
+                        baseDeal.setStatus(1);
+                        baseDeal.setLastRevampTime(System.currentTimeMillis());
+                        baseDealDao.update(baseDeal);
+                    }
+
                 } else {
                     logger.warn("订单支付通知：签名错误");
+                    System.out.println("订单支付通知：签名错误");
                    /* return error(CommonErrorResult.SECRET_FAIL, "订单支付通知：签名错误");*/
                 }
             } else {
@@ -190,6 +212,7 @@ public class AlipayController {
             }
         } catch (Exception e) {
             logger.error("微信支付获取回调失败");
+            System.out.println("微信支付获取回调失败");
             //LOG.info("获取回调失败");
             /*throw new BusinessException(CommonErrorResult.SECRET_FAIL,"获取回调失败");*/
         }
