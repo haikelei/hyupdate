@@ -2,13 +2,11 @@ package com.empathy.service.impl;
 
 import com.empathy.cache.CacheUtils;
 import com.empathy.common.CreateLiveChannel;
-import com.empathy.common.Live;
 import com.empathy.common.PageBo;
 import com.empathy.common.RspResult;
 import com.empathy.dao.*;
 import com.empathy.domain.album.Album;
 import com.empathy.domain.album.bo.FindAlbumForAccountBo;
-import com.empathy.domain.album.bo.RecordAddUrlBo;
 import com.empathy.domain.album.vo.AlbumAccountVo;
 import com.empathy.domain.article.Article;
 import com.empathy.domain.baseGift.BaseGift;
@@ -17,7 +15,6 @@ import com.empathy.domain.baseReport.bo.ReportAddBo;
 import com.empathy.domain.baseReport.bo.ReportFindBo;
 import com.empathy.domain.baseReport.vo.ReportVo;
 import com.empathy.domain.bidding.File;
-import com.empathy.domain.configuration.Configuration;
 import com.empathy.domain.file.bo.FileCarBo;
 import com.empathy.domain.grade.BaseGrade;
 import com.empathy.domain.live.*;
@@ -36,7 +33,6 @@ import com.empathy.schedule.SpringHelper;
 import com.empathy.service.AbstractBaseService;
 import com.empathy.service.IAlbumService;
 import com.empathy.service.IBaseLiveSerivce;
-import com.empathy.service.IBaseMemberService;
 import com.empathy.utils.DateUtils;
 import com.empathy.utils.StringUtil;
 import com.empathy.utils.YXUtils;
@@ -606,12 +602,12 @@ public class BaseLiveService extends AbstractBaseService implements IBaseLiveSer
     @Override
     public RspResult addReport(ReportAddBo bo) {
         BaseReport baseReport = new BaseReport();
-        if(bo.getReportType()==100){
+        if(bo.getType()==100){
 
             Album byId = albumDao.findById(bo.getLiveId());
             baseReport.setLiveId(byId.getId());
             baseReport.setReportUserId(byId.getUserId());
-        }else if(bo.getReportType()==200){
+        }else if(bo.getType()==200){
             BaseMember byId = baseMemberDao.findById(bo.getLiveId());
             baseReport.setLiveId(byId.getId());
             baseReport.setReportUserId(byId.getId());

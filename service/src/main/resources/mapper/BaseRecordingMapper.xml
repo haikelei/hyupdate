@@ -54,7 +54,7 @@
         a.title,
         a.create_time createTime,d.url url
         from base_Recording a left join base_member b on a.user_id = b.id
-          LEFT join base_file d on a.id = d.purpose_id and d.type ='image' and d.purpose='recording'
+          LEFT join base_file d on a.album_id = d.purpose_id and d.type ='image' and d.purpose='album'
          where a.album_id = #{albumId} and a.del_flag =
         0
         order by a.create_time LIMIT #{start},#{limit}
@@ -72,7 +72,7 @@
         a.title,
         a.create_time createTime,d.url url
         from base_Recording a left join base_member b on a.user_id = b.id
-          LEFT join base_file d on a.id = d.purpose_id and d.type ='image' and d.purpose='album'
+          LEFT join base_file d on a.album_id = d.purpose_id and d.type ='image' and d.purpose='album'
          where a.user_id = #{userId} and a.del_flag =
         0
         order by a.create_time LIMIT #{start},#{limit}
@@ -99,7 +99,7 @@
         a.create_time createTime,
         a.del_flag delFlag,d.url url
         from base_Recording a left join base_member b on a.user_id = b.id
-           LEFT join base_file d on a.id = d.purpose_id and d.type ='image' and d.purpose='recording'
+           LEFT join base_file d on a.album_id = d.purpose_id and d.type ='image' and d.purpose='album'
 
            where a.album_id = #{albumId}
         order by a.create_time LIMIT #{start},#{limit}
@@ -116,7 +116,7 @@
         a.create_time createTime,
         a.del_flag delFlag,d.url url
         from base_Recording a left join base_member b on a.user_id = b.id
-           LEFT join base_file d on a.id = d.purpose_id and d.type ='image' and d.purpose='recording'
+           LEFT join base_file d on a.album_id = d.purpose_id and d.type ='image' and d.purpose='album'
 
            where a.album_id = #{albumId}
         order by a.create_time

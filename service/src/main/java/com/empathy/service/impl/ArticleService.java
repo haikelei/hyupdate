@@ -240,11 +240,19 @@ public class ArticleService extends AbstractBaseService implements IArticleServi
                 }
                 articleVo.setPoints(pointFindVoList);
 
+                // RecordId不为空时，代表的是上传的专辑 音频
                 if(StringUtil.isNotLongEmpty(articleVo.getRecordId())){
                     BaseRecording byId = baseRecordingDao.findById(articleVo.getRecordId());
                     articleVo.setAlbumId(byId.getAlbumId());
                     articleVo.setStatus(3);
                     articleVo.setRecordingName(byId.getTitle());
+
+                    FileCarBo fileCar = new FileCarBo();
+                    fileCar.setType("album");
+                    fileCar.setPurposeId(byId.getAlbumId());
+                    List<String> fileList = fileDao.findFileByPurposeIdAndTypeList1(fileCar);
+                    articleVo.setArticleUrl(fileList);
+
                     continue a;
                 }else if (articleVo.getArticleUrl()!=null&&articleVo.getArticleUrl().size()>0&&articleVo.getUserId()!=1){
                     articleVo.setStatus(2);
