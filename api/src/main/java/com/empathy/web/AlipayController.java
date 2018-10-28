@@ -182,7 +182,7 @@ public class AlipayController {
 
                             double money = Double.valueOf(restmap.get("total_fee"));
                             baseMemberService.addMoney(money, baseDeal.getUserId());
-                            System.out.print("wechat ok");
+                            System.out.println("wechat ok");
 
                             logger.info("微信支付获取回调成功");
                             System.out.println("微信支付获取回调成功");

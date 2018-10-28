@@ -227,16 +227,25 @@ public final class DateUtils {
         return sdf.format(date);
     }
 
-    /** 获取本周第一天零点的时间戳 */
-    public static Date getWeekStartDate(){
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-        cal.set(Calendar.HOUR_OF_DAY, 0);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.SECOND, 0);
-        Date date = cal.getTime();
-        return date;
-    }
+    /** 获取本周一 零点的时间戳 */
+    public static Date getWeekStartDate() {
+//        Calendar cal = Calendar.getInstance();
+//        cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+//        cal.set(Calendar.HOUR_OF_DAY, 0);
+//        cal.set(Calendar.MINUTE, 0);
+//        cal.set(Calendar.SECOND, 0);
+//        Date date = cal.getTime();
 
+        Calendar cal = Calendar.getInstance();
+        cal.set(cal.get(Calendar.YEAR),cal.get(Calendar.MONDAY), cal.get(Calendar.DAY_OF_MONTH), 0, 0,0);
+        int d = 0;
+        if (cal.get(Calendar.DAY_OF_WEEK) == 1) {
+            d = -6;
+        } else {
+            d = 2 - cal.get(Calendar.DAY_OF_WEEK);
+        }
+        cal.add(Calendar.DAY_OF_WEEK, d);
+        return cal.getTime();
+    }
 
 }
