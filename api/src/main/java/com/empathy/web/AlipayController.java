@@ -54,7 +54,8 @@ public class AlipayController {
     public void notifyUrl(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 
-        System.out.println("支付宝进入回调！");
+//        System.out.println("支付宝进入回调！");
+        logger.info("****************** 支付宝进入回调 ****************** ");
 
         //获取支付宝POST过来反馈信息
         Map<String, String> params = new HashMap<String, String>();
@@ -77,7 +78,7 @@ public class AlipayController {
         String wcCode = params.get("trade_no");
         String outTradeNo = params.get("out_trade_no");
 
-        System.out.println("out_trade_no: " + outTradeNo + " , total_amount: " + money);
+        logger.info("支付宝充值：  out_trade_no: " + outTradeNo + " , total_amount: " + money);
 
         BaseDeal deal = baseDealDao.findById(Long.parseLong(outTradeNo));
         if(deal.getStatus()==1){
@@ -100,7 +101,8 @@ public class AlipayController {
         }
 
 
-        System.out.println("支付宝回调结束OK！");
+//        System.out.println("支付宝回调结束OK！");
+        logger.info("****************** 支付宝回调结束OK ****************** ");
 
       /*  Recharge recharge = rechargeService.queryRecharge(wcCode);
         System.out.println("3！");
@@ -136,8 +138,8 @@ public class AlipayController {
     public void wechatCallBack(HttpServletRequest request, HttpServletResponse response) {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/xml");
-        System.out.print("wechat进入回调...");
-        logger.info("wechat进入回调");
+//        System.out.print("wechat进入回调...");
+        logger.info("****************** wechat充值进入回调 ****************** ");
         try {
             ServletInputStream in = request.getInputStream();
             String resxml = convertStreamToString(in);
@@ -154,13 +156,14 @@ public class AlipayController {
                 restmap.remove("sign");
                 // String signnow = WXPayUtil.generateSignature(restmap, "wx.api.secret");
                 String signnow =  WXPayUtil.generateSignature(restmap, API_SECRET, WXPayConstants.SignType.MD5);
-                System.out.print("拿到签名"+signnow);
-                System.out.print("返回签名"+sing);
+//                System.out.print("拿到签名"+signnow);
+//                System.out.print("返回签名"+sing);
 
                 logger.info("拿到签名"+signnow + "返回签名"+sing);
 
                 if (signnow.equals(sing)) {
-                    System.out.print("进行业务处理");
+                    logger.info("进行业务处理");
+//                    System.out.print("进行业务处理");
                     // 进行业务处理
                     //LOG.info("订单支付通知： 支付成功，订单号" + out_trade_no);
                     BaseDeal baseDeal = baseDealDao.findById(Long.parseLong(out_trade_no));
@@ -181,10 +184,12 @@ public class AlipayController {
                         else {
 
                             double money = Double.valueOf(restmap.get("total_fee"));
-                            baseMemberService.addMoney(money, baseDeal.getUserId());
-                            System.out.println("wechat ok");
+                            logger.info("微信充值金额: {}分", money);
 
-                            logger.info("微信支付获取回调成功");
+                            baseMemberService.addMoney(money/100, baseDeal.getUserId());
+//                            System.out.println("wechat ok");
+
+//                            logger.info("微信支付获取回调成功");
                             System.out.println("微信支付获取回调成功");
                         }
 
@@ -202,7 +207,7 @@ public class AlipayController {
 
                 } else {
                     logger.warn("订单支付通知：签名错误");
-                    System.out.println("订单支付通知：签名错误");
+//                    System.out.println("订单支付通知：签名错误");
                    /* return error(CommonErrorResult.SECRET_FAIL, "订单支付通知：签名错误");*/
                 }
             } else {
@@ -212,10 +217,13 @@ public class AlipayController {
             }
         } catch (Exception e) {
             logger.error("微信支付获取回调失败");
-            System.out.println("微信支付获取回调失败");
+//            System.out.println("微信支付获取回调失败");
             //LOG.info("获取回调失败");
             /*throw new BusinessException(CommonErrorResult.SECRET_FAIL,"获取回调失败");*/
         }
+
+
+        logger.info("****************** wechat充值回调结束 ****************** ");
     }
 
 

@@ -234,7 +234,12 @@ public class UserMemberService extends AbstractBaseService implements IUserMembe
 
             System.out.println("会员续费: " + baseMember.getId() );
             UserMember userMember = userMemberDao.findByUserId(baseMember.getId());
-            userMember.setEndTime(30 * 24 * 60 * 60 * 1000 + userMember.getEndTime());
+
+            if (userMember.getEndTime() < System.currentTimeMillis()) {
+                userMember.setEndTime(System.currentTimeMillis() + 30 * 24 * 60 * 60 * 1000L);
+            } else {
+                userMember.setEndTime(userMember.getEndTime() + 30 * 24 * 60 * 60 * 1000L);
+            }
             userMember.setLastRevampTime(System.currentTimeMillis());
             userMemberDao.update(userMember);
 
@@ -243,7 +248,7 @@ public class UserMemberService extends AbstractBaseService implements IUserMembe
             System.out.println("会员新增: " + baseMember.getId() );
             UserMember userMember = new UserMember();
             userMember.setUserId(baseMember.getId());
-            userMember.setEndTime(System.currentTimeMillis() + 30 * 24 * 60 * 60 * 1000);
+            userMember.setEndTime(System.currentTimeMillis() + 30 * 24 * 60 * 60 * 1000L);
             userMemberDao.save(userMember);
         }
     }
