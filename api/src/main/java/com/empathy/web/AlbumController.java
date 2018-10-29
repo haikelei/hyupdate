@@ -39,16 +39,12 @@ public class AlbumController {
     @ApiOperation(value = "修改", httpMethod = "POST", response = String.class)
     @RequestMapping(value = "/updAlbum", method = RequestMethod.POST)
     public RspResult updAlbum(AlbumUpdBo bo) {
-
         return albumService.updAlbum(bo);
-
     }
 
     @ApiOperation(value = "删除", httpMethod = "POST", response = String.class)
     @RequestMapping(value = "/delAlbum", method = RequestMethod.POST)
     public RspResult delAlbum(AlbumDelBo bo) {
-
-
         return albumService.delAlbum(bo);
 
     }

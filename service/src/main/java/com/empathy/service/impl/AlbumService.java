@@ -775,7 +775,7 @@ public class AlbumService extends AbstractBaseService implements IAlbumService {
     @Override
     public RspResult addAlbum(AlbumAddBo bo) {
         Album album = new Album();
-        album.setAlbumName(bo.getAlbumName());
+        album.setAlbumName(bo.getTitle());
         album.setClassifyId(bo.getClassifyId());
         album.setUserId(bo.getUserId());
         album.setDetail(bo.getDetail());
@@ -787,19 +787,19 @@ public class AlbumService extends AbstractBaseService implements IAlbumService {
         albumMoney.setAlbumId(album.getId());
         albumMoney.setCreateTime(System.currentTimeMillis());
         albumMoney.setLastRevampTime(System.currentTimeMillis());
-        if (bo.getType() == 100) {
+        if (bo.getFeeType() == 100) {
             albumMoney.setChargeStatus(0);
-            albumMoney.setType(bo.getType());
+            albumMoney.setType(bo.getFeeType());
             albumMoneyDao.save(albumMoney);
-        } else if (bo.getType() == 200) {
-            albumMoney.setChargeStatus(bo.getChargeStatus());
-            albumMoney.setType(bo.getType());
+        } else if (bo.getFeeType() == 200) {
+            albumMoney.setChargeStatus(bo.getFeeType());
+            albumMoney.setType(bo.getFeeType());
             albumMoney.setBumSet(bo.getBumSet());
             albumMoney.setBumMoney(bo.getBumMoney());
             albumMoneyDao.save(albumMoney);
-        } else if (bo.getType() == 300) {
-            albumMoney.setChargeStatus(bo.getChargeStatus());
-            albumMoney.setType(bo.getType());
+        } else if (bo.getFeeType() == 300) {
+            albumMoney.setChargeStatus(bo.getFeeType());
+            albumMoney.setType(bo.getFeeType());
             albumMoney.setBumMoney(bo.getBumMoney());
             albumMoneyDao.save(albumMoney);
         }
