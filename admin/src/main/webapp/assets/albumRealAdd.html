@@ -96,19 +96,20 @@
         </div>
         <div class="form-group">
             <div class="col-sm-2 control-label">收费方式</div>
-            <div class="col-sm-5">
+            <div class="col-sm-4">
                 <a href="javascript:void(0)" class="sel_mask"><span id="span_fee_type">选择收费方式</span><img src="img/1.png"/>
                     <select id="fee-type" class="sel">
+                        <option value="">选择收费方式</option>
                         <option value="100">全部免费</option>
                         <option value="200">分集收费</option>
                         <option value="300">全部收费</option>
                     </select>
                 </a>
             </div>
-            <div class="col-sm-2 free-count">
+            <div class="col-sm-3 free-count">
                 <input type="text" class="form-control" id="free-count" placeholder="输入免费集数" >
             </div>
-            <div class="col-sm-2 fee-other">
+            <div class="col-sm-3 fee-other">
                 <input type="text" class="form-control" id="fee-other" placeholder="剩余每集收费" >
             </div>
         </div>
@@ -117,6 +118,7 @@
             <div class="col-sm-3">
                 <a href="javascript:void(0)" class="sel_mask"><span id="span_share">选择是否接受会员分享</span><img src="img/1.png"/>
                     <select id="share-type" class="sel_share">
+                        <option value="">选择是否接受会员分享</option>
                         <option value="0">接受会员分享</option>
                         <option value="1">不接受会员分享</option>
                     </select>
@@ -233,6 +235,9 @@
         var role_html = ''
         var baseCompany = "分类列表"
         for (var i = 0; i < result.data.length; i++) {
+            if (i == 0) {
+                role_html += '<option value="" selected="selected">' + baseCompany + '</option>'
+            }
             role_html += '<option value="' + result.data[i].id + '">' + result.data[i].name + '</option>'
             $("#category-type").html(role_html)
         }
