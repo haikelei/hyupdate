@@ -87,10 +87,9 @@
         <div class="form-group">
             <div class="col-sm-2 control-label">分类</div>
             <div class="col-sm-3">
-                <a href="javascript:void(0)" class="sel_mask"><span id="span_category">选择分类</span><img src="img/1.png"/>
-                    <select id="category-type" class="sel_catgory">
-                        <option ></option>
-
+                <a style="display:table-cell" href="javascript:void(0)" class="sel_mask1"><span id="span_mian3">分类类型</span><img src="img/1.png"/>
+                    <select id="selectForClassify" class="sel-category">
+                        <option></option>
                     </select>
                 </a>
             </div>
@@ -170,7 +169,6 @@
 <script>
 
     var classifyId = null;
-
     $(function () {
         $('.sel').change(function () {    // 选择后替换内容并恢复箭头方向
             $("#span_fee_type").html($('.sel').find('option:selected').html());
@@ -198,8 +196,8 @@
     })
 
     $(function () {
-        $('.sel_catgory').change(function () {    // 选择后替换内容并恢复箭头方向
-            $("#span_category").html($('.sel_catgory').find('option:selected').html());
+        $('.sel-category').change(function () {    // 选择后替换内容并恢复箭头方向
+            $("#span_mian3").html($('.sel-category').find('option:selected').html());
             $('.sel_mask').find('img').attr('src', 'img/1.png');
         })
         $('.sel').blur(function () {      //什么也不选恢复箭头方向
@@ -211,23 +209,9 @@
     })
 
 
-    $(function () {
-        /**
-         * 检查登录态
-         */
-        checkLoginStatus();
 
-        //获取专辑类型
-        ajaxByPOST("/hy/album/findAlbumForAccount", {start: 0, limit: 1000000000}, listSelectCallBack);
-
-        addVale();
-
-    });
-
-
-    //添加分类下拉列表
-    if ($('#albumId option:selected').val() != "" && $('#albumId option:selected').val() != undefined) {
-        classifyId = $('#albumId option:selected').val();
+    function findClassify() {
+        ajaxByPOST("/hy/classify/findAllClassify", {type: 0}, listSelectCallBack);
     }
 
     function listSelectCallBack(result) {
@@ -238,9 +222,26 @@
             if (i == 0) {
                 role_html += '<option value="" selected="selected">' + baseCompany + '</option>'
             }
-            role_html += '<option value="' + result.data[i].id + '" onclick="">' + result.data[i].albumName + '</option>'
-            $("#albumId").html(role_html)
+            role_html += '<option value="' + result.data[i].id + '">' + result.data[i].name + '</option>'
+            $("#selectForClassify").html(role_html)
         }
+    }
+
+
+    $(function () {
+        /**
+         * 检查登录态
+         */
+        checkLoginStatus();
+        findClassify()
+        addVale();
+
+    });
+
+
+    //添加分类下拉列表
+    if ($('#albumId option:selected').val() != "" && $('#albumId option:selected').val() != undefined) {
+        classifyId = $('#albumId option:selected').val();
     }
 
     function addVale() {
@@ -257,7 +258,7 @@
         var url = $("#ImgUrl").val();
         var feeType = $("#fee-type").val();//100全部免费 200分级收费 300全部收费
         var shareType = $("#share-type").val();//0 不接受 1接受
-        var categoryType = $("#category-type").val();
+        var categoryType = $("#selectForClassify").val();
         $.ajax({
             type: "post",
             url: "/hy/album/addAlbum",
@@ -291,7 +292,8 @@
         var url = $("#ImgUrl").val();
         var feeType = $("#fee-type").val();//100全部免费 200分级收费 300全部收费
         var shareType = $("#share-type").val();//0 不接受 1接受
-        var categoryType = $("#category-type").val();
+        var categoryType = $("#selectForClassify").val();
+        console.log(title+detail+url+feeType+shareType+categoryType)
         $.ajax({
             type: "post",
             url: "/hy/album/addAlbum",
@@ -355,31 +357,6 @@
         }
     });
 
-    //音频上传
-    new AjaxUpload('#upload-recroding', {
-        action: '/hy/record/addRecording',
-        name: 'file',
-        responseType: 'json',
-        onSubmit: function (file, ext) {
-            if (ext && /^(mp3|mp4)$/.test(ext.toLowerCase())) {
-                this.setData({
-                    'file': file
-                });
-            } else {
-                alert("请上传格式为 mp3|mp4 的音频！");
-                return false;
-            }
-        },
-        onComplete: function (file, response) {
-            if (response.error) {
-                alert(response.error);
-                return;
-            }
-            $("#sign").attr("value", response.data);
-            alert("音频上传成功");
-
-        }
-    });
 
 
 </script>
