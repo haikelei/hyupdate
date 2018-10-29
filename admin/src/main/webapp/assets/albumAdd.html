@@ -77,12 +77,15 @@
             </div>
             <div class="form-group">
                 <div class="col-sm-2 control-label">专辑</div>
-                <div class="col-sm-10">
+                <div class="col-sm-3">
                     <a href="javascript:void(0)" class="sel_mask"><span id="span_mian">选择专辑</span><img src="img/1.png"/>
                         <select id="albumId" class="sel">
                             <option></option>
                         </select>
                     </a>
+                </div>
+                <div class="col-sm-3">
+                <input type="button" class="btn btn-default" onclick="gotoAddAublm()" value="创建专辑" />
                 </div>
             </div>
 
@@ -128,8 +131,9 @@
 
             <div class="form-group">
                 <div class="col-sm-2 control-label"></div>
-                <input type="button" class="btn btn-default" onclick="HtmlLoad()" value="保存" style="margin-left:15px;" />
+                <input type="button" class="btn btn-default" onclick="HtmlLoad()" value="保存并返回" style="margin-left:15px;" />
                 <input type="button" class="btn btn-default" onclick="history.go(-1)" value="返回" />
+                <input type="button" class="btn btn-default" onclick="HtmlLoadAndContinue()" value="保存并继续添加" />
             </div>
         </form>
     </div>
@@ -193,6 +197,38 @@
             $("#span_mian").html($('.sel').find('option:selected').html());
 
         });
+    }
+
+    function gotoAddAublm() {
+        location.href="albumRealAdd.html";
+    }
+
+    function  HtmlLoadAndContinue(){
+        $('#myModal').modal('show');
+        var title = $("#title").val();
+        var albumId = $("#albumId").val();
+        var url = $("#ImgUrl").val();
+        var sign = $("#sign").val();
+        $.ajax({
+            type: "post",
+            url: "/hy/record/addBybackstage",
+            async: false,
+            data: {title:title,albumId:albumId,userId:0,url:url,sign:sign},
+            dataType: "json",
+            success: function (result) {
+                if(result.code == 200){
+                    alert("操作成功！");
+                    location.href="albumAdd.html";
+                }else {
+                    alert("操作失败，请重新操作！");
+                    $('#myModal').modal('hide');
+                }
+            },error: function (result) {
+                alert("操作失败，请重试！");
+                $('#myModal').modal('hide');
+            }
+        });
+
     }
 
     function  HtmlLoad(){

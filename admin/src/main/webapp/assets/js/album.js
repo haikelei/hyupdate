@@ -287,7 +287,6 @@ function cancelFreezeRecord(id) {
     ajaxByPOST("/hy/album/freezeRecording", {id: id, type: 1}, initAddSuccess)
 }
 
-
 function initAddSuccess(result) {
 
     if (result.code == 200) {
