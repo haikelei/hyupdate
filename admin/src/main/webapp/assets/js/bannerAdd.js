@@ -30,11 +30,11 @@ $(function () {
             msg(":" + file + "...");
         },
         success: function (data, status) {
-            alert(data);
+            // alert(data);
             if (data.status == 200) {
                 //把url保存到cookie中
 
-                alert(data.result);
+                // alert(data.result);
 
             } else {
                 alert("操作失败！");
@@ -65,7 +65,7 @@ function initSuccess(result) {
         location.href="resource.html";
     }else{
         console.log(result.msg)
-        alert(result.msg)
+        // alert(result.msg)
         location.reload();
     }
 }
@@ -136,7 +136,7 @@ function initForUrl(result) {
         location.href="resource.html";
     }else {
         console.log(result.msg)
-        alert(result.msg)
+        // alert(result.msg)
         location.reload();
     }
 
