@@ -58,17 +58,17 @@ $(function () {
         onSubmit: function (file, extension) {
 
             if (!(extension && /^(jpg|jpeg|png|gif|bmp)$/.test(extension.toLowerCase()))) {
-                alert('');
+                // alert('');
                 return false;
             }
             msg(":" + file + "...");
         },
         success: function (data, status) {
-            alert(data);
+            // alert(data);
             if (data.status == 200) {
                 //把url保存到cookie中
 
-                alert(data.result);
+                // alert(data.result);
 
             } else {
                 alert("操作失败！");
@@ -104,7 +104,7 @@ function update() {
         if ($(v).is(":checked"))
         {
             type = ($(v).val());
-            alert(type);
+            // alert(type);
         }
     });
 
@@ -122,7 +122,7 @@ function initSuccess(result) {
         location.href="article.html";
     }else{
         console.log(result.msg)
-        alert(result.msg)
+        // alert(result.msg)
         location.reload();
     }
 }
