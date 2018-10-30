@@ -103,7 +103,7 @@ function initClassify(result) {
             alert("访问失败" + e);
         },
         onComplete: function (file, r) {
-
+            r = JSON.parse(r)
             removeCookie("url")
             setCookie("url",r.data)
             $("#imageAddId").attr('src',imageDevURL+r.data);
