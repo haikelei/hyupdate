@@ -81,8 +81,6 @@ function init(result) {
         },
         onComplete: function (file, r) {
 
-            r =JSON.parse(r);
-
             removeCookie("url")
             setCookie("url",r.data)
             $("#imageAddId").attr('src',imageDevURL+r.data);
