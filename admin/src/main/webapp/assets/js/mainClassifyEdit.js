@@ -80,10 +80,11 @@ function init(result) {
             alert("访问失败" + e);
         },
         onComplete: function (file, r) {
-            r = JSON.parse(r)
+            // r = JSON.parse(r)
+            var obj = $.parseJSON(r.replace(/<.*?>/ig,""))
             removeCookie("url")
-            setCookie("url",r.data)
-            $("#imageAddId").attr('src',imageDevURL+r.data);
+            setCookie("url",obj.data)
+            $("#imageAddId").attr('src',imageDevURL+obj.data);
             msg("上传成功！");
             $("#updateId").val(1)
             $("#ImgUrl").val(file);

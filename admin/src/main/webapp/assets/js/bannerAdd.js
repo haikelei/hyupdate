@@ -44,10 +44,13 @@ $(function () {
             alert("访问失败" + e);
         },
         onComplete: function (file, r) {
-            r = JSON.parse(r)
+            console.log(r)
+            // r = JSON.parse(r)
+            var obj = $.parseJSON(r.replace(/<.*?>/ig,""))
+            console.log(r)
             removeCookie("url")
-            setCookie("url",r.data)
-            $("#imageAddId").attr('src',imageDevURL+r.data);
+            setCookie("url",obj.data)
+            $("#imageAddId").attr('src',imageDevURL+obj.data);
             msg("上传成功！");
             $("#ImgUrl").val(file);
             $("#showImg").slideDown(500);
@@ -92,6 +95,7 @@ function addCla() {
 
     var name = $("#title").val();
     var image = getCookie("url");
+    console.log(image)
     var code = $("#code").val();
     var url = $("#url").val();
     var type =  $('#selectForClass option:selected').val();
