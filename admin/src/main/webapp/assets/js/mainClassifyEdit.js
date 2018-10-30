@@ -85,6 +85,7 @@ function init(result) {
             removeCookie("url")
             setCookie("url",obj.data)
             $("#imageAddId").attr('src',imageDevURL+obj.data);
+            console.log(imageDevURL+obj.data)
             msg("上传成功！");
             $("#updateId").val(1)
             $("#ImgUrl").val(file);
