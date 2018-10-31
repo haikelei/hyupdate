@@ -35,7 +35,7 @@
 
     <select id="list" parameterType="com.empathy.domain.baseReport.bo.ReportFindBo"
             resultType="com.empathy.domain.baseReport.vo.ReportVo">
-        select a.id,a.live_id liveId,a.type,a.create_time createTime,a.report_type reportType,a.user_id userId ,a.report_user_id reportUserId,
+        select a.id,a.live_id liveId,a.type,a.create_time createTime,a.report_type reportType, a.content ,a.user_id userId ,a.report_user_id reportUserId,
         b.username username, c.username reportUsername from base_report a left join base_member b on a.user_id = b.id
         LEFT join base_member c on a.report_user_id = c.id
         <where>
