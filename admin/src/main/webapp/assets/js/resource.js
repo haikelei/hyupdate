@@ -132,13 +132,13 @@ function listAllPersonCallBack(result) {
         var url = array[i].url == undefined ? " " : array[i].url;
         td += "<td style='vertical-align: middle;'>" + url + "</td>";
         var image1 = array[i].image == undefined ? " " : array[i].image;
-        if(image){
-            td += "<td style='vertical-align: middle;'>"+"<img width='100px' src='"+ imageProdUrl+image +"'  />"+"</td>";
+        if(image1){
+            td += "<td style='vertical-align: middle;'>"+"<img width='100px' src='"+ imageProdUrl+image1 +"'  />"+"</td>";
             //td += "<td style='vertical-align: middle;'>"+"<img width='100px' src='http://localhost:7080/image/image/article/e0007a6a-e672-436f-bef5-763490249d9e.jpg'  />"+"</td>";
 
         }else{
 
-            td += "<td style='vertical-align: middle;'>"+"<img width='100px' src='"+ imageDevURL+image +"'  />"+"</td>";
+            td += "<td style='vertical-align: middle;'>"+"<img width='100px' src='"+ imageDevURL+image1 +"'  />"+"</td>";
         }
         var code = array[i].code == undefined ? " " : array[i].code;
         td += "<td style='vertical-align: middle;'>" + code + "</td>";

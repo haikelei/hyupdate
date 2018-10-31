@@ -58,17 +58,17 @@ $(function () {
         onSubmit: function (file, extension) {
 
             if (!(extension && /^(jpg|jpeg|png|gif|bmp)$/.test(extension.toLowerCase()))) {
-                alert('');
+                // alert('');
                 return false;
             }
             msg(":" + file + "...");
         },
         success: function (data, status) {
-            alert(data);
+            // alert(data);
             if (data.status == 200) {
                 //把url保存到cookie中
 
-                alert(data.result);
+                // alert(data.result);
 
             } else {
                 alert("操作失败！");
@@ -78,11 +78,11 @@ $(function () {
             alert("访问失败" + e);
         },
         onComplete: function (file, r) {
-
-            r =JSON.parse(r);
+            var obj = $.parseJSON(r.replace(/<.*?>/ig,""))
+            // r = JSON.parse(r)
             removeCookie("url")
-            setCookie("url",r.data)
-            $("#imageAddId").attr('src',imageDevURL+r.data);
+            setCookie("url",obj.data)
+            $("#imageAddId").attr('src',imageDevURL+obj.data);
             msg("上传成功！");
             $("#ImgUrl").val(file);
             $("#showImg").slideDown(500);
@@ -105,7 +105,7 @@ function update() {
         if ($(v).is(":checked"))
         {
             type = ($(v).val());
-            alert(type);
+            // alert(type);
         }
     });
 
@@ -123,7 +123,7 @@ function initSuccess(result) {
         location.href="article.html";
     }else{
         console.log(result.msg)
-        alert(result.msg)
+        // alert(result.msg)
         location.reload();
     }
 }
