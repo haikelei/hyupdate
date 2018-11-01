@@ -63,7 +63,7 @@ function listAllPersonCallBack(result) {
         var td = "<tr>";
         var id = array[i].id;
         //td += "<td style='vertical-align: middle;'>" + ((currentPage - 1) * 10 + i + 1) + "</td>";
-        td += "<td style='display: none'>" + array[i].id + "</td>";
+        td += "<td style='vertical-align: middle;'>" + array[i].id + "</td>";
         td += "<td style='display: none'>" + array[i].liveId + "</td>";
         var username = array[i].username == undefined ? " " : array[i].username;
         td += "<td style='vertical-align: middle;'>" + username + "</td>";
