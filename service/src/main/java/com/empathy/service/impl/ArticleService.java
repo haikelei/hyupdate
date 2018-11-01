@@ -411,7 +411,7 @@ public class ArticleService extends AbstractBaseService implements IArticleServi
 
     @Override
     public Article findById(Long aLong) {
-        return null;
+        return articleDao.findById(aLong);
     }
 
     @Override
@@ -421,6 +421,7 @@ public class ArticleService extends AbstractBaseService implements IArticleServi
 
     @Override
     public RspResult delById(Long aLong) {
-        return null;
+        articleDao.delById(aLong);
+        return success();
     }
 }

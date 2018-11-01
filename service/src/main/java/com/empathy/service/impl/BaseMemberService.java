@@ -110,7 +110,7 @@ public class BaseMemberService extends AbstractBaseService implements IBaseMembe
 
     @Override
     public BaseMember findById(Long aLong) {
-        return null;
+        return baseMemberDao.findById(aLong);
     }
 
     @Override
@@ -120,6 +120,7 @@ public class BaseMemberService extends AbstractBaseService implements IBaseMembe
 
     @Override
     public RspResult delById(Long aLong) {
-        return null;
+        baseMemberDao.delById(aLong);
+        return success();
     }
 }

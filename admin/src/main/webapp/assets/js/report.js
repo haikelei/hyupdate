@@ -105,24 +105,48 @@ function listAllPersonCallBack(result) {
 
         td += "<td style='vertical-align: middle;'>" + dateFormatUtil(array[i].createTime) + "</td>";
 
-        td += "<td style='vertical-align: middle;'><button type='button' class='btn btn-primary' onclick='auditPass(" + id + ")'>审核通过</a></button>" +
+        td += "<td style='vertical-align: middle;'><button type='button' class='btn btn-primary' onclick='auditPass(" + id + ", " + type + ")'>审核通过</a></button>" +
             "<button type='button' class='btn btn-primary' onclick='auditUnpass(" + id + ")'>审核不通过</a></button></td>";
-
 
         table.append(td);
     }
 
 }
 
-function auditPass(id) {
-    alert("维护中...")
-    // ajaxByPOST("/hy/article/delArticle",{id:id},forSuccess);
+function auditPass(id, type) {
+    var tip = "";
+    if (type == '100') {
+        tip = "确认是否将该专辑删除?";
+    } else if (type == '200') {
+        tip = "确认是否将该个人账号禁止登陆?";
+    } else if (type == '300') {
+        tip = "确认是否将该文章删除?";
+    }
+
+    if (confirm(tip) ) {
+        ajaxByPOST("/hy/report/auditPass/" + id, {}, callForSuccess);
+    }
 }
 
 function auditUnpass(id) {
-    if (confirm("确认是否删除?") ) {
-        ajaxByPOST("/hy/report/delReport/" + id, {}, forSuccess);
+    if (confirm("确认是否删除该条举报记录?") ) {
+        ajaxByPOST("/hy/report/delReport/" + id, {}, callForSuccess);
     }
+}
+
+function callForSuccess(result) {
+    if(result.code==200){
+        alert("操作成功！")
+        reloadResord();
+    }else{
+        console.log(result.msg)
+        alert(result.msg)
+        reloadResord();
+    }
+}
+
+function reloadResord() {
+    ajaxByPOST("/hy/report/findReportCount", {type: $("#typeId").val() }, initPersonCallback);
 }
 
 function updMessage(id) {

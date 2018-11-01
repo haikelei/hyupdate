@@ -823,7 +823,7 @@ public class AlbumService extends AbstractBaseService implements IAlbumService {
 
     @Override
     public Album findById(Long aLong) {
-        return null;
+        return albumDao.findById(aLong);
     }
 
     @Override
@@ -833,6 +833,7 @@ public class AlbumService extends AbstractBaseService implements IAlbumService {
 
     @Override
     public RspResult delById(Long aLong) {
-        return null;
+        albumDao.delById(aLong);
+        return success();
     }
 }

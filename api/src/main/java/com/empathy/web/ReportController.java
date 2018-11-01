@@ -52,13 +52,24 @@ public class ReportController extends AbstractBaseController {
     }
 
     /**
+     * 审核通过 (删除、或者禁止相关文章、专辑或者个人)
+     * @param id
+     * @return
+     */
+    @RequestMapping("/auditPass/{id}")
+    @ResponseBody
+    public RspResult auditPass(@PathVariable("id") Long id) {
+        return baseReportSerivce.auditPass(id);
+    }
+
+    /**
      * 审核不通过、直接删除
      * @param id
      * @return
      */
     @RequestMapping("/delReport/{id}")
     @ResponseBody
-    public RspResult detail(@PathVariable("id") Long id) {
+    public RspResult delReport(@PathVariable("id") Long id) {
         return baseReportSerivce.delById(id);
     }
 }

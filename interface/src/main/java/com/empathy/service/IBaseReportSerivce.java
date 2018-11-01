@@ -15,4 +15,6 @@ public interface IBaseReportSerivce extends BaseService<BaseReport, Long, PageBo
     String findReportCount(ReportFindBo bo);
 
     RspResult page(ReportFindBo bo);
+
+    RspResult auditPass(Long id);
 }
