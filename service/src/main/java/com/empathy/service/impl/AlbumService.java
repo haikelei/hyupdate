@@ -75,6 +75,7 @@ public class AlbumService extends AbstractBaseService implements IAlbumService {
         Long albumId = baseRecording.getAlbumId();
         AlbumVo album = albumDao.findAlbumById(albumId);
         UserMember byUserId = userMemberDao.findByUserId(bo.getUserId());
+        BaseMember baseMember = baseMemberDao.findByIdUser(bo.getUserId());
         List<BaseRecording> list = baseRecordingDao.findByAlbumId(albumId);
         int countInfo =0;
         for (int h=0;h<list.size();h++){
@@ -126,6 +127,9 @@ public class AlbumService extends AbstractBaseService implements IAlbumService {
             recordPlayVo.setId(baseRecording.getId());
             recordPlayVo.setUserId(byUserId.getUserId());
             recordPlayVo.setPlayUrl(url);
+            recordPlayVo.setAlbumDetail(album.getDetail());
+            recordPlayVo.setAlbumName(album.getAlbumName());
+            recordPlayVo.setUsername(baseMember.getUsername());
 
             // album
             FileCarBo fileCarBo = new FileCarBo();
@@ -145,7 +149,7 @@ public class AlbumService extends AbstractBaseService implements IAlbumService {
            for (int j =0;j<list.size();j++){
                if(list.get(j).getId()==bo.getId()){
                    if(j==0){
-                        return error(1,"没有上一首！");
+                        return error(2,"没有上一首！");
                    }else {
                        result=j-1;
                    }
@@ -189,9 +193,12 @@ public class AlbumService extends AbstractBaseService implements IAlbumService {
             baseRecordingDao.update(baseRecording);
 
             RecordPlayVo recordPlayVo = new RecordPlayVo();
-            recordPlayVo.setId(baseRecording.getId());
+            recordPlayVo.setId(list.get(result).getId());
             recordPlayVo.setUserId(byUserId.getUserId());
             recordPlayVo.setPlayUrl(url1);
+            recordPlayVo.setAlbumDetail(album.getDetail());
+            recordPlayVo.setAlbumName(album.getAlbumName());
+            recordPlayVo.setUsername(baseMember.getUsername());
 
             // album
             FileCarBo fileCarBo = new FileCarBo();
@@ -210,8 +217,8 @@ public class AlbumService extends AbstractBaseService implements IAlbumService {
 
             for (int i =0;i<list.size();i++){
                 if(list.get(i).getId()==bo.getId()){
-                    if(i+1>list.size()){
-                        return error(1,"没有下一首！");
+                    if(i+1>=list.size()){
+                        return error(2,"没有下一首！");
                     }else {
                         result=i+1;
                     }
@@ -253,9 +260,12 @@ public class AlbumService extends AbstractBaseService implements IAlbumService {
             baseRecordingDao.update(baseRecording);
 
             RecordPlayVo recordPlayVo = new RecordPlayVo();
-            recordPlayVo.setId(baseRecording.getId());
+            recordPlayVo.setId(list.get(result).getId());
             recordPlayVo.setUserId(byUserId.getUserId());
             recordPlayVo.setPlayUrl(url1);
+            recordPlayVo.setAlbumDetail(album.getDetail());
+            recordPlayVo.setAlbumName(album.getAlbumName());
+            recordPlayVo.setUsername(baseMember.getUsername());
 
             // album
             FileCarBo fileCarBo = new FileCarBo();

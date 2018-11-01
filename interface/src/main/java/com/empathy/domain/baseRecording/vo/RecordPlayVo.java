@@ -20,8 +20,18 @@ public class RecordPlayVo {
     // 专辑封页
     private String albumUrl;
 
+    // 专辑名称
+    private String albumName;
+
+    // 专辑detail
+    private String albumDetail;
+
     // 用户id
     private Long userId;
+
+    // 用户名
+    private String username;
+
 
 
 
