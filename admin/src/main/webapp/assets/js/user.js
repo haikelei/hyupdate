@@ -70,6 +70,9 @@ function listAllPersonCallBack(result) {
         if(array[i].memberStatus == 1){
             color = "#F0E68C";
         }
+        if(array[i].proveStatus == 1 && array[i].memberStatus == 1){
+            color = "#ff0705";
+        }
         var td = "<tr style='background-color: " + color + " '>";
 
         var id = array[i].id;
