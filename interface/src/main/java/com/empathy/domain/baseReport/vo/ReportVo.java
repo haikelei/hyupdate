@@ -21,4 +21,5 @@ public class ReportVo {
     private Long createTime;
     private Integer reportType;
 
+    private String detail;//详细
 }

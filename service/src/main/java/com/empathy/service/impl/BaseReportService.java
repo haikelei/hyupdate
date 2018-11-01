@@ -49,11 +49,35 @@ public class BaseReportService extends AbstractBaseService implements IBaseRepor
         List<ReportVo> list = new ArrayList<>();
         if (count > 0) {
             list = baseReportDao.list(bo);
-//            if (list != null) {
-//                for (Member m : list) {
-//                    m.setRole(getRole(m.getId()));
-//                }
-//            }
+
+            if (list != null) {
+                for (ReportVo reportVo : list) {
+                    // 专辑
+                    if (reportVo.getType() != null && 100 == reportVo.getType()) {
+                        Album album = albumService.findById(reportVo.getLiveId());
+
+                        if (album != null) {
+                            reportVo.setDetail(album.getAlbumName());
+                        }
+                    }
+                    // 个人
+                    else if (reportVo.getType() != null && 200 == reportVo.getType()) {
+                        BaseMember baseMember = memberService.findById(reportVo.getLiveId());
+
+                        if (baseMember != null) {
+                            reportVo.setDetail(baseMember.getPhone());
+                        }
+                    }
+                    // 文章
+                    else if (reportVo.getType() != null && 300 == reportVo.getType()) {
+                        Article article = articleService.findById(reportVo.getLiveId());
+
+                        if (article != null) {
+                            reportVo.setDetail(article.getContent());
+                        }
+                    }
+                }
+            }
         }
         return success(count, list);
     }

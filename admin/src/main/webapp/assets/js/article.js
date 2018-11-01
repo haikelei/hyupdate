@@ -100,6 +100,8 @@ function listAllPersonCallBack(result) {
         }
 
         var content = array[i].content == undefined ? " " : array[i].content;
+        content = content.length > 100 ? content.substr(0, 100) + " ......" : content;
+
         td += "<td style='vertical-align: middle;' width='250px'>" + content + "</td>";
 
 

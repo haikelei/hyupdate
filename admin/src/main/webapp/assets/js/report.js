@@ -103,6 +103,18 @@ function listAllPersonCallBack(result) {
 
         td += "<td style='vertical-align: middle;'>" + array[i].reportUsername + "</td>";
 
+        var detail = array[i].detail == undefined ? "" : array[i].detail;
+        detail = detail.length > 100 ? detail.substr(0, 100) + " ......" : detail;
+        if (type == '100') {
+            detail = "专辑名称: (" + detail + ")";
+        } else if (type == '200') {
+            detail = "电话号码: (" + detail + ")";
+        } else if (type == '300') {
+            detail = "文章内容: (" + detail + ")";
+        }
+
+        td += "<td style='vertical-align: middle;width: 20%'>" + detail + "</td>";
+
         td += "<td style='vertical-align: middle;'>" + dateFormatUtil(array[i].createTime) + "</td>";
 
         td += "<td style='vertical-align: middle;'><button type='button' class='btn btn-primary' onclick='auditPass(" + id + ", " + type + ")'>审核通过</a></button>" +
