@@ -1,6 +1,5 @@
 package com.empathy.service.impl;
 
-import com.empathy.Constants;
 import com.empathy.common.RspResult;
 import com.empathy.dao.*;
 import com.empathy.domain.album.*;
@@ -10,10 +9,13 @@ import com.empathy.domain.album.vo.AlbumBestVo;
 import com.empathy.domain.album.vo.AlbumVo;
 import com.empathy.domain.baseRecording.BaseRecording;
 import com.empathy.domain.baseRecording.bo.*;
+import com.empathy.domain.baseRecording.vo.RecordPlayVo;
+import com.empathy.domain.bidding.File;
 import com.empathy.domain.comments.Comments;
 import com.empathy.domain.comments.bo.CommentsAddBo;
 import com.empathy.domain.comments.bo.CommentsFindBo;
 import com.empathy.domain.enumer.CommentType;
+import com.empathy.domain.file.bo.FileCarBo;
 import com.empathy.domain.live.bo.FindLiveByClassifyBo;
 import com.empathy.domain.user.BaseMember;
 import com.empathy.domain.user.UserMember;
@@ -22,19 +24,12 @@ import com.empathy.service.AbstractBaseService;
 import com.empathy.service.IAlbumService;
 import com.empathy.utils.StringUtil;
 import com.empathy.utils.YXUtils;
-import com.netease.vcloud.auth.BasicCredentials;
-import com.netease.vcloud.auth.Credentials;
-import com.netease.vcloud.client.VcloudClient;
-import com.netease.vcloud.upload.param.QueryVideoIDorWatermarkIDParam;
-import com.netease.vcloud.util.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by MI on 2018/4/16.
@@ -66,6 +61,8 @@ public class AlbumService extends AbstractBaseService implements IAlbumService {
     private BaseMemberDao baseMemberDao;
     @Autowired
     private UserMoneyDao userMoneyDao;
+    @Autowired
+    private FileService fileService;
 
 
     @Override
@@ -122,7 +119,24 @@ public class AlbumService extends AbstractBaseService implements IAlbumService {
             String url =  YXUtils.getVoice(Long.valueOf(baseRecording.getSign()));
             baseRecording.setPlayNumber(baseRecording.getPlayNumber()+1);
             baseRecordingDao.update(baseRecording);
-            return success(url);
+
+
+
+            RecordPlayVo recordPlayVo = new RecordPlayVo();
+            recordPlayVo.setId(baseRecording.getId());
+            recordPlayVo.setUserId(byUserId.getUserId());
+            recordPlayVo.setPlayUrl(url);
+
+            // album
+            FileCarBo fileCarBo = new FileCarBo();
+            fileCarBo.setPurposeId(album.getId());
+            fileCarBo.setType("album");
+            File file = fileService.findFile(fileCarBo);
+            if(file!=null){
+                recordPlayVo.setAlbumUrl(file.getLocation());
+            }
+
+            return success(recordPlayVo);
         }
 
 
@@ -173,7 +187,22 @@ public class AlbumService extends AbstractBaseService implements IAlbumService {
 
             baseRecording.setPlayNumber(baseRecording.getPlayNumber()+1);
             baseRecordingDao.update(baseRecording);
-           return success(url1);
+
+            RecordPlayVo recordPlayVo = new RecordPlayVo();
+            recordPlayVo.setId(baseRecording.getId());
+            recordPlayVo.setUserId(byUserId.getUserId());
+            recordPlayVo.setPlayUrl(url1);
+
+            // album
+            FileCarBo fileCarBo = new FileCarBo();
+            fileCarBo.setPurposeId(album.getId());
+            fileCarBo.setType("album");
+            File file = fileService.findFile(fileCarBo);
+            if(file!=null){
+                recordPlayVo.setAlbumUrl(file.getLocation());
+            }
+
+           return success(recordPlayVo);
 
 
         }else{
@@ -222,7 +251,22 @@ public class AlbumService extends AbstractBaseService implements IAlbumService {
 
             baseRecording.setPlayNumber(baseRecording.getPlayNumber()+1);
             baseRecordingDao.update(baseRecording);
-            return success(url1);
+
+            RecordPlayVo recordPlayVo = new RecordPlayVo();
+            recordPlayVo.setId(baseRecording.getId());
+            recordPlayVo.setUserId(byUserId.getUserId());
+            recordPlayVo.setPlayUrl(url1);
+
+            // album
+            FileCarBo fileCarBo = new FileCarBo();
+            fileCarBo.setPurposeId(album.getId());
+            fileCarBo.setType("album");
+            File file = fileService.findFile(fileCarBo);
+            if(file!=null){
+                recordPlayVo.setAlbumUrl(file.getLocation());
+            }
+
+            return success(recordPlayVo);
 
 
         }
