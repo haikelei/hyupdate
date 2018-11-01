@@ -7,6 +7,8 @@ import com.empathy.service.IBaseReportSerivce;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -49,12 +51,14 @@ public class ReportController extends AbstractBaseController {
         return baseReportSerivce.page(bo);
     }
 
-
-
-//    @RequestMapping("/{id}")
-//    public String detail(@PathVariable("id") Long id, ModelMap model) {
-//        final Member entity = baseReportSerivce.findById(id);
-//        model.put("entity", entity);
-//        return "admin/member/show";
-//    }
+    /**
+     * 审核不通过、直接删除
+     * @param id
+     * @return
+     */
+    @RequestMapping("/delReport/{id}")
+    @ResponseBody
+    public RspResult detail(@PathVariable("id") Long id) {
+        return baseReportSerivce.delById(id);
+    }
 }

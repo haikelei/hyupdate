@@ -105,7 +105,8 @@ function listAllPersonCallBack(result) {
 
         td += "<td style='vertical-align: middle;'>" + dateFormatUtil(array[i].createTime) + "</td>";
 
-        td += "<td style='vertical-align: middle;'><button type='button' class='btn btn-primary' onclick='audit(" + id + ")'>审核</a></button></td>";
+        td += "<td style='vertical-align: middle;'><button type='button' class='btn btn-primary' onclick='auditPass(" + id + ")'>审核通过</a></button>" +
+            "<button type='button' class='btn btn-primary' onclick='auditUnpass(" + id + ")'>审核不通过</a></button></td>";
 
 
         table.append(td);
@@ -113,15 +114,16 @@ function listAllPersonCallBack(result) {
 
 }
 
-function audit() {
+function auditPass(id) {
     alert("维护中...")
+    // ajaxByPOST("/hy/article/delArticle",{id:id},forSuccess);
 }
 
-function delArticle(id) {
-    ajaxByPOST("/hy/article/delArticle",{id:id},forSuccess);
-
+function auditUnpass(id) {
+    if (confirm("确认是否删除?") ) {
+        ajaxByPOST("/hy/report/delReport/" + id, {}, forSuccess);
+    }
 }
-
 
 function updMessage(id) {
 

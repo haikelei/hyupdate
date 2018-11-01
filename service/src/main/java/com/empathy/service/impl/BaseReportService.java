@@ -62,7 +62,8 @@ public class BaseReportService extends AbstractBaseService implements IBaseRepor
     }
 
     @Override
-    public RspResult delById(Long aLong) {
-        return null;
+    public RspResult delById(Long id) {
+        baseReportDao.delById(id);
+        return success();
     }
 }
