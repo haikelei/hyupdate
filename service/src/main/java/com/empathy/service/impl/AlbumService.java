@@ -75,8 +75,9 @@ public class AlbumService extends AbstractBaseService implements IAlbumService {
         Long albumId = baseRecording.getAlbumId();
         AlbumVo album = albumDao.findAlbumById(albumId);
         UserMember byUserId = userMemberDao.findByUserId(bo.getUserId());
-        BaseMember baseMember = baseMemberDao.findByIdUser(bo.getUserId());
+        BaseMember baseMember = baseMemberDao.findByIdUser(baseRecording.getUserId());
         List<BaseRecording> list = baseRecordingDao.findByAlbumId(albumId);
+
         int countInfo =0;
         for (int h=0;h<list.size();h++){
             if(list.get(h).getId()==baseRecording.getId()){
@@ -125,11 +126,11 @@ public class AlbumService extends AbstractBaseService implements IAlbumService {
 
             RecordPlayVo recordPlayVo = new RecordPlayVo();
             recordPlayVo.setId(baseRecording.getId());
-            recordPlayVo.setUserId(byUserId.getUserId());
-            recordPlayVo.setPlayUrl(url);
-            recordPlayVo.setAlbumDetail(album.getDetail());
-            recordPlayVo.setAlbumName(album.getAlbumName());
+            recordPlayVo.setUserId(baseMember.getId());
             recordPlayVo.setUsername(baseMember.getUsername());
+            recordPlayVo.setPlayUrl(url);
+//            recordPlayVo.setAlbumDetail(album.getDetail());
+            recordPlayVo.setAlbumName(baseRecording.getTitle());
 
             // album
             FileCarBo fileCarBo = new FileCarBo();
@@ -194,11 +195,11 @@ public class AlbumService extends AbstractBaseService implements IAlbumService {
 
             RecordPlayVo recordPlayVo = new RecordPlayVo();
             recordPlayVo.setId(list.get(result).getId());
-            recordPlayVo.setUserId(byUserId.getUserId());
-            recordPlayVo.setPlayUrl(url1);
-            recordPlayVo.setAlbumDetail(album.getDetail());
-            recordPlayVo.setAlbumName(album.getAlbumName());
+            recordPlayVo.setUserId(baseMember.getId());
             recordPlayVo.setUsername(baseMember.getUsername());
+            recordPlayVo.setPlayUrl(url1);
+//            recordPlayVo.setAlbumDetail(album.getDetail());
+            recordPlayVo.setAlbumName(list.get(result).getTitle());
 
             // album
             FileCarBo fileCarBo = new FileCarBo();
@@ -261,11 +262,11 @@ public class AlbumService extends AbstractBaseService implements IAlbumService {
 
             RecordPlayVo recordPlayVo = new RecordPlayVo();
             recordPlayVo.setId(list.get(result).getId());
-            recordPlayVo.setUserId(byUserId.getUserId());
-            recordPlayVo.setPlayUrl(url1);
-            recordPlayVo.setAlbumDetail(album.getDetail());
-            recordPlayVo.setAlbumName(album.getAlbumName());
+            recordPlayVo.setUserId(baseMember.getId());
             recordPlayVo.setUsername(baseMember.getUsername());
+            recordPlayVo.setPlayUrl(url1);
+//            recordPlayVo.setAlbumDetail(album.getDetail());
+            recordPlayVo.setAlbumName(list.get(result).getTitle());
 
             // album
             FileCarBo fileCarBo = new FileCarBo();
