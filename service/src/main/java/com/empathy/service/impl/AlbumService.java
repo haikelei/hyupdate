@@ -129,8 +129,11 @@ public class AlbumService extends AbstractBaseService implements IAlbumService {
             recordPlayVo.setUserId(baseMember.getId());
             recordPlayVo.setUsername(baseMember.getUsername());
             recordPlayVo.setPlayUrl(url);
-//            recordPlayVo.setAlbumDetail(album.getDetail());
-            recordPlayVo.setAlbumName(baseRecording.getTitle());
+            recordPlayVo.setAlbumId(album.getId());
+            recordPlayVo.setAlbumName(album.getAlbumName());
+            recordPlayVo.setAlbumDetail(album.getDetail());
+            recordPlayVo.setPlayNumber(baseRecording.getPlayNumber());
+            recordPlayVo.setRecordingName(baseRecording.getTitle());
 
             // album
             FileCarBo fileCarBo = new FileCarBo();
@@ -198,8 +201,11 @@ public class AlbumService extends AbstractBaseService implements IAlbumService {
             recordPlayVo.setUserId(baseMember.getId());
             recordPlayVo.setUsername(baseMember.getUsername());
             recordPlayVo.setPlayUrl(url1);
-//            recordPlayVo.setAlbumDetail(album.getDetail());
-            recordPlayVo.setAlbumName(list.get(result).getTitle());
+            recordPlayVo.setAlbumId(album.getId());
+            recordPlayVo.setAlbumName(album.getAlbumName());
+            recordPlayVo.setAlbumDetail(album.getDetail());
+            recordPlayVo.setPlayNumber(list.get(result).getPlayNumber());
+            recordPlayVo.setRecordingName(list.get(result).getTitle());
 
             // album
             FileCarBo fileCarBo = new FileCarBo();
@@ -265,8 +271,11 @@ public class AlbumService extends AbstractBaseService implements IAlbumService {
             recordPlayVo.setUserId(baseMember.getId());
             recordPlayVo.setUsername(baseMember.getUsername());
             recordPlayVo.setPlayUrl(url1);
-//            recordPlayVo.setAlbumDetail(album.getDetail());
-            recordPlayVo.setAlbumName(list.get(result).getTitle());
+            recordPlayVo.setAlbumId(album.getId());
+            recordPlayVo.setAlbumName(album.getAlbumName());
+            recordPlayVo.setAlbumDetail(album.getDetail());
+            recordPlayVo.setPlayNumber(list.get(result).getPlayNumber());
+            recordPlayVo.setRecordingName(list.get(result).getTitle());
 
             // album
             FileCarBo fileCarBo = new FileCarBo();

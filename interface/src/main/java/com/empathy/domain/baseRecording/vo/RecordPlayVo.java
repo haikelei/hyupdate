@@ -17,11 +17,20 @@ public class RecordPlayVo {
     // url
     private String playUrl;
 
+    // 播放量
+    private Integer playNumber;
+
+    // 总专辑ID
+    private Long albumId;
+
     // 专辑封页
     private String albumUrl;
 
-    // 专辑名称
+    // 总专辑名称
     private String albumName;
+
+    // 各分集名称
+    private String recordingName;
 
     // 专辑detail
     private String albumDetail;
