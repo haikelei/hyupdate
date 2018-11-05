@@ -187,8 +187,16 @@ public class AlbumController {
 
     @ApiOperation(value = "查看评论（根据传的类型可查看录音评论或是听友评论）", httpMethod = "POST", response = String.class)
     @RequestMapping(value = "/findComments", method = RequestMethod.POST)
-    public RspResult findComments(CommentsFindBo bo) {
+    public RspResult findComments(CommentsFindBo bo, HttpServletResponse response, HttpServletRequest request) {
 
+        response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+        response.setHeader("P3P", "CP=CAO PSA OUR");
+        if (request.getHeader("Access-Control-Request-Method") != null && "OPTIONS".equals(request.getMethod())) {
+            response.addHeader("Access-Control-Allow-Methods", "POST,GET,TRACE,OPTIONS");
+            response.addHeader("Access-Control-Allow-Headers", "Content-Type,Origin,Accept");
+            response.addHeader("Access-Control-Max-Age", "120");
+        }
 
         return albumService.findComments(bo);
 
