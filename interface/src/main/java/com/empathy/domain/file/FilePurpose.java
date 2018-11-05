@@ -25,7 +25,8 @@ public enum FilePurpose {
     BASELIVE("idCard",BaseLive.class),//认证主播图片
     MAINCLASSIFY("mainClassify", BaseMainClassify.class),//主分类图片
     RECORDING("recording", BaseRecording.class),//录音图片
-    CLASSIFY("classify",BaseClassify.class);//分类图片
+    CLASSIFY("classify",BaseClassify.class),//分类图片
+    APP("app",String.class);//APP
 
     FilePurpose(String code, Class belongToClass) {
         this.code = code;
