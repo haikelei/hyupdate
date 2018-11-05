@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * Created by MI on 2018/6/7.
  */
@@ -71,7 +74,16 @@ public class ArticleController {
     }
     @ApiOperation(value = "app查看详情", httpMethod = "POST", response = String.class)
     @RequestMapping(value = "/findArticleById", method = RequestMethod.POST)
-    public RspResult findArticleById(Long id) {
+    public RspResult findArticleById(Long id, HttpServletResponse response, HttpServletRequest request) {
+
+        response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+        response.setHeader("P3P", "CP=CAO PSA OUR");
+        if (request.getHeader("Access-Control-Request-Method") != null && "OPTIONS".equals(request.getMethod())) {
+            response.addHeader("Access-Control-Allow-Methods", "POST,GET,TRACE,OPTIONS");
+            response.addHeader("Access-Control-Allow-Headers", "Content-Type,Origin,Accept");
+            response.addHeader("Access-Control-Max-Age", "120");
+        }
 
         return articleService.findArticleById(id);
     }

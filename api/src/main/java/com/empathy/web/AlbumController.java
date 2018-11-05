@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * Created by MI on 2018/4/16.
  */
@@ -95,8 +98,16 @@ public class AlbumController {
     }
     @ApiOperation(value = "录音上一首下一首，文档我看了，播放地址是你们根据那个唯一标识拿的，差不多这个样子", httpMethod = "POST", response = String.class)
     @RequestMapping(value = "/recordPlay", method = RequestMethod.POST)
-    public RspResult recordPlay(RecordPlayBo bo) {
+    public RspResult recordPlay(RecordPlayBo bo, HttpServletResponse response, HttpServletRequest request) {
 
+        response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+        response.setHeader("P3P", "CP=CAO PSA OUR");
+        if (request.getHeader("Access-Control-Request-Method") != null && "OPTIONS".equals(request.getMethod())) {
+            response.addHeader("Access-Control-Allow-Methods", "POST,GET,TRACE,OPTIONS");
+            response.addHeader("Access-Control-Allow-Headers", "Content-Type,Origin,Accept");
+            response.addHeader("Access-Control-Max-Age", "120");
+        }
 
         return albumService.recordPlay(bo);
 
