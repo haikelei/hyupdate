@@ -1,0 +1,115 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>单曲</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<script>
+		    document.documentElement.style.fontSize =document.documentElement.clientWidth/750*40 +"px";
+		</script>
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="css/common.css" />
+		<link rel="stylesheet" href="css/single.css" />
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		    <h1 class="mui-title">单曲</h1>
+		</header>
+		<div class="mui-content">
+		    <div class="music_body">
+		    	<div class="music_content" id="content">
+		    		
+		    	</div>
+		    	<div class="div_button">
+		    		<button type="button" class="open_button" id="webtoapp">打开</button>
+		    		<button type="button" class="download_button">下载</button>
+		    	</div>
+		    </div>
+		</div>
+		<script type="text/html" id="text">
+			<img src="http://47.106.196.89:8080{{data.albumUrl}}"/>
+			<audio src="{{data.playUrl}}" autoplay="autoplay"></audio>
+		</script>
+		<script src="js/mui.min.js"></script>
+		<script type="text/javascript" src="js/art-template.js" ></script>
+		<script type="text/javascript" src="js/jquery-3.3.1.min.js" ></script>
+		<script type="text/javascript">
+			mui.init();
+			$(function(){
+				var id=getUrlParam("id");
+				$.ajax({
+					type:"post",
+					url:"http://47.106.196.89:8080/hy/album/recordPlay",
+					async:false,
+					data:{
+						id:id,
+						type:0,
+						userId:0
+					},
+					success:function(data){
+						console.info(data);
+						var html=template("text",data);
+						document.getElementById("content").innerHTML=html;
+					},
+					error:function(){
+						console.info("获取数据失败！")
+					}
+				});
+
+			})
+			function getUrlParam(name){
+				var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象var r = window.location.search.substr(1).match(reg);  //匹配目标参数if (r!=null) return unescape(r[2]); return null; //返回参数值} 
+				var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+				if (r!=null) return unescape(r[2]); return null; //返回参数值
+			}
+			$(".download_button").on('tap',function(){
+				window.location.href="http://47.106.196.89:8080/app/HYZS.apk";
+			})
+		</script>
+		<script>
+		    (function() {
+		        var ua = navigator.userAgent.toLowerCase();
+		        var t;
+		        var config = {
+		            /*scheme:必须*/
+		            scheme_IOS: ' huayu://launch',
+		            scheme_IOS: ' huayu://launch',
+		            download_url: 'http://47.106.196.89:8080/app/HYZS.apk',
+		            timeout: 3000
+		        };
+		 
+		        function openclient() {
+		            var startTime = Date.now();
+		 
+		            var ifr = document.createElement('iframe');
+		            ifr.src = ua.indexOf('os') > 0 ? config.scheme_IOS : config.scheme_Adr;
+		            ifr.style.display = 'none';
+		            document.body.appendChild(ifr);
+		 
+		            var t = setTimeout(function() {
+		                var endTime = Date.now();
+		 
+		                if (!startTime || endTime - startTime < config.timeout + 200) {
+		                    window.location = config.download_url;
+		                } else {
+		 
+		                }
+		            }, config.timeout);
+		 
+		            window.onblur = function() {
+		                clearTimeout(t);
+		            }
+		        }
+		 
+		        window.addEventListener("DOMContentLoaded", function() {
+		            document.getElementById("webtoapp").addEventListener('click', openclient, false);
+		        }, false);
+		    })()
+		</script>
+
+	</body>
+
+</html>

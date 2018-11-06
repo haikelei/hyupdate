@@ -1,0 +1,179 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>文章详情</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<script>
+		    document.documentElement.style.fontSize =document.documentElement.clientWidth/750*40 +"px";
+		</script>
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="css/common.css" />
+		<link rel="stylesheet" href="css/article_details.css" />
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		    <h1 class="mui-title">文章详情</h1>
+		    <a class="mui-btn mui-btn-blue mui-btn-link mui-pull-right">举报</a>
+		</header>
+		<div class="mui-content" id="content"></div>
+		<div id="content1"></div>
+		
+		<footer onclick="download()">
+			下载
+		</footer>
+		
+		<script id="text" type="text/html">
+			<div class="article_title">
+		    	<div class="article_title_div">
+		    		{{data.title}}
+		    	</div>
+		    	<p class="font_p">
+		    		<span>{{data.username}}</span>
+		    		<span>{{time}}</span>
+		    	</p>
+		    </div>
+		    <div class="article_content">
+		    	<div class="article_content_img">
+		    		
+			    	<img src="http://47.106.196.89:8080{{data.articleUrl[0]}}"/>
+		    	</div>
+		    	<div class="article_content_font">
+		    		{{#data.content}}
+		    	</div>
+		    </div>
+		    <div class="comment_title">
+		    	<span>热门评论({{data.commentCount}})</span>
+		    	<img  src="img/bianji@2x.png" class="fx_img"/>
+		    </div>
+		    
+		</script>
+		<script type="text/html" id="text1">
+			{{each data as value i}}
+			<div class="comment_content">
+		    	<div class="comment_left">
+		    		<img src="http://47.106.196.89:8080{{value.url}}" />
+		    	</div>
+		    	<div class="comment_right">
+		    		<span>{{value.username}}</span>
+		    		<p class="font_p1">{{value.time}}</p>
+		    		<span>{{value.content}}</span>
+		    	</div>
+		    </div>
+		    {{/each}}
+		</script>
+		<script src="js/mui.min.js"></script>
+		<script type="text/javascript" src="js/art-template.js" ></script>
+		<script type="text/javascript" src="js/jquery-3.3.1.min.js" ></script>
+		<script type="text/javascript">
+			mui.init();
+			var time;
+			$(function(){
+				var id=getUrlParam("id");
+				
+				$.ajax({
+					type:"post",
+					url:"http://47.106.196.89:8080/hy/article/findArticleById",
+					async:false,
+					data:{
+						id:id
+					},
+					dataType:'json',
+					success:function(data){
+						console.info(data);
+						time=data.data.createTime;
+						time= getTimeShow(time);
+						data["time"]=time;
+						var html=template("text",data);
+						document.getElementById("content").innerHTML=html;
+					},
+					error:function(XMLHttpRequest, textStatus, errorThrown){
+						console.info(XMLHttpRequest.status);
+				        console.info(XMLHttpRequest.readyState);
+				        console.info(textStatus);
+					}
+				});
+				$.ajax({
+					type:"post",
+					url:"http://47.106.196.89:8080/hy/album/findComments",
+					async:false,
+					data:{
+						start:1,
+						limit:10,
+						commentId:id,
+						commentType:"dynamic",
+					},
+					success:function(data){
+						console.info(data);
+						for (var i=0;i<data.data.length;i++) {
+							time=data.data[i].lastRevampTime;
+							time=gettime1(time);
+							console.info(time)
+							data.data[i]["time"]=time;
+							
+						}
+						var html1=template("text1",data);
+						document.getElementById("content1").innerHTML=html1;
+					},
+					error:function(){
+						console.info("获取数据失败！")
+					}
+				});
+			})
+			function getUrlParam(name){
+				var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象var r = window.location.search.substr(1).match(reg);  //匹配目标参数if (r!=null) return unescape(r[2]); return null; //返回参数值} 
+				var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+				if (r!=null) return unescape(r[2]); return null; //返回参数值
+			}
+			function gettime1(t){
+			    var _time=new Date(t);
+			    var   year=_time.getFullYear();//2017
+			    var   month=_time.getMonth()+1;//7
+			    var   date=_time.getDate();//10
+			    var   hour=_time.getHours();//10
+			    var   minute=_time.getMinutes();//56
+			    var   second=_time.getSeconds();//15
+			    return   year+"-"+month+"-"+date;
+			}
+			 getTimeShow=function(time_str){
+	            //debugger;
+	            var now = new Date();
+	            var date = new Date(time_str);
+	            //计算时间间隔，单位为分钟
+	            var inter = parseInt((now.getTime() - date.getTime())/1000/60);
+	            if(inter == 0){
+	                return "刚刚";
+	            }
+	            //多少分钟前
+	            else if(inter < 60){
+	                return inter.toString() + "分钟前";
+	            }
+	            //多少小时前
+	            else if(inter < 60*24){
+	                return parseInt(inter/60).toString() + "小时前";
+	            }
+	            //本年度内，日期不同，取日期+时间  格式如  06-13 22:11
+	            else if(now.getFullYear() == date.getFullYear()){
+	                return (date.getMonth()+1).toString() + "-" +
+	                    date.getDate().toString() + " " + 
+	                    date.getHours() + ":" +
+	                    date.getMinutes();
+	            }
+	            else{
+	                return date.getFullYear().toString().substring(2, 3) + "-" +
+	                (date.getMonth()+1).toString() + "-" + 
+	                date.getDate().toString() + " " + 
+	                date.getHours() + ":" +
+	                date.getMinutes();
+	            }
+	        }
+			 function download(){
+			 	window.location.href="http://47.106.196.89:8080/app/HYZS.apk";
+			 }
+		</script>
+	</body>
+
+</html>
