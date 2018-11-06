@@ -219,5 +219,16 @@ public class FileController {
     }
 
 
+    /**
+     * MultipartFile方式
+     */
+    @ApiOperation(value = "上传APP文件", httpMethod = "POST", response = String.class)
+    @RequestMapping(value = "/saveAppFile", method = RequestMethod.POST)
+    public RspResult saveFile(  @RequestParam(value = "file", required = true) MultipartFile file) throws IOException {
+
+
+        return fileService.saveAppFileOnly(file);
+    }
+
 
 }

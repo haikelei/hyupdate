@@ -39,5 +39,5 @@ public interface IFileService {
 
     RspResult saveRecordingFile(MultipartFile file) throws IOException;
 
-
+    RspResult saveAppFileOnly(MultipartFile file) throws IOException;
 }

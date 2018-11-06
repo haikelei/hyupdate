@@ -496,5 +496,30 @@ public class FileService extends AbstractBaseService implements IFileService {
 
 
 
+    @Override
+    public RspResult saveAppFileOnly(MultipartFile file) throws IOException{
+
+        String filePurpose="app";
+        //如果用途不存在
+        FilePurpose filePurposeObj = FilePurpose.getByCode(filePurpose);
+        if (filePurposeObj == null) {
+            return new RspResult("文件用途不存在", 1);
+        }
+
+        String fileLocation =  "/pic/" + "app" + "/" + "HYZS.apk";
+        //拼接逻辑访问路径给前端请求
+        String fileLogicLocation = "/" + "app" + "/" + "HYZS.apk";
+        //创建文件
+        File repositoryfile = new File(fileLocation);
+        //如果目录不存在，则创建
+        if (!repositoryfile.getParentFile().exists()) {
+            repositoryfile.getParentFile().mkdirs();
+        }
+        //保存文件
+        file.transferTo(repositoryfile);
+
+        return success(fileLogicLocation);
+    }
+
 
 }
