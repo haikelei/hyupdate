@@ -255,9 +255,11 @@ function initAllWithdrawSuc(result) {
     if (result.code != 200) {
         alert(result.msg)
     } else {
-        alert(操作成功)
+        alert("操作成功")
     }
 
+    initAllPersonPage();
+    layer.close(layer.index);
 }
 
 

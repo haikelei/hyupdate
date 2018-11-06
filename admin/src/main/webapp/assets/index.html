@@ -17,6 +17,12 @@
 
 </head>
 
+<style>
+    #sidebar::-webkit-scrollbar {
+        display: none;
+    }
+</style>
+
 <body class="hold-transition skin-blue sidebar-mini" style="overflow-y: hidden;">
 
 
@@ -49,7 +55,7 @@
     </nav>
 </header>
 <aside class="main-sidebar">
-    <section class="sidebar">
+    <section id="sidebar" class="sidebar" style="overflow: scroll;">
         <ul class="sidebar-menu">
             <li class="header">导航菜单</li>
 
@@ -310,6 +316,9 @@
             $(this).height($content.height());
         });
     }).resize();
+
+    var height = document.documentElement.scrollHeight || document.body.scrollHeight;
+    $("#sidebar").css("height", height - 100 + "px");//通过设置CSS属性来设置元素的高
 
 </script>
 
