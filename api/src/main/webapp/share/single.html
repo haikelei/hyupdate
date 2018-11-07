@@ -11,6 +11,11 @@
 		<link href="css/mui.min.css" rel="stylesheet" />
 		<link rel="stylesheet" href="css/common.css" />
 		<link rel="stylesheet" href="css/single.css" />
+		<style>
+			.open_button a{
+				color: #FD6C20;
+			}
+		</style>
 	</head>
 
 	<body>
@@ -24,7 +29,7 @@
 		    		
 		    	</div>
 		    	<div class="div_button">
-		    		<button type="button" class="open_button" id="webtoapp">打开</button>
+		    		<button type="button" class="open_button" id="webtoapp"><a href="huayuzs://" id="zjmobliestart">打开</a></button>
 		    		<button type="button" class="download_button">下载</button>
 		    	</div>
 		    </div>
@@ -72,46 +77,19 @@
 			$(".download_button").on('tap',function(){
 				window.location.href="http://47.106.196.89:8080/app/HYZS.apk";
 			})
-		</script>
-		<script>
-		    (function() {
-		        var ua = navigator.userAgent.toLowerCase();
-		        var t;
-		        var config = {
-		            /*scheme:必须*/
-		            scheme_IOS: ' huayu://launch',
-		            scheme_IOS: ' huayu://launch',
-		            download_url: 'http://47.106.196.89:8080/app/HYZS.apk',
-		            timeout: 3000
-		        };
-		 
-		        function openclient() {
-		            var startTime = Date.now();
-		 
-		            var ifr = document.createElement('iframe');
-		            ifr.src = ua.indexOf('os') > 0 ? config.scheme_IOS : config.scheme_Adr;
-		            ifr.style.display = 'none';
-		            document.body.appendChild(ifr);
-		 
-		            var t = setTimeout(function() {
-		                var endTime = Date.now();
-		 
-		                if (!startTime || endTime - startTime < config.timeout + 200) {
-		                    window.location = config.download_url;
-		                } else {
-		 
-		                }
-		            }, config.timeout);
-		 
-		            window.onblur = function() {
-		                clearTimeout(t);
-		            }
-		        }
-		 
-		        window.addEventListener("DOMContentLoaded", function() {
-		            document.getElementById("webtoapp").addEventListener('click', openclient, false);
-		        }, false);
-		    })()
+			function applink(){  
+			    return function(){  
+			        var clickedAt = +new Date;  
+			         setTimeout(function(){
+			             !window.document.webkitHidden && setTimeout(function(){ 
+			                   if (+new Date - clickedAt < 3000){  
+			                       window.location = 'http://47.106.196.89:8080/app/HYZS.apk';  
+			                   }  
+			             }, 500);       
+			         }, 500)   
+			    };  
+			}  
+			document.getElementById("zjmobliestart").onclick = applink(); 
 		</script>
 
 	</body>
