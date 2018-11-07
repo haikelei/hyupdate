@@ -37,7 +37,7 @@ function initPersonCallback(result) {
 function initAllPersonPage(page) {
     currentPage = page;
     ajaxByPOST("/hy/classify/findAllClassify", {
-        start: (page - 1) * showNum,
+        start: page,
         limit: showNum,
         type: 0
     }, listAllPersonCallBack);

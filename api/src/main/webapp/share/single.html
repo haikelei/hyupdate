@@ -51,8 +51,12 @@
 					},
 					success:function(data){
 						console.info(data);
-						var html=template("text",data);
-						document.getElementById("content").innerHTML=html;
+						if(data.cood==200){
+							var html=template("text",data);
+							document.getElementById("content").innerHTML=html;
+						}else{
+							mui.toast(data.msg);
+						}
 					},
 					error:function(){
 						console.info("获取数据失败！")
