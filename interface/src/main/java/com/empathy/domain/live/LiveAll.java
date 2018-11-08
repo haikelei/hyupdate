@@ -49,5 +49,5 @@ public class LiveAll {
     private Double giftMoney;//礼物金额
     private Integer rank;//排名
 
-
+    private String userUrl;  // 主播头像
 }

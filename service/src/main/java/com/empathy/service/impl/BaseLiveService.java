@@ -506,6 +506,18 @@ public class BaseLiveService extends AbstractBaseService implements IBaseLiveSer
     public RspResult findLiveForDetail(FindLiveForDetailBo bo) {
         LiveAll liveAll = baseLiveDao.findLiveForDetail(bo);
 
+        if (liveAll == null) {
+            return errorMo();
+        }
+
+        FileCarBo fileCarBo = new FileCarBo();
+        fileCarBo.setPurposeId(liveAll.getUserId());
+        fileCarBo.setType("user");
+        File file = fileService.findFile(fileCarBo);
+        if (file != null) {
+            liveAll.setUserUrl(file.getLocation());
+        }
+
         int countResult = userFocusDao.findCountByIds(bo.getUserId(),liveAll.getUserId());
         if(countResult>0){
             liveAll.setFocusStatus(1);
