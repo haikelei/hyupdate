@@ -68,7 +68,7 @@ LEFT JOIN base_file c ON a.album_id = c.purpose_id
 AND c.type = 'image'
 AND c.purpose = 'album'
 left join base_member m on m.id = b.user_id
-where a.parent_id=1 and del_flag = 0 ORDER BY a.code,a.create_time desc limit 5
+where a.parent_id=1 and a.del_flag = 0 ORDER BY a.code,a.create_time desc limit 5
 
     </select>
 
@@ -93,7 +93,7 @@ LEFT JOIN base_file c ON a.album_id = c.purpose_id
 AND c.type = 'image'
 AND c.purpose = 'album'
 left join base_member m on m.id = b.user_id
-where a.parent_id=2 and del_flag = 0 ORDER BY a.code limit 3
+where a.parent_id=2 and a.del_flag = 0 ORDER BY a.code limit 3
 
     </select>
 
@@ -118,7 +118,7 @@ LEFT JOIN base_file c ON a.album_id = c.purpose_id
 AND c.type = 'image'
 AND c.purpose = 'album'
 left join base_member m on m.id = b.user_id
-where a.parent_id=3 and del_flag = 0 ORDER BY a.code limit 3
+where a.parent_id=3 and a.del_flag = 0 ORDER BY a.code limit 3
 
     </select>
 
