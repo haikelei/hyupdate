@@ -22,7 +22,7 @@ var currentPage = 1;
 /**
  * 一页显示条数
  */
-var showNum = 10;
+var showNum = 100;
 /**
  * select类型
  */
@@ -119,18 +119,16 @@ function addGiftSubmit() {
         url: $("#addGiftUrl").val()
     }
     ajaxByPOST("/hy/gift/addGift", gift, initAddGift);
-    location.reload();
 }
 
-function initAddGift() {
+function initAddGift(result) {
     if (result.code != 200) {
         alert(result.msg)
         return
     } else {
         alert("添加成功!")
-        return
     }
-
+    location.reload();
 }
 
 
@@ -144,9 +142,8 @@ function initDelById(result) {
         return
     } else {
         alert("删除成功!")
-        return
     }
-
+    location.reload();
 }
 
 

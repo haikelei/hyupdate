@@ -3,7 +3,6 @@ package com.empathy.service.impl;
 import cn.jiguang.common.utils.StringUtils;
 import com.empathy.common.RspResult;
 import com.empathy.dao.BaseGiftDao;
-import com.empathy.dao.FileDao;
 import com.empathy.domain.baseGift.BaseGift;
 import com.empathy.domain.baseGift.bo.GiftAddBo;
 import com.empathy.domain.baseGift.bo.GiftDelBo;
@@ -11,7 +10,6 @@ import com.empathy.domain.baseGift.bo.GiftFindBo;
 import com.empathy.domain.baseGift.bo.GiftUpdBo;
 import com.empathy.service.AbstractBaseService;
 import com.empathy.service.IBaseGiftService;
-import com.empathy.service.IBaseMemberService;
 import com.empathy.utils.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -130,6 +128,9 @@ public class BaseGiftService extends AbstractBaseService implements IBaseGiftSer
         }
         if (!StringUtil.isNotIntegerEmpty(bo.getExp())) {
             return error(1, "礼物经验值不能为空！");
+        }
+        if (!StringUtil.isNotEmpty(bo.getUrl())) {
+            return error(1, "礼物图片不能为空！");
         }
         BaseGift baseGift = new BaseGift();
         baseGift.setDefaultMoney(bo.getDefaultMoney());
