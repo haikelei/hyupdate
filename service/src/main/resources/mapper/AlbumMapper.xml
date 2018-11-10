@@ -101,7 +101,7 @@
         left join base_member d on a.user_id = d.id
         <where>
             <if test="classifyId != null">
-                a.classifyId = #{classifyId} and
+                a.classify_id = #{classifyId} and
             </if>
 
 
@@ -135,7 +135,7 @@
         left join base_member d on a.user_id = d.id
         <where>
             <if test="classifyId != null">
-                a.classifyId = #{classifyId} and
+                a.classify_id = #{classifyId} and
             </if>
 
             <if test="str != null  and str != ''">

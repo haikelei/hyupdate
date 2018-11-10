@@ -333,12 +333,13 @@
             url: "/hy/album/addAlbum",
             async: false,
             data: {
+                userId: 1,
                 albumName: title,
                 detail: detail,
                 url: url,
                 type: feeType,
                 chargeStatus:shareType,
-                categoryType:categoryType,
+                classifyId:categoryType,
                 bumMoney:feeOther,
                 bumSet:freeCount
             },
@@ -348,7 +349,7 @@
                     alert("操作成功！");
                     location.href = "albumAdd.html";
                 } else {
-                    alert("操作失败，请重新操作！");
+                    alert(result.msg);
                     $('#myModal').modal('hide');
                 }
             }, error: function (result) {

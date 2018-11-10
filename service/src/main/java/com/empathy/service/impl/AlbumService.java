@@ -854,6 +854,16 @@ public class AlbumService extends AbstractBaseService implements IAlbumService {
 
     @Override
     public RspResult addAlbum(AlbumAddBo bo) {
+        if(!StringUtil.isNotLongEmpty(bo.getUserId())){
+            return error(1,"用户不能为空！");
+        }
+        if(!StringUtil.isNotLongEmpty(bo.getClassifyId())){
+            return error(1,"分类不能为空！");
+        }
+        if(!StringUtil.isNotIntegerEmpty(bo.getType())){
+            return error(1,"收费方式不能为空！");
+        }
+
         Album album = new Album();
         album.setAlbumName(bo.getAlbumName());
         album.setClassifyId(bo.getClassifyId());
