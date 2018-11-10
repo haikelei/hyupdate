@@ -180,6 +180,19 @@
         })
     })
 
+    $(function () {
+        $('.sel2').change(function () {    // 选择后替换内容并恢复箭头方向
+            $("#span_mian3").html($('.sel2').find('option:selected').html());
+            $('.sel_mask2').find('img').attr('src', 'img/1.png');
+        })
+        $('.sel1').blur(function () {      //什么也不选恢复箭头方向
+            $('.sel_mask2').find('img').attr('src', 'img/2.png');
+        })
+        $('.sel1').click(function () {     // 点击后更改箭头方向
+            $('.sel_mask2').find('img').attr('src', 'img/1.png');
+        })
+    })
+
 </script>
 
 

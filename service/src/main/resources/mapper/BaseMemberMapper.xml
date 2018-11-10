@@ -65,7 +65,7 @@
 
         <where>
             <if test="classifyId != null">
-                b.classifyId = #{classifyId} and
+                b.classify_id = #{classifyId} and
             </if>
 
 
@@ -100,7 +100,7 @@
 
         <where>
             <if test="classifyId != null">
-                b.classifyId = #{classifyId} and
+                b.classify_id = #{classifyId} and
             </if>
 
 

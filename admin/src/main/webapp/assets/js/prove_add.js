@@ -128,11 +128,11 @@ function updateProve(id) {
 function updateProveForSuccessSubmit() {
     var hostProveId = $("#hostProveId").val();
     var se = $('#selectForClassify option:selected').val();
-    if (se == "" && se == undefined) {
+    if (se == "" || se == undefined) {
         alert("分类类型不能为空")
+        return;
     }
     ajaxByPOST("/hy/live/updProve", {status: 0, id: hostProveId, classifyId: se}, initAddSuccess)
-
 }
 function updateProveForFailSubmit() {
     var hostProveId = $("#hostProveId").val();
