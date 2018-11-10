@@ -124,7 +124,7 @@ function update() {
     var title = $("#informationTitle").val();
     var id  = $("#agreementId").val();
     //alert(content)
-    ajaxByGET("/hy/agreement/updAgreement", {id: id,title:title,content:content}, forSuccess);
+    ajaxByPOST("/hy/agreement/updAgreement", {id: id,title:title,content:content}, forSuccess);
 
 }
 

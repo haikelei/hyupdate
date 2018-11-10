@@ -5,18 +5,46 @@
     <title>用户协议</title>
 </head>
 <body>
-    <lable style="    width: 100%;
+    <!--<lable style="width: 100%;
             text-align: center;
             display: block;
-            margin-top: 59px;
-            font-size: 18px;
-            font-weight: 600;">华语</lable>
+            margin-top: 39px;" ><strong id="title"></strong></lable>-->
 
     <div>
-
-
-        <p style="font-weight: 600;font-size: 15px;">用户协议</p>
-
+        <div id="content"></div>
     </div>
+    <script type="text/javascript" src="//g.alicdn.com/sj/lib/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="//g.alicdn.com/sui/sui3/0.0.18/js/sui.min.js"></script>
+    <script type="text/javascript" src="../js/common.js"></script>
+
+    <script type="text/javascript">
+
+        (function (doc, win) {
+            var docEl = doc.documentElement,
+                resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+                recalc = function (first) {
+                    var clientWidth = docEl.clientWidth;
+
+                    if (!clientWidth) return;
+
+                    docEl.style.fontSize = 13 * (clientWidth / 320) + 'px';
+                };
+            if (!doc.addEventListener) return;
+            win.addEventListener(resizeEvt, recalc, false);
+            doc.addEventListener('DOMContentLoaded', recalc, false);
+            recalc();
+        })(document, window);
+
+        ajaxByGET("/hy/agreement/findAgreementById", {id: 1}, callBack);
+
+        function callBack(result) {
+            if (result.code == 200) {
+                // $("#title").html(result.data.title);
+                $("#content").html(result.data.content);
+            }
+        }
+
+    </script>
+
 </body>
 </html>
