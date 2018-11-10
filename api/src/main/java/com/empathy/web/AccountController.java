@@ -9,10 +9,10 @@ import com.empathy.domain.live.bo.ProveAccountUpdBo;
 import com.empathy.domain.live.bo.ProveFreezeBo;
 import com.empathy.domain.permission.bo.PermissionAddBo;
 import com.empathy.domain.role.bo.RoleAddBo;
+import com.empathy.domain.user.bo.FindUserBo;
 import com.empathy.domain.user.bo.FreezeUserBo;
 import com.empathy.service.IAccountService;
 import com.empathy.service.IBaseMemberService;
-import com.google.code.kaptcha.Producer;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -203,10 +203,10 @@ public class AccountController {
      */
     @RequestMapping(value = "/findAllUserCount", method = RequestMethod.GET)
     @ResponseBody
-    public String findAllUserCount() {
+    public String findAllUserCount(FindUserBo bo) {
 
 
-        return baseMemberService.findAllUserCount();
+        return baseMemberService.findAllUserCount(bo);
     }
 
 
@@ -217,8 +217,7 @@ public class AccountController {
      */
     @RequestMapping(value = "/findAllUser", method = RequestMethod.GET)
     @ResponseBody
-    public RspResult findAllUser(PageBo bo) {
-
+    public RspResult findAllUser(FindUserBo bo) {
 
         return baseMemberService.findAllUser(bo);
     }

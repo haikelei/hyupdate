@@ -28,6 +28,7 @@
     <link rel="stylesheet" href="css/iconfont.css">
     <link rel="stylesheet" href="css/paging.css">
     <link rel="stylesheet" href="css/H-ui.min.css">
+    <link rel="stylesheet" href="css/select.style.css">
     <link rel="stylesheet" href="css/main.css">
     <!-- Daterange picker -->
 
@@ -61,6 +62,53 @@
 
     </section>
 
+    <div style="padding-left: 20px;margin-top: 10px">
+
+        <a href="javascript:void(0)" class="sel_mask1"><span id="span_mian2">性别</span><img src="img/1.png"/>
+            <select id="selectForSex" class="sel1">
+                <option value="">主播性别</option>
+                <option value="1">男</option>
+                <option value="2">女</option>
+            </select>
+        </a>
+
+
+        <a href="javascript:void(0)" class="sel_mask"><span id="span_mian1">是否是主播</span><img src="img/1.png"/>
+            <select id="selectForProve" class="sel">
+                <option value="">是否是主播</option>
+                <option value="1">是</option>
+                <option value="0">否</option>
+            </select>
+        </a>
+
+        <a href="javascript:void(0)" class="sel_mask1"><span id="span_mian3">是否是会员</span><img src="img/1.png"/>
+            <select id="selectForMember" class="sel2">
+                <option value="">是否是主播</option>
+                <option value="1">是</option>
+                <option value="0">否</option>
+            </select>
+        </a>
+
+        <a href="javascript:void(0)" class="sel_mask1"><span id="span_mian4">是否是被冻结</span><img src="img/1.png"/>
+            <select id="selectForDel" class="sel3">
+                <option value="">是否是被冻结</option>
+                <option value="0">否</option>
+                <option value="1">是</option>
+            </select>
+        </a>
+
+
+        <div style="margin-top: 10px">
+
+            <input class="fa-gear" id="username" placeholder="用户名">
+            <input class="fa-gear" id="phone" placeholder="手机号">
+        </div>
+    </div>
+
+    <div style="padding-left: 20px;margin-top: 10px">
+        <button type='button' class='btn btn-primary' onclick='findUser()'>查看</button>
+
+    </div>
 
     <div class="panel-body text-center">
         <table class="table table-bordered">
@@ -127,6 +175,61 @@
          */
         checkLoginStatus();
     })
+
+
+    $(function () {
+        $('.sel').change(function () {    // 选择后替换内容并恢复箭头方向
+            $("#span_mian1").html($('.sel').find('option:selected').html());
+            $('.sel_mask').find('img').attr('src', 'img/1.png');
+        })
+        $('.sel').blur(function () {      //什么也不选恢复箭头方向
+            $('.sel_mask').find('img').attr('src', 'img/2.png');
+        })
+        $('.sel').click(function () {     // 点击后更改箭头方向
+            $('.sel_mask').find('img').attr('src', 'img/1.png');
+        })
+    })
+
+
+    $(function () {
+        $('.sel1').change(function () {    // 选择后替换内容并恢复箭头方向
+            $("#span_mian2").html($('.sel1').find('option:selected').html());
+            $('.sel_mask1').find('img').attr('src', 'img/1.png');
+        })
+        $('.sel1').blur(function () {      //什么也不选恢复箭头方向
+            $('.sel_mask1').find('img').attr('src', 'img/2.png');
+        })
+        $('.sel1').click(function () {     // 点击后更改箭头方向
+            $('.sel_mask1').find('img').attr('src', 'img/1.png');
+        })
+    })
+
+    $(function () {
+        $('.sel2').change(function () {    // 选择后替换内容并恢复箭头方向
+            $("#span_mian3").html($('.sel2').find('option:selected').html());
+            $('.sel_mask2').find('img').attr('src', 'img/1.png');
+        })
+        $('.sel1').blur(function () {      //什么也不选恢复箭头方向
+            $('.sel_mask2').find('img').attr('src', 'img/2.png');
+        })
+        $('.sel1').click(function () {     // 点击后更改箭头方向
+            $('.sel_mask2').find('img').attr('src', 'img/1.png');
+        })
+    })
+
+    $(function () {
+        $('.sel3').change(function () {    // 选择后替换内容并恢复箭头方向
+            $("#span_mian4").html($('.sel3').find('option:selected').html());
+            $('.sel_mask3').find('img').attr('src', 'img/1.png');
+        })
+        $('.sel3').blur(function () {      //什么也不选恢复箭头方向
+            $('.sel_mask3').find('img').attr('src', 'img/2.png');
+        })
+        $('.sel3').click(function () {     // 点击后更改箭头方向
+            $('.sel_mask3').find('img').attr('src', 'img/1.png');
+        })
+    })
+
 </script>
 </body>
 </html>

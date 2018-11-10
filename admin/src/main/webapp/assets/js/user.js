@@ -178,3 +178,44 @@ function cancel() {
     location.reload();
 }
 
+
+function findUser() {
+
+    var sex = $('#selectForSex option:selected').val();
+    var proveStatus = $('#selectForProve option:selected').val();
+    var memberStatus = $('#selectForMember option:selected').val();
+    var delStatus = $('#selectForDel option:selected').val();
+    var username = $('#username').val();
+    var phone = $('#phone').val();
+
+    function listSoPersonCallBack(page) {
+        currentPage = page;
+        ajaxByGET("/hy/account/findAllUser",
+            {   start: page ,
+                limit: showNum,
+                sex: sex,
+                proveStatus: proveStatus,
+                memberStatus: memberStatus,
+                delStatus: delStatus,
+                username: username,
+                phone: phone
+            }, listAllPersonCallBack);
+    }
+
+    ajaxByGET("/hy/account/findAllUserCount", {
+        sex: sex,
+        proveStatus: proveStatus,
+        memberStatus: memberStatus,
+        delStatus: delStatus,
+        username: username,
+        phone: phone
+    }, listSomePersonCallBack);
+
+
+    function listSomePersonCallBack(result) {
+        var count = result;
+        var page = Math.ceil(count / showNum);
+        pagination(count, page, listSoPersonCallBack);
+    }
+
+}

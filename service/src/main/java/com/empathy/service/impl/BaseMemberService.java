@@ -1,6 +1,5 @@
 package com.empathy.service.impl;
 
-import com.empathy.common.PageBo;
 import com.empathy.common.RspResult;
 import com.empathy.dao.BaseGradeDao;
 import com.empathy.dao.BaseMemberDao;
@@ -8,6 +7,7 @@ import com.empathy.dao.UserMoneyDao;
 import com.empathy.domain.grade.BaseGrade;
 import com.empathy.domain.user.BaseMember;
 import com.empathy.domain.user.UserMoney;
+import com.empathy.domain.user.bo.FindUserBo;
 import com.empathy.domain.user.bo.FreezeUserBo;
 import com.empathy.domain.user.vo.MemberVo;
 import com.empathy.service.AbstractBaseService;
@@ -91,14 +91,14 @@ public class BaseMemberService extends AbstractBaseService implements IBaseMembe
 
 
     @Override
-    public RspResult findAllUser(PageBo bo) {
+    public RspResult findAllUser(FindUserBo bo) {
         List<MemberVo> list = baseMemberDao.findAllUser(bo);
         return success(list);
     }
 
     @Override
-    public String findAllUserCount() {
-        int count = baseMemberDao.findAllUserCount();
+    public String findAllUserCount(FindUserBo bo) {
+        int count = baseMemberDao.findAllUserCount(bo);
 
         return count + "";
     }

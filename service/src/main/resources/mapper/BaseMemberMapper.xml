@@ -45,15 +45,50 @@
         UPDATE base_member SET del_flag = 1 WHERE id = #{id}
     </update>
 
-    <select id="findAllUserCount" resultType="int">
-        select count(id) from base_member
+    <sql id="where">
 
+        <where>
+            <if test="sex != null">
+                and a.sex = #{sex}
+            </if>
+
+            <if test="memberStatus != null">
+                and a.member_status = #{memberStatus}
+            </if>
+
+            <if test="proveStatus != null">
+                and a.prove_status = #{proveStatus}
+            </if>
+
+            <if test="delStatus != null">
+                and a.del_flag = #{delStatus}
+            </if>
+
+            <if test="username != null and username != ''">
+                and a.username like CONCAT('%',#{username},'%')
+            </if>
+
+            <if test="phone != null and phone != ''">
+                and a.phone = #{phone}
+            </if>
+
+        </where>
+    </sql>
+
+    <select id="findAllUserCount" parameterType="com.empathy.domain.user.bo.FindUserBo" resultType="int">
+        select count(id) from base_member a
+
+        <include refid="where"/>
     </select>
 
-    <select id="findAllUser" parameterType="com.empathy.common.PageBo" resultType="com.empathy.domain.user.vo.MemberVo">
+    <select id="findAllUser" parameterType="com.empathy.domain.user.bo.FindUserBo" resultType="com.empathy.domain.user.vo.MemberVo">
         select a.id,a.username,a.sex,a.prove_status,a.phone,a.address,a.prove_status proveStatus,a.member_status
         memberStatus,a.intro,a.level,a.create_time createTime,a.del_flag delFlag,b.money
-        from base_member a left join base_user_money b on a.id=b.user_id order by a.create_time desc
+        from base_member a left join base_user_money b on a.id=b.user_id
+
+        <include refid="where"/>
+
+        order by a.create_time desc
         LIMIT #{start},#{limit}
     </select>
 
