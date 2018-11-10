@@ -12,6 +12,7 @@ import com.empathy.domain.baseRecording.bo.*;
 import com.empathy.domain.baseRecording.vo.RecordPlayVo;
 import com.empathy.domain.bidding.File;
 import com.empathy.domain.comments.Comments;
+import com.empathy.domain.comments.TbComment;
 import com.empathy.domain.comments.bo.CommentsAddBo;
 import com.empathy.domain.comments.bo.CommentsFindBo;
 import com.empathy.domain.enumer.CommentType;
@@ -63,6 +64,8 @@ public class AlbumService extends AbstractBaseService implements IAlbumService {
     private UserMoneyDao userMoneyDao;
     @Autowired
     private FileService fileService;
+    @Autowired
+    private TbCommentDao tbCommentDao;
 
 
     @Override
@@ -621,6 +624,19 @@ public class AlbumService extends AbstractBaseService implements IAlbumService {
         String way = CommentType.getWay(bo.getCommentType());
         if (!StringUtil.isNotEmpty(way)) {
             return error(1, "不存在此种评论方式");
+        }
+
+        // 判断评论功能是否被关闭
+        Integer type = -1;
+        if ("dynamic".equals(way)) {
+            type = 0;
+        } else if ("recording".equals(way)) {
+            type = 1;
+        }
+        TbComment tbComment = tbCommentDao.findByType(type);
+
+        if (tbComment != null && tbComment.getStatus() != null && tbComment.getStatus() == 1) {
+            return error(1, "评论功能已关闭");
         }
 
         Comments comments = new Comments();
