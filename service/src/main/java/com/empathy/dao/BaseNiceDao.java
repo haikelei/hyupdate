@@ -1,15 +1,9 @@
 package com.empathy.dao;
 
 import com.empathy.common.BaseDao;
-import com.empathy.common.BaseDomain;
-import com.empathy.common.PageBo;
-import com.empathy.domain.account.Account;
 import com.empathy.domain.album.BaseNice;
 import com.empathy.domain.album.bo.AlbumFindBestBo;
-import com.empathy.domain.album.bo.FindBestForContentBo;
-import com.empathy.domain.album.vo.AlbumBestVo;
 import com.empathy.domain.album.vo.AlbumVo;
-import com.empathy.domain.baseMain.BaseMain;
 import com.empathy.domain.log.bo.LogBo;
 import org.apache.ibatis.annotations.Param;
 
@@ -30,4 +24,6 @@ public interface BaseNiceDao extends BaseDao<BaseNice, Long, LogBo> {
     List<AlbumVo> findAlbumBest();
     List<AlbumVo> findAlbumBest1();
     List<AlbumVo>  findAlbumBest2();
+
+    void delByAlbumId(Long albumId);
 }

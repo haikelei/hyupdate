@@ -520,7 +520,7 @@ public class AlbumService extends AbstractBaseService implements IAlbumService {
         }
         int count  = baseNiceDao.findCount(ids,id);
         if(count>0){
-            return error(1,"已添加");
+            return error(1,"该专辑已添加过，不能重复添加");
         }
         BaseNice baseNice = new BaseNice();
         baseNice.setAlbumId(ids);
@@ -528,6 +528,19 @@ public class AlbumService extends AbstractBaseService implements IAlbumService {
         baseNice.setCode(0);
         baseNiceDao.save(baseNice);
         return success();
+    }
+
+    @Override
+    public RspResult delAlbumByBest(Long albumId) {
+        baseNiceDao.delByAlbumId(albumId);
+        return new RspResult();
+    }
+
+    @Override
+    public String findAlbumByBestCount(AlbumFindBestBo bo) {
+
+        int count = baseNiceDao.listCount(bo);
+        return count + "";
     }
 
     @Override

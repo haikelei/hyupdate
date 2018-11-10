@@ -1,7 +1,5 @@
 package com.empathy.web;
 
-import com.baomidou.mybatisplus.plugins.Page;
-import com.empathy.common.PageBo;
 import com.empathy.common.RspResult;
 import com.empathy.domain.album.bo.*;
 import com.empathy.domain.baseRecording.bo.*;
@@ -238,6 +236,12 @@ public class AlbumController {
 
     }
 
+    @ApiOperation(value = "后台查看所有的精品的个数", httpMethod = "POST", response = String.class)
+    @RequestMapping(value = "/findAlbumByBestCount", method = RequestMethod.POST)
+    public String findAlbumByBestCount(AlbumFindBestBo bo) {
+
+        return albumService.findAlbumByBestCount(bo);
+    }
 
     @ApiOperation(value = "精品标题下方列表", httpMethod = "POST", response = String.class)
     @RequestMapping(value = "/findAlbumByBest", method = RequestMethod.POST)
@@ -248,12 +252,20 @@ public class AlbumController {
 
     }
 
-    @ApiOperation(value = "后台增加精品页面", httpMethod = "POST", response = String.class)
+    @ApiOperation(value = "后台增加精品", httpMethod = "POST", response = String.class)
     @RequestMapping(value = "/addAlbumByBest", method = RequestMethod.POST)
     public RspResult addAlbumByBest(Long albumId,Long id) {
 
 
         return albumService.addAlbumByBest(albumId,id);
+    }
+
+    @ApiOperation(value = "后台删除精品", httpMethod = "POST", response = String.class)
+    @RequestMapping(value = "/delAlbumByBest", method = RequestMethod.POST)
+    public RspResult delAlbumByBest(Long albumId) {
+
+
+        return albumService.delAlbumByBest(albumId);
 
     }
 

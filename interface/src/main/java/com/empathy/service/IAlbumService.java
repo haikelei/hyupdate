@@ -54,9 +54,13 @@ public interface IAlbumService extends BaseService<Album, Long, PageBo> {
 
     RspResult findAlbumByClassify(FindLiveByClassifyBo bo);
 
+    String findAlbumByBestCount(AlbumFindBestBo bo);
+
     RspResult findAlbumByBest(AlbumFindBestBo bo);
 
     RspResult addAlbumByBest(Long ids,Long id);
+
+    RspResult delAlbumByBest(Long albumId);
 
     RspResult findAlbumByBestTitle();
 

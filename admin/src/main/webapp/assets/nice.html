@@ -24,11 +24,11 @@
     <link rel="stylesheet" href="bower_components/jvectormap/jquery-jvectormap.css">
     <!-- Date Picker -->
     <link rel="stylesheet" href="bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
-
     <link rel="stylesheet" href="//g.alicdn.com/sui/sui3/0.0.18/css/sui.min.css">
     <link rel="stylesheet" href="css/iconfont.css">
     <link rel="stylesheet" href="css/paging.css">
     <link rel="stylesheet" href="css/H-ui.min.css">
+    <link rel="stylesheet" href="css/select.style.css">
     <link rel="stylesheet" href="css/main.css">
     <!-- Daterange picker -->
 
@@ -46,6 +46,7 @@
 <body class="hold-transition skin-blue sidebar-mini">
 
 
+<!-- Content Wrapper. Contains page content -->
 <div>
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -62,14 +63,18 @@
     </section>
 
     <h4 style="margin-left: 20px">大咖说</h4>
+    <div style="padding-left: 20px;margin-top: 10px;display:table-cell">
+        <button type='button' class='btn btn-primary' onclick='addBest()'>增加精品</button>
+    </div>
+
     <div class="panel-body text-center">
         <table class="table table-hover table-bordered">
             <thead>
             <tr>
-                <th class="text-center">用户名</th>
-                <th class="text-center">工号</th>
-                <th class="text-center">角色名</th>
-                <th class="text-center">创建时间</th>
+                <th class="text-center">ID</th>
+                <th class="text-center">主播名</th>
+                <th class="text-center">专辑名</th>
+                <th class="text-center">专辑详情</th>
                 <th class="text-center">操作</th>
             </tr>
             </thead>
@@ -78,70 +83,24 @@
         <div class="box" id="box"></div>
     </div>
 
-    <!-- 添加 -->
+
+    <!-- 增加精品的模块-->
 
     <div class="modal-body" style="display: none">
+        <input type="hidden" id="hostProveId">
+        <a href="javascript:void(0)" class="sel_mask1"><span id="span_mian3">专辑名称</span><img src="img/1.png"/>
+            <select id="selectForAlbum" class="sel2">
+                <option></option>
+            </select>
+        </a>
+        <br><!--
+        <input type="text" id="code" placeholder="排序值" class="form-control" maxlength="50" style="width:150px;">-->
+        <br>
         <div>
-            <input type="hidden" id="addPersonId">
-            <label for="addPersonName" class="control-label">管理员名称：</label>
-            <input id="addPersonName" type="text" class="form-control">
-        </div>
-        <br/>
-        <div>
-            <label for="addPersonCode" class="control-label">管理员工号：</label>
-            <input id="addPersonCode" type="text" class="form-control">
-        </div>
-        <br/>
-        <div>
-            <label for="addPassword" class="control-label">管理员密码：</label>
-            <input id="addPassword" type="text" class="form-control">
-        </div>
-        <br/>
-        <div>
-            <label class="control-label">管理员角色：</label>
-            <select id="roleList">
-                <option>角色列表</option>
-            </select></div>
-        <br/>
-        <div>
-            <button type='button' class='btn btn-primary' onclick='addPersonSubmit()'>添加</button>
-            </td>
-            &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-            <button type='button' class='btn btn-primary' onclick='cancel()'>取消</button>
-            </td>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <button type='button' class='btn btn-primary' onclick='bestSubmit()'>保存</button>
         </div>
     </div>
-
-
-    <div class="modal-eddit-body" style="display: none">
-        <div>
-            <input type="hidden" id="editPersonId">
-            <label for="edidPersonName" class="control-label">管理员名称：</label>
-            <input id="edidPersonName" type="text" class="form-control">
-        </div>
-        <br/>
-        <div>
-            <label for="editPersonCode" class="control-label">管理员工号：</label>
-            <input id="editPersonCode" type="text" class="form-control">
-        </div>
-        <br/>
-        <div>
-            <label class="control-label">管理员角色：</label>
-            <select id="editRoleList">
-                <option>角色列表</option>
-            </select></div>
-        <br/>
-        <div>
-            <button type='button' class='btn btn-primary' onclick='edidPersonSubmit()'>修改</button>
-            </td>
-            &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-            <button type='button' class='btn btn-primary' onclick='cancel()'>取消</button>
-            </td>
-        </div>
-    </div>
-
-
-    <!-- /.content -->
 
 </div>
 <!-- /.content-wrapper -->
@@ -160,7 +119,7 @@
 <!-- SlimScroll -->
 <!--<script src="bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>-->
 <!-- FastClick -->
-<!--<script src="bower_components/fastclick/lib/fastclick.js"></script>-->
+<script src="bower_components/fastclick/lib/fastclick.js"></script>
 <!-- AdminLTE App -->
 <!--<script src="dist/js/adminlte.min.js"></script>-->
 <!-- AdminLTE for demo purposes -->
@@ -172,7 +131,7 @@
 <script type="text/javascript" src="js/md5.js"></script>
 <script type="text/javascript" src="js/layer/layer.js"></script>
 <script type="text/javascript" src="js/paging.min.js"></script>
-<script type="text/javascript" src="js/person.js"></script>
+<script type="text/javascript" src="js/nice.js"></script>
 <script type="text/javascript">
     $(function () {
         $('#header').load('head.html');
@@ -183,6 +142,22 @@
          */
         checkLoginStatus();
     })
+
+    $(function () {
+        $('.sel2').change(function () {    // 选择后替换内容并恢复箭头方向
+            $("#span_mian3").html($('.sel2').find('option:selected').html());
+            $('.sel_mask2').find('img').attr('src', 'img/1.png');
+        })
+        $('.sel1').blur(function () {      //什么也不选恢复箭头方向
+            $('.sel_mask2').find('img').attr('src', 'img/2.png');
+        })
+        $('.sel1').click(function () {     // 点击后更改箭头方向
+            $('.sel_mask2').find('img').attr('src', 'img/1.png');
+        })
+    })
+
 </script>
+
+
 </body>
 </html>
