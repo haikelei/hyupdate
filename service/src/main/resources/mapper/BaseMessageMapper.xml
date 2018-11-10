@@ -45,7 +45,13 @@
 
     <select id="listForApp" parameterType="com.empathy.domain.baseMessage.bo.MessageFindBo" resultType="com.empathy.domain.baseMessage.BaseMessage">
       SELECT  id,title,code,head_message headMessage,read_status readStatus,
-        create_time createTime  FROM  base_message where del_flag = 0 and user_id =#{id} order by code, create_time desc    LIMIT #{start},#{limit}
+        create_time createTime  FROM  base_message where del_flag = 0
+
+        <if test="id != null and id != ''">
+           and a.user_id = #{id}
+        </if>
+
+        order by code, create_time desc    LIMIT #{start},#{limit}
 
     </select>
 

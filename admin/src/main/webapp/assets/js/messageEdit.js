@@ -108,7 +108,15 @@ function update() {
     //console.log(title)
    // console.log(headMessage)
    // console.log(code)
-    ajaxByPOST("/hy/base/message/updMessage", {id: id,code:code,title:title,headMessage:headMessage,content:content}, forSuccess);
+    ajaxByPOST("/hy/base/message/updMessage", {id: id,code:code,title:title,headMessage:headMessage,content:content}, forSuccessCallBack);
 
 }
 
+function forSuccessCallBack(result) {
+    if(result.code==200){
+        alert("操作成功！")
+        window.location= "message.html";
+    }else{
+        alert(result.msg)
+    }
+}

@@ -76,7 +76,7 @@ function listAllPersonCallBack(result) {
 
         td += "<td style='vertical-align: middle;'>" + dateFormatUtil(array[i].createTime) + "</td>";
 
-        td += "<td style='vertical-align: middle;'><button type='button' class='btn btn-primary' onclick='updMessage(" + id + ")'>编辑</a></button><button type='button' class='btn btn-primary' onclick='delGift(" + array[i].id + ")'>删除</button></td>";
+        td += "<td style='vertical-align: middle;'><button type='button' class='btn btn-primary' onclick='updMessage(" + id + ")'>编辑</a></button><button type='button' class='btn btn-primary' onclick='delMessage(" + array[i].id + ")'>删除</button></td>";
 
 
         table.append(td);
@@ -95,6 +95,20 @@ function updMessage(id) {
 function addMessage() {
 
     window.location= "messageAdd.html";
+}
+
+function delMessage(id) {
+    ajaxByPOST("/hy/base/message//delMessage", {id: id}, initDelById)
+
+}
+function initDelById(result) {
+    if (result.code != 200) {
+        alert(result.msg)
+        return
+    } else {
+        alert("删除成功!")
+    }
+    location.reload();
 }
 
 

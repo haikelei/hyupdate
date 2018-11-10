@@ -22,6 +22,6 @@ public class BaseMessage extends BaseDomain{
 
     private Integer readStatus;
 
-
+    private Long userId;
 
 }
