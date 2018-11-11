@@ -28,6 +28,7 @@
     <link rel="stylesheet" href="css/iconfont.css">
     <link rel="stylesheet" href="css/paging.css">
     <link rel="stylesheet" href="css/H-ui.min.css">
+    <link rel="stylesheet" href="css/select.style.css">
     <link rel="stylesheet" href="css/main.css">
     <!-- Daterange picker -->
 
@@ -55,31 +56,46 @@
                                                           style="font-size: 20px; position: relative; top: 2px; left: -3px;"></i>
                     &nbsp; 华语
                 </li>
-                <li class="active"> 财务管理</li>
+                <li class="active"> 提现管理</li>
             </ol>
         </section>
 
     </section>
 
+    <div style="padding-left: 20px;margin-top: 10px;display:table-cell">
+        <button type='button' class='btn btn-primary' onclick='getExcle()'>导出Excle</button>
+    </div>
+    <div style="padding-left: 20px;margin-top: 10px;display:table-cell" >
+        <a style="display:table-cell" href="javascript:void(0)" class="sel_mask"><span id="span_mian">提现方式</span><img src="img/1.png"/>
+            <select id="selectForType" class="sel">
+                <option value="">交易类型</option>
+                <option value="0">充值</option>
+                <option value="1">提现</option>
+                <!--<option value="2">发出打赏</option>
+                <option value="3">接受礼物</option>-->
+                <option value="4">返还</option>
+                <option value="5">开通会员</option>
+            </select>
+        </a>
 
-    <div class="panel-body text-center">
+        <div style="padding-left: 20px;margin-top: 10px;display:table-cell"></div>
+
+    </div>
+    <div style="padding-left: 20px;margin-top: 10px;display:table-cell">
+        <button type='button' class='btn btn-primary' onclick='lookUp()'>查看</button>
+    </div>
+
+    <div id="aliMode" class="panel-body text-center" style="display: none">
         <table class="table table-hover table-bordered">
             <thead>
             <tr>
-                <th class="text-center">主播名称</th>
-                <th class="text-center">直播间号</th>
-                <th class="text-center">直播状态</th>
-                <th class="text-center">等级</th>
-                <th class="text-center">分类</th>
-                <th class="text-center">话题</th>
-                <th class="text-center">标题</th>
-                <th class="text-center">时间总和</th>
-                <th class="text-center">是否是会员</th>
-                <th class="text-center">排序值</th>
-                <th class="text-center">新排序值</th>
-                <th class="text-center">刚进入时观众人数</th>
+                <th class="text-center">ID</th>
+                <th class="text-center">用户名</th>
+                <th class="text-center">用户手机号</th>
+                <th class="text-center">交易类型</th>
+                <th class="text-center">交易流水号</th>
+                <th class="text-center">金额(元)</th>
                 <th class="text-center">创建时间</th>
-                <th class="text-center">操作</th>
             </tr>
             </thead>
             <tbody id="table"></tbody>
@@ -88,7 +104,6 @@
     </div>
 
     <!-- /.content -->
-
 </div>
 <!-- /.content-wrapper -->
 <!-- /.control-sidebar -->
@@ -116,9 +131,10 @@
 <script type="text/javascript" src="//g.alicdn.com/sui/sui3/0.0.18/js/sui.min.js"></script>
 <script type="text/javascript" src="js/common.js"></script>
 <script type="text/javascript" src="js/md5.js"></script>
-<script type="text/javascript" src="js/prove.js"></script>
 <script type="text/javascript" src="js/layer/layer.js"></script>
 <script type="text/javascript" src="js/paging.min.js"></script>
+<script type="text/javascript" src="js/ajaxupload.js"></script>
+<script type="text/javascript" src="js/money.js"></script>
 <script type="text/javascript">
     $(function () {
         $('#header').load('head.html');
@@ -129,6 +145,34 @@
          */
         checkLoginStatus();
     })
+
+    $(function () {
+        $('.sel').change(function () {    // 选择后替换内容并恢复箭头方向
+            $("#span_mian").html($('.sel').find('option:selected').html());
+            $('.sel_mask').find('img').attr('src', 'img/1.png');
+        })
+        $('.sel').blur(function () {      //什么也不选恢复箭头方向
+            $('.sel_mask').find('img').attr('src', 'img/2.png');
+        })
+        $('.sel').click(function () {     // 点击后更改箭头方向
+            $('.sel_mask').find('img').attr('src', 'img/1.png');
+        })
+
+        $('.sel1').change(function () {    // 选择后替换内容并恢复箭头方向
+            $("#span_mian1").html($('.sel1').find('option:selected').html());
+            $('.sel_mask1').find('img').attr('src', 'img/1.png');
+        })
+        $('.sel1').blur(function () {      //什么也不选恢复箭头方向
+            $('.sel_mask1').find('img').attr('src', 'img/2.png');
+        })
+        $('.sel1').click(function () {     // 点击后更改箭头方向
+            $('.sel_mask1').find('img').attr('src', 'img/1.png');
+        })
+
+    })
+
+
+
 </script>
 
 

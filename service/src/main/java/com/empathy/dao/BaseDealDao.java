@@ -3,6 +3,8 @@ package com.empathy.dao;
 import com.empathy.common.BaseDao;
 import com.empathy.domain.deal.BaseDeal;
 import com.empathy.domain.deal.bo.DealFindByUserIdBo;
+import com.empathy.domain.deal.bo.DealFindPageBo;
+import com.empathy.domain.deal.vo.DealFindVo;
 import com.empathy.domain.log.bo.LogBo;
 
 import java.util.List;
@@ -17,4 +19,6 @@ public interface BaseDealDao extends BaseDao<BaseDeal, Long, LogBo> {
 
 
 
+    int findAllDealCount(DealFindPageBo bo);
+    List<DealFindVo> findAllDeal(DealFindPageBo bo);
 }

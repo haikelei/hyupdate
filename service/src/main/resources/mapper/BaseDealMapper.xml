@@ -44,5 +44,33 @@
         SELECT count(id) FROM base_deal where del_flag = 0 and user_id =#{id}
     </select>
 
+    <sql id="where">
+        <if test="userId != null">
+            and user_id = #{userId}
+        </if>
+        <if test="status != null">
+            and status = #{status}
+        </if>
+        <if test="type != null">
+            and type = #{type}
+        </if>
+    </sql>
+
+    <select id="findAllDealCount" parameterType="com.empathy.domain.deal.bo.DealFindPageBo" resultType="int">
+
+        SELECT count(id) FROM base_deal where del_flag = 0
+
+        <include refid="where"/>
+
+    </select>
+    <select id="findAllDeal" parameterType="com.empathy.domain.deal.bo.DealFindPageBo"
+            resultType="com.empathy.domain.deal.vo.DealFindVo">
+        SELECT <include refid="fields"></include> FROM base_deal where del_flag = 0
+
+        <include refid="where"/>
+
+        order by create_time desc
+        LIMIT #{start},#{limit}
+    </select>
 
 </mapper>

@@ -1,8 +1,8 @@
 package com.empathy.web;
 
 import com.empathy.common.RspResult;
+import com.empathy.domain.deal.bo.DealFindPageBo;
 import com.empathy.domain.deal.bo.DealFindByUserIdBo;
-import com.empathy.domain.user.bo.LoginBo;
 import com.empathy.service.IBaseDealService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -32,12 +32,20 @@ public class DealController {
     }
 
 
+    @ApiOperation(value = "后台查看所有交易记录数", httpMethod = "POST", response = String.class)
+    @RequestMapping(value = "/findAllDealCount", method = RequestMethod.POST)
+    public String findAllDealCount(DealFindPageBo bo) {
+
+
+        return baseDealService.findAllDealCount(bo);
+    }
+
     @ApiOperation(value = "后台查看所有交易记录", httpMethod = "POST", response = String.class)
     @RequestMapping(value = "/findAllDeal", method = RequestMethod.POST)
-    public RspResult findAllDeal(DealFindByUserIdBo bo) {
+    public RspResult findAllDeal(DealFindPageBo bo) {
 
 
-        return baseDealService.findByUserId(bo);
+        return baseDealService.findAllDeal(bo);
     }
 
 
