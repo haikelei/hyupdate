@@ -202,9 +202,8 @@ function initEditGift(result) {
         return
     } else {
         alert("修改成功!")
-        return
     }
-
+    location.reload();
 }
 
 

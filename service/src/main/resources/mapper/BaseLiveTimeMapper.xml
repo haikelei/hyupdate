@@ -41,7 +41,9 @@
 
 
     <select id="findByLiveIdForClose" resultType="com.empathy.domain.live.BaseLiveTime" parameterType="long">
-        SELECT <include refid="fields"></include> FROM base_live_time order by create_time limit 1
+        SELECT <include refid="fields"></include> FROM base_live_time
+        where live_id = #{liveId}
+        order by create_time desc limit 1
     </select>
 
     <select id="findByLiveUserId" resultType="com.empathy.domain.live.BaseLiveTime" parameterType="long">
