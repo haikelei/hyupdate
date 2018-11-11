@@ -78,10 +78,15 @@ function listAllPersonCallBack(result) {
         var td = "<tr>";
         var id = array[i].id;
         td += "<td>" + array[i].id + "</td>";
+
         var username = array[i].username == undefined ? " " : array[i].username;
         td += "<td style='vertical-align: middle;text-align: center'>" + username + "</td>";
+
         var phone = array[i].phone == undefined ? " " : array[i].phone;
         td += "<td style='vertical-align: middle;text-align: center'>" + phone + "</td>";
+
+        var code = array[i].code == undefined ? " " : array[i].code;
+        td += "<td style='vertical-align: middle;'>" + code + "</td>";
 
         var type = array[i].type == undefined ? " " : array[i].type;
         var typeValue = "";
@@ -99,9 +104,6 @@ function listAllPersonCallBack(result) {
             typeValue = "开通会员";
         }
         td += "<td style='vertical-align: middle;text-align: center'>" + typeValue + "</td>";
-
-        var code = array[i].code == undefined ? " " : array[i].code;
-        td += "<td style='vertical-align: middle;'>" + code + "</td>";
 
         td += "<td style='vertical-align: middle;text-align: center'>" +array[i].money + "</td>";
 
@@ -121,37 +123,7 @@ function getExcle(){
     if(currentPage == undefined){
         currentPage = 1;
     }
-    location.href="/hy/withdraw/getExcel?start=" + currentPage + "&withdrawType=" + 1 + "&withdrawStatus=" + status;
+    var type = $("#selectForType").val();
+    location.href="/hy/deal/getExcel?limit=" + 65535 + "&status=" + 1 + "&type=" + type;
+    // location.href="/hy/deal/getExcel?start=" + currentPage + "&limit=" + showNum + "&status=" + 1 + "&type=" + type;
 }
-
-
-    new AjaxUpload('#import_excle', {
-        action: "/hy/withdraw/importExcel",
-        name: 'file',
-        autoSubmit: true,
-        secureuri: false,
-        crossDomain: true,
-        dataType: "json",
-        onSubmit: function (file, extension) {
-            if (!(extension && /^(xls|xlsx)$/.test(extension.toLowerCase()))) {
-                alert('请上传.xls或.xlsx类型的文件');
-                return false;
-            }
-           /* msg(":" + file + "...");*/
-        },
-        success: function (data) {
-            alert(data);
-            if (data.code == 200) {
-                alert(data.msg);
-            } else {
-                alert("操作失败！");
-            }
-        },
-        error: function (data, status, e) {
-            alert(data.msg);
-        }
-    });
-
-
-
-

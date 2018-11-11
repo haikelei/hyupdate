@@ -7,6 +7,8 @@ import com.empathy.domain.deal.BaseDeal;
 import com.empathy.domain.deal.bo.DealFindPageBo;
 import com.empathy.domain.deal.bo.DealFindByUserIdBo;
 
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * Created by MI on 2018/4/17.
  */
@@ -16,4 +18,6 @@ public interface IBaseDealService extends BaseService<BaseDeal, Long, PageBo> {
     String findAllDealCount(DealFindPageBo bo);
 
     RspResult findAllDeal(DealFindPageBo bo);
+
+    void getExcel(DealFindPageBo bo, HttpServletResponse response);
 }

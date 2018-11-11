@@ -23,5 +23,4 @@ public class DealFindPageBo extends PageBo {
     @Required
     private Integer type;
 
-
 }
