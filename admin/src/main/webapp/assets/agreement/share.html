@@ -1,17 +1,44 @@
 <!DOCTYPE html>
 <html>
 
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<title>手机APP服务协议</title>
-	</head>
-	<body>
-		<p>1.用户有权在注册后获得其个人的华语FM 账号。</p>
-		<p>2.用户有权在注册并登陆后通过其个人的华语FM 账号上载音频作品、图片、专辑等。</p>
-		<p>3.用户有权在注册并登陆后在线收听音频作品、在“华语FM ”移动客户端内下载收听音频作品等。</p>
-		<p>4.用户有权在注册并登陆后，根据华语FM 的规定，分享声音、专辑、主播并取得华语FM 给予的奖励，如积分等。</p>
-		<p>5.用户有权在注册并登陆后，根据华语FM 的规定，参与华语FM 的线上或线下活动并取得华语FM 给予的奖励等。</p>
-		<p>6.用户有权在注册并登陆后，根据华语FM 的规定，参与华语FM 的商业性项目，通过华语FM 提供的增值化服务取得经济收益。</p>
-	</body>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title id="title"></title>
+
+	<script type="text/javascript" src="//g.alicdn.com/sj/lib/jquery/dist/jquery.min.js"></script>
+	<script type="text/javascript" src="../js/common.js"></script>
+</head>
+<body>
+<div id="content"></div>
+</body>
+
+<script type="text/javascript">
+
+    (function (doc, win) {
+        var docEl = doc.documentElement,
+            resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+            recalc = function (first) {
+                var clientWidth = docEl.clientWidth;
+
+                if (!clientWidth) return;
+
+                docEl.style.fontSize = 13 * (clientWidth / 320) + 'px';
+            };
+        if (!doc.addEventListener) return;
+        win.addEventListener(resizeEvt, recalc, false);
+        doc.addEventListener('DOMContentLoaded', recalc, false);
+        recalc();
+    })(document, window);
+
+    ajaxByGET("/hy/agreement/findAgreementByType", {type: 5}, callBack);
+
+    function callBack(result) {
+        if (result.code == 200) {
+            $("#title").html(result.data.title);
+            $("#content").html(result.data.content);
+        }
+    }
+
+</script>
 
 </html>

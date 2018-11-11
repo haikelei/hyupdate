@@ -3,14 +3,42 @@
 
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<title>关于我们</title>
+		<title id="title"></title>
+
+		<script type="text/javascript" src="//g.alicdn.com/sj/lib/jquery/dist/jquery.min.js"></script>
+		<script type="text/javascript" src="../js/common.js"></script>
+
 	</head>
 	<body>
-		<p>如您对本政策有任何疑问、建议或意见的 ，或您发现您的个人信息可能被泄露的，您可通过客服热线或app内在线客服联系 我们 。</p>
-		<p>本政策的生效、履行、解释及争议的解决，您因使用华语公司平台 或服务 而产生或与本政策相关的一切争议、权利主张或其他事项，均适用中华人民共和国法律（港澳台 地区除外 ）。您与华语公司或华语平台发生的一切争议，应友好协商，如协商不成的，应提交上海市浦东新区人民法院管辖。</p>
-		<p>请您再次确认您已全部阅读并充分理解上述条款。</p>
-		<p>【审慎提醒】 如您使用华语平台或进行用户注册的 ，将视为您已同意前述服务使用协议及个人信息保护政策 ，该等条款将立即生效，并构成您和上海证大华语网络科技有限公司及其经营的华语FM之间有约束力的法律文件。</p>
-		<p></p>
+		<div id="content"></div>
 	</body>
 
+	<script type="text/javascript">
+
+        (function (doc, win) {
+            var docEl = doc.documentElement,
+                resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+                recalc = function (first) {
+                    var clientWidth = docEl.clientWidth;
+
+                    if (!clientWidth) return;
+
+                    docEl.style.fontSize = 13 * (clientWidth / 320) + 'px';
+                };
+            if (!doc.addEventListener) return;
+            win.addEventListener(resizeEvt, recalc, false);
+            doc.addEventListener('DOMContentLoaded', recalc, false);
+            recalc();
+        })(document, window);
+
+        ajaxByGET("/hy/agreement/findAgreementByType", {type: 2}, callBack);
+
+        function callBack(result) {
+            if (result.code == 200) {
+                $("#title").html(result.data.title);
+                $("#content").html(result.data.content);
+            }
+        }
+
+	</script>
 </html>

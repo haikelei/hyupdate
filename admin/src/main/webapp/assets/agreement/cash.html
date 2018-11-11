@@ -3,35 +3,42 @@
 
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<title>提现协议</title>
+		<title id="title"></title>
+
+		<script type="text/javascript" src="//g.alicdn.com/sj/lib/jquery/dist/jquery.min.js"></script>
+		<script type="text/javascript" src="../js/common.js"></script>
 	</head>
 	<body>
-		<p><b>一、提现</b></p>
-		<p>您可以通过平台当时向您开放的提现功能将您会员账户中的资金转入您绑定的银行账户中。将于收到您的前述指示后，尽快通过第三方机构将相应的款项汇入您绑定的银行账户（根据您提供的银行不同，会产生汇入时间上的差异）。</p>
-		<p><b>二、费用</b></p>
-		<p>在推广期间，免收提现手续费。</p>
-		<p><b>三、其他事项</b></p>
-		<p>1.您了解，上述充值、代收/代付以及提现服务涉及金发所与银行、担保公司、第三方支付机构等第三方的合作。您同意：（a） 受银行、担保公司、第三方支付机构 等第三方仅在工作日进行资金代扣及划转的现状等各种原因所限，金发所不对前述服务的资金到账时间做任何承诺，也不承担与此相关的责任，包括但不限于由此产 生的利息、货币贬值等损失；（b） 一经您使用前述服务，即表示您不可撤销地授权金发所进行相关操作，且该等操作是不可逆转的，您不能以任何理由拒绝付款 或要求取消交易。就前述服务，金发所暂不会向您收取费用，但您应按照第三方的规定向第三方支付费用，具体请见第三方网站的相关信息。您与第三方之间就费用 支付事项产生的争议或纠纷，与-----无关。</p>
-		<p>2.您保证并承诺您通过金发所平台用于交易的资金来源合法。</p>
-		<p>3.----有权基于交易安全等方面的考虑不时设定涉及交易的相关事项，包括但不限于交易限额、交易次数等。您了解，金发所的前述设定可能会对您的交易造成一定不便，您对此没有异议。</p>
-		<p>4.如果----发现了因系统故障或其他任何原因导致的处理错误，无论有利于---还是有利于您，----都有权在以电子邮件等方式通知您后纠正该错误。如果该错误 导致您实际收到的金额少于您应获得的金额，则金发所在确认该处理错误后会尽快将您应收金额与实收金额之间的差额存入您的会员账户。如果该错误导致您实际收 到的金额多于您应获得的金额，则无论错误的性质和原因为何，您都应及时根据金发所向您发出的有关纠正错误的通知的具体要求返还多收的款项或进行其他操作。 您理解并同意，您因前述处理错误而多付或少付的款项均不计利息-----所不承担因前述处理错误而导致的任何损失或责任（包括您可能因前述错误导致的利息、汇 率等损失），因-----所恶意而导致的处理错误除外。</p>
-		<p>5.在任何情况下，对于您使用金发所服务过程中涉及由第三方提供相关服务的责任由该第三方承担，----不承担该等责任，包括但不限于：</p>
-		<p  style="font-size:13px;">1）银行、第三方支付机构等第三方未按照您和/或----指令进行操作引起的任何损失或责任；</p>
-		<p  style="font-size:13px;">2）因银行、第三方支付机构等第三方原因导致资金未能及时到账或未能到账引起的任何损失或责任；</p>
-		<p  style="font-size:13px;">3）银行、第三方支付机构等第三方对交易限额或次数等方面的限制而引起的任何损失或责任；</p>
-		<p  style="font-size:13px;">4）因其他第三方的行为或原因导致的任何损失或责任。</p>
-		<p>6.因您自身的原因导致金发所服务无法提供或提供时发生任何错误而产生的任何损失或责任，由您自行负责，金发所不承担责任，包括但不限于：</p>
-		<p  style="font-size:13px;">1）您未按照本协议或-----网站不时公布的任何规则进行操作；</p>
-		<p  style="font-size:13px;">2）因您使用的银行卡的原因导致的损失或责任，包括您使用未经认证的银行卡或使用非您本人的银行卡或使用信用卡，您的银行卡被冻结、挂失等；</p>
-		<p  style="font-size:13px;">3）您向----发送的指令信息不明确、存在乱码或歧义、不完整等；</p>
-		<p  style="font-size:13px;">4）您会员账户内余额不足。</p>
-		<p>6.本协议是电子协议，甲方注册成功后生效。</p>
-		<p>7. 本协议未尽事宜，由双方协商解决。任何对本协议的修改、补充、完善，均需以书面形式提出，并经双方签字盖章后生效。</p>
-		
-		
-		
-		
-		
+		<div id="content"></div>
 	</body>
+
+	<script type="text/javascript">
+
+        (function (doc, win) {
+            var docEl = doc.documentElement,
+                resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+                recalc = function (first) {
+                    var clientWidth = docEl.clientWidth;
+
+                    if (!clientWidth) return;
+
+                    docEl.style.fontSize = 13 * (clientWidth / 320) + 'px';
+                };
+            if (!doc.addEventListener) return;
+            win.addEventListener(resizeEvt, recalc, false);
+            doc.addEventListener('DOMContentLoaded', recalc, false);
+            recalc();
+        })(document, window);
+
+        ajaxByGET("/hy/agreement/findAgreementByType", {type: 4}, callBack);
+
+        function callBack(result) {
+            if (result.code == 200) {
+                $("#title").html(result.data.title);
+                $("#content").html(result.data.content);
+            }
+        }
+
+	</script>
 
 </html>

@@ -14,7 +14,6 @@
         <div id="content"></div>
     </div>
     <script type="text/javascript" src="//g.alicdn.com/sj/lib/jquery/dist/jquery.min.js"></script>
-    <script type="text/javascript" src="//g.alicdn.com/sui/sui3/0.0.18/js/sui.min.js"></script>
     <script type="text/javascript" src="../js/common.js"></script>
 
     <script type="text/javascript">
@@ -35,7 +34,7 @@
             recalc();
         })(document, window);
 
-        ajaxByGET("/hy/agreement/findAgreementById", {id: 1}, callBack);
+        ajaxByGET("/hy/agreement/findAgreementByType", {type: 1}, callBack);
 
         function callBack(result) {
             if (result.code == 200) {

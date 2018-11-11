@@ -216,7 +216,7 @@ public class AlipayController {
                         "订单支付通知：支付失败，" + restmap.get("err_code") + ":" + restmap.get("err_code_des"));*/
             }
         } catch (Exception e) {
-            logger.error("微信支付获取回调失败");
+            logger.error("微信支付获取回调失败", e);
 //            System.out.println("微信支付获取回调失败");
             //LOG.info("获取回调失败");
             /*throw new BusinessException(CommonErrorResult.SECRET_FAIL,"获取回调失败");*/

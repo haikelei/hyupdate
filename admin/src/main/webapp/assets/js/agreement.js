@@ -48,7 +48,7 @@ function init(result) {
             selector: '#textarea1',
             branding: false,
             elementpath: false,
-            height: 200,
+            height: 350,
             language: 'zh_CN.GB2312',
             menubar: 'edit insert view format table tools',
             theme: 'modern',
@@ -123,8 +123,6 @@ function update() {
     var content = tinymce.activeEditor.getContent();
     var title = $("#informationTitle").val();
     var id  = $("#agreementId").val();
-    //alert(content)
     ajaxByPOST("/hy/agreement/updAgreement", {id: id,title:title,content:content}, forSuccess);
 
 }
-

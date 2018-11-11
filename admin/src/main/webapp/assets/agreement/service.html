@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title id="title"></title>
+
+	<script type="text/javascript" src="//g.alicdn.com/sj/lib/jquery/dist/jquery.min.js"></script>
+	<script type="text/javascript" src="../js/common.js"></script>
+</head>
+<body>
+<div id="content"></div>
+</body>
+
+<script type="text/javascript">
+
+    (function (doc, win) {
+        var docEl = doc.documentElement,
+            resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+            recalc = function (first) {
+                var clientWidth = docEl.clientWidth;
+
+                if (!clientWidth) return;
+
+                docEl.style.fontSize = 13 * (clientWidth / 320) + 'px';
+            };
+        if (!doc.addEventListener) return;
+        win.addEventListener(resizeEvt, recalc, false);
+        doc.addEventListener('DOMContentLoaded', recalc, false);
+        recalc();
+    })(document, window);
+
+    ajaxByGET("/hy/agreement/findAgreementByType", {type: 6}, callBack);
+
+    function callBack(result) {
+        if (result.code == 200) {
+            $("#title").html(result.data.title);
+            $("#content").html(result.data.content);
+        }
+    }
+
+</script>
+
+</html>
