@@ -797,6 +797,8 @@ public class UserinfoService extends AbstractBaseService implements IUserinfoSer
         baseMemberDao.save(baseMember);
         String yxToken = YXUtils.getYxToken(baseMember.getId(), baseMember.getUsername());
         baseMember.setToken(yxToken);
+
+        baseMember.setUsername(baseMember.getId()+"");
         baseMemberDao.update(baseMember);
         Userinfo userinfo = new Userinfo();
         userinfo.setLastRevampTime(System.currentTimeMillis());
