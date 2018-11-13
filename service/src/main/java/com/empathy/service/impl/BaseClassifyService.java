@@ -9,7 +9,6 @@ import com.empathy.domain.classify.bo.ClassifyUpdBo;
 import com.empathy.domain.classify.bo.FindClassifyBo;
 import com.empathy.service.AbstractBaseService;
 import com.empathy.service.IBaseClassifyService;
-import com.empathy.service.IBaseMemberService;
 import com.empathy.utils.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -81,7 +80,7 @@ public class BaseClassifyService extends AbstractBaseService implements IBaseCla
         baseClassify.setParentId(bo.getParentId());
         baseClassify.setLastRevampTime(System.currentTimeMillis());
         baseClassifyDao.update(baseClassify);
-        if(StringUtil.isNotEmpty(baseClassify.getUrl())) {
+        if(StringUtil.isNotEmpty(bo.getUrl())) {
 
 
             fileService.insertFile("classify", bo.getUrl(), baseClassify.getId());

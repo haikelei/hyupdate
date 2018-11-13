@@ -128,8 +128,6 @@ function update() {
             alert("请选择主分类名")
         }
 
-        alert($("#updateId").val())
-
     if($("#updateId").val()==0){
         ajaxByPOST("/hy/classify/updClassify",{code:code,name:name,id:id,parentId:parentId},initSuccess)
 
